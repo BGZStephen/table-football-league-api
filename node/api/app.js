@@ -1,1 +1,33 @@
 global.ENV = process.env.NODE_ENV || 'development';
+const config = require('./config')
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const winston = require('winston');
+
+mongoose.connect(config.database);
+
+mongoose.connection.on('connected', () => {
+  winston.info('Database connection successful');
+});
+
+mongoose.connection.on('error', (error) => {
+  winston.error(`Error: ${error}`);
+})
+
+const app = express()
+
+app.use(cors())
+
+// static folder for public views
+app.use(express.static(path.join(__dirname, '../public')));
+
+// body partser initialize
+app.use(bodyParser.json());
+
+const port = 3000;
+app.listen(port, () => {
+	winston.info(`Server started successfully`);
+});
