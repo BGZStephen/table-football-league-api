@@ -7,6 +7,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const winston = require('winston');
 
+// make models globally available
+require('./models');
+
+// db connection
 mongoose.connect(config.database);
 
 mongoose.connection.on('connected', () => {
@@ -19,6 +23,7 @@ mongoose.connection.on('error', (error) => {
 
 const app = express()
 
+// middlewares
 app.use(cors())
 
 // static folder for public views
