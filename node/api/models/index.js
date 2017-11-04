@@ -1,4 +1,4 @@
-require('./users');
-require('./teams');
-require('./fixtures');
-require('./leagues');
+require('./user');
+require('./team');
+require('./fixture');
+require('./league');

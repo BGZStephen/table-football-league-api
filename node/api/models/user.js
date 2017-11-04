@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const UserSchema = mongoose.Schema({
+const UserSchema = Schema({
   firstNane: {
     type: String,
     required: true,
