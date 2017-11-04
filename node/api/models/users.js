@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const PlayerSchema = mongoose.Schema({
+const UserSchema = mongoose.Schema({
   firstNane: {
     type: String,
     required: true,
@@ -17,4 +17,4 @@ const PlayerSchema = mongoose.Schema({
   leagues: [{type: Schema.ObjectId, ref: 'League'}],
 })
 
-module.exports = mongoose.model('Player', PlayerSchema);
+module.exports = mongoose.model('User', UserSchema);
