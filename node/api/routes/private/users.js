@@ -22,6 +22,10 @@ async function updateOne(req, res) {
       }
     })
 
+    if(updateParams.password) {
+      updateParams.password = createHash(req.body.password);
+    }
+
     await User.update({_id: ObjectId(req.params.id)}, updateParams);
     const user = await User.findById(ObjectId(req.params.id));
     res.json(user);
@@ -31,7 +35,6 @@ async function updateOne(req, res) {
 }
 
 async function validateUser(req, res, next) {
-  return next();
   try {
     const decoded = jwt.verify(req.body.token, config.jwtSecret);
     if(!ObjectId(decoded._id).equals(ObjectId(req.params.id))) {
@@ -57,6 +60,10 @@ async function fetchUser(req, res, next) {
   } catch (error) {
     res.status(500).json(error);
   }
+}
+
+function createHash(string) {
+  return bcrypt.hashSync(string, 8)
 }
 
 module.exports = {

@@ -1,6 +1,6 @@
 const request = require('supertest');
 
-describe('Test the users POST route', () => {
+describe('Test the users GET route', () => {
   test('It should respond with 200 and an array of users', (done) => {
     request('http://localhost:3000')
     .get('/users')

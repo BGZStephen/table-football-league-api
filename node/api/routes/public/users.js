@@ -20,8 +20,7 @@ async function create(req, res, next) {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password: req.body.password,
-      confirmPassword: req.body.confirmPassword,
+      password: createHash(req.body.password),
     })
 
     await user.save();
@@ -97,6 +96,10 @@ function validate(object, params) {
   if(errorArray.length > 0) {
     throw new Error(errorArray)
   }
+}
+
+function createHash(string) {
+  return bcrypt.hashSync(string, 8)
 }
 
 module.exports = {
