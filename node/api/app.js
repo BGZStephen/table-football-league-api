@@ -32,6 +32,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 // body partser initialize
 app.use(bodyParser.json());
 
+app.use(require('./routes/public'));
+app.use(require('./routes/private'));
+
 const port = 3000;
 app.listen(port, () => {
 	winston.info(`Server started successfully`);
