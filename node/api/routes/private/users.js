@@ -1,4 +1,8 @@
-async function deleteOne() {
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
+const ObjectId = mongoose.Types.ObjectId;
+
+async function deleteOne(req, res) {
   try {
     User.findById(ObjectId(req.params.id)).remove();
     res.sendstatus(200);
@@ -7,15 +11,15 @@ async function deleteOne() {
   }
 }
 
-async function updateOne() {
+async function updateOne(req, res) {
   const updateFields = 'firstName lastName email password'.split(' ');
   const updateParams = {};
 
   try {
     Object.keys(req.body).forEach(function (key) {
-      if(updateFields.indexOf(key) {
+      if(updateFields.indexOf(key)) {
         updateParams[key] = req.body[key]
-      })
+      }
     })
 
     await User.update({_id: ObjectId(req.params.id)}, updateParams);
@@ -27,6 +31,16 @@ async function updateOne() {
 }
 
 async function validateUser(req, res, next) {
+  return next();
+  try {
+    const decoded = jwt.verify(req.body.token, config.jwtSecret);
+    if(!ObjectId(decoded._id).equals(ObjectId(req.params.id))) {
+      res.status(403).json({message: 'Invalid token'});
+    }
+  } catch(err) {
+    res.status(500).json({message: 'Invalid token'});
+  }
+
   next();
 }
 
@@ -49,4 +63,5 @@ module.exports = {
   updateOne,
   deleteOne,
   validateUser,
+  fetchUser,
 }
