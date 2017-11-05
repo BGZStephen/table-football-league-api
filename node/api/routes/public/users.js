@@ -61,7 +61,7 @@ async function getOne(req, res, next) {
   }
 }
 
-async function comparePassword(password, passwordComparison) {
+function comparePassword(password, passwordComparison) {
   if (password !== passwordComparison) {
     throw new Error('Passwords do not match')
   }
