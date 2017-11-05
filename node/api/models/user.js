@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = Schema({
-  firstNane: {
+  firstName: {
     type: String,
     required: true,
   },
