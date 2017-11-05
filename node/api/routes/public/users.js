@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const winston = require('winston');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
-const ObjectId = mongoose.Schema.ObjectId;
+const ObjectId = mongoose.Types.ObjectId;
 
 async function create(req, res, next) {
   try {
@@ -34,7 +34,7 @@ async function create(req, res, next) {
 
 async function getAll(req, res, next) {
   try {
-    const users = await Users.find({})
+    const users = await User.find({})
 
     if (users.length === 0) {
       return res.status(200).json({message: 'No users found'})
@@ -42,6 +42,7 @@ async function getAll(req, res, next) {
 
     res.json(users);
   } catch (error) {
+    winston.error(error)
     res.status(500).json(error)
   }
 }
@@ -49,14 +50,19 @@ async function getAll(req, res, next) {
 async function getOne(req, res, next) {
   const id = req.params.id;
   try {
-    const user = await Users.findById(ObjectId(id))
+    if (!/[A-Fa-f0-9]{24}/g.test(id)) {
+      throw new Error('Invalid User Id');
+    }
+
+    const user = await User.findById(ObjectId(id))
 
     if(!user) {
-      throw new Error('User not found');
+      return res.status(404).json({message: 'User not found'});
     }
 
     res.json(user);
   } catch (error) {
+    winston.error(error)
     res.status(500).json(error);
   }
 }
@@ -95,4 +101,6 @@ function validate(object, params) {
 
 module.exports = {
   create,
+  getOne,
+  getAll,
 }
