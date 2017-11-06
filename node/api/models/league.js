@@ -3,7 +3,10 @@ const Schema = mongoose.Schema;
 
 const LeagueSchema = Schema({
   createdOn: Date,
-  name: String,
+  name: {
+    type: String,
+    unique: true
+  },
   administrators: [{type: Schema.ObjectId, ref: 'User'}],
   teams: [{type: Schema.ObjectId, ref: 'Team'}],
   fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],

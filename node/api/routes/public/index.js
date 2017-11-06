@@ -1,5 +1,6 @@
 const express = require('express');
 const Users = require('./users');
+const Leagues = require('./leagues');
 const router = express.Router();
 
 router.get('/users', Users.getAll);

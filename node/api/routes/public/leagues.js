@@ -4,6 +4,12 @@ const ObjectId = mongoose.Types.ObjectId;
 
 async function create(req, res) {
   try {
+    if (!req.body.name) {
+      res.status(500).json({message: 'League name is required'});
+    }
+
+    await duplicateLeagueCheck(req.body.name);
+
     const league = new League({
       createdOn: Date.now(),
       name: req.body.name,
@@ -46,6 +52,13 @@ async function fetchLeague(req, res, next) {
 
   req.league = league;
   next();
+}
+
+async function duplicateLeagueCheck(leagueName) {
+  const league = await League.findOne({name: leagueName});
+  if (league) {
+    throw new Error('League name already in use');
+  }
 }
 
 module.exports = {
