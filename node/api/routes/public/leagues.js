@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId;
 async function create(req, res) {
   try {
     if (!req.body.name) {
-      res.status(500).json({message: 'League name is required'});
+      return res.status(500).json({message: 'League name is required'});
     }
 
     await duplicateLeagueCheck(req.body.name);
@@ -19,6 +19,7 @@ async function create(req, res) {
     await league.save();
     res.json(league);
   } catch (error) {
+    winston.error(error);
     res.status(500).json(error);
   }
 }
@@ -35,23 +36,34 @@ async function getAll(req, res) {
     const leagues = await League.find({});
     res.json(leagues);
   } catch (error) {
+    winston.error(error)
     res.status(500).json(error);
   }
 }
 
 async function fetchLeague(req, res, next) {
-  const id = req.params.id;
-  if (!id) {
-    return res.status(500).json({message: 'League ID is required'});
-  }
+  try {
+    const id = req.params.id;
+    if (!id) {
+      return res.status(500).json({message: 'League ID is required'});
+    }
 
-  const league = await League.findById(ObjectId(id));
-  if (!league) {
-    return res.status(404).json({message: 'League not found'});
-  }
+    if (!/[A-Fa-f0-9]{24}/g.test(id)) {
+      console.log(id)
+      return res.status(500).json({message: 'Invalid League Id'});
+    }
 
-  req.league = league;
-  next();
+    const league = await League.findById(ObjectId(id));
+    if (!league) {
+      return res.status(404).json({message: 'League not found'});
+    }
+
+    req.league = league;
+    next();
+  } catch (error) {
+    winston.error(error);
+    res.status(500).json(error);
+  }
 }
 
 async function duplicateLeagueCheck(leagueName) {
