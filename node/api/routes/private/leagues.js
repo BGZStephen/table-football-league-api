@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const winston = require('winston');
 const League = mongoose.model('League');
+const ObjectId = mongoose.Types.ObjectId;
 
 async function deleteOne(req, res) {
   try {
@@ -11,7 +13,7 @@ async function deleteOne(req, res) {
   }
 }
 
-async function updateOne() {
+async function updateOne(req, res) {
   const updateFields = 'administrators name teams fixtures'.split(' ');
   const updateParams = {};
 
