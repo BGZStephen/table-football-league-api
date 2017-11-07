@@ -4,8 +4,10 @@ const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
 
 async function deleteOne(req, res) {
+  const user = req.user;
+
   try {
-    await User.findById(ObjectId(req.params.id)).remove();
+    await user.remove();
     res.status(200).send();
   } catch (error) {
     winston.error(error);
@@ -14,22 +16,22 @@ async function deleteOne(req, res) {
 }
 
 async function updateOne(req, res) {
+  const user = req.user;
   const updateFields = 'firstName lastName email password'.split(' ');
   const updateParams = {};
 
   try {
     Object.keys(req.body).forEach(function (key) {
       if(updateFields.indexOf(key)) {
-        updateParams[key] = req.body[key]
+        user[key] = req.body[key]
       }
     })
 
     if(updateParams.password) {
-      updateParams.password = createHash(req.body.password);
+      user.password = createHash(req.body.password);
     }
 
-    await User.update({_id: ObjectId(req.params.id)}, updateParams);
-    const user = await User.findById(ObjectId(req.params.id));
+    await user.save();
     res.json(user);
   } catch (error) {
     winston.error(error);
@@ -38,7 +40,6 @@ async function updateOne(req, res) {
 }
 
 async function validateUser(req, res, next) {
-  return next();
   try {
     const decoded = jwt.verify(req.body.token, config.jwtSecret);
     if(!ObjectId(decoded._id).equals(ObjectId(req.params.id))) {

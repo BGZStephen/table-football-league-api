@@ -25,9 +25,6 @@ async function create(req, res) {
 }
 
 async function getOne(req, res) {
-  if(!req.league) {
-    return res.status(404).json({message: 'League not found'});
-  }
   res.json(req.league);
 }
 
@@ -37,30 +34,6 @@ async function getAll(req, res) {
     res.json(leagues);
   } catch (error) {
     winston.error(error)
-    res.status(500).json(error);
-  }
-}
-
-async function fetchLeague(req, res, next) {
-  try {
-    const id = req.params.id;
-    if (!id) {
-      return res.status(500).json({message: 'League ID is required'});
-    }
-
-    if (!/[A-Fa-f0-9]{24}/g.test(id)) {
-      return res.status(500).json({message: 'Invalid League Id'});
-    }
-
-    const league = await League.findById(ObjectId(id));
-    if (!league) {
-      return res.status(404).json({message: 'League not found'});
-    }
-
-    req.league = league;
-    next();
-  } catch (error) {
-    winston.error(error);
     res.status(500).json(error);
   }
 }

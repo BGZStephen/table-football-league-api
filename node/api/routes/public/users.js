@@ -72,13 +72,7 @@ async function getAll(req, res, next) {
 }
 
 async function getOne(req, res, next) {
-  const user = req.user;
-  
-  if(!user) {
-    res.status(404).send({message: 'User not found'});
-  }
-
-  res.json(user);
+  res.json(req.user);
 }
 
 function comparePassword(password, passwordComparison) {
