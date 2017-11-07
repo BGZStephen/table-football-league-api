@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+const League = mongoose.model('League');
+
 async function deleteOne(req, res) {
   try {
     await User.findById(ObjectId(req.params.id)).remove();

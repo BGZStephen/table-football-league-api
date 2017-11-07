@@ -8,7 +8,7 @@ router.put('/users/:id', Users.updateOne);
 router.delete('/users/:id', Users.deleteOne);
 
 router.all('/leagues/:id', Leagues.fetchLeague);
-router.delete('/leagues/:id', Leagues.delteOne);
+router.delete('/leagues/:id', Leagues.deleteOne);
 router.put('/leagues/:id', Leagues.updateOne);
 
 module.exports = router;
