@@ -3,7 +3,7 @@ const request = require('supertest');
 describe('Test the users GET route', () => {
   test('It should respond with 200 and a user object', (done) => {
     request('http://localhost:3000')
-    .get('/users/59ff297327e8d20e50eae671')
+    .get('/users/5a0011cc7d1e69281b31ed46')
     .then((response) => {
         expect(response.statusCode).toBe(200);
         done();

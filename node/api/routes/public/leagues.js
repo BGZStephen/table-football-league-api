@@ -74,7 +74,6 @@ async function duplicateLeagueCheck(leagueName) {
 
 module.exports = {
   create,
-  fetchLeague,
   getOne,
   getAll
 }

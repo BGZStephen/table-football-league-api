@@ -72,23 +72,13 @@ async function getAll(req, res, next) {
 }
 
 async function getOne(req, res, next) {
-  const id = req.params.id;
-  try {
-    if (!/[A-Fa-f0-9]{24}/g.test(id)) {
-      throw new Error('Invalid User Id');
-    }
-
-    const user = await User.findById(ObjectId(id))
-
-    if(!user) {
-      return res.status(404).json({message: 'User not found'});
-    }
-
-    res.json(user);
-  } catch (error) {
-    winston.error(error)
-    res.status(500).json(error);
+  const user = req.user;
+  
+  if(!user) {
+    res.status(404).send({message: 'User not found'});
   }
+
+  res.json(user);
 }
 
 function comparePassword(password, passwordComparison) {

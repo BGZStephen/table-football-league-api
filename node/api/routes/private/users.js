@@ -51,21 +51,6 @@ async function validateUser(req, res, next) {
   next();
 }
 
-async function fetchUser(req, res, next) {
-  try {
-    const user = await User.findById(req.params.id);
-
-    if(!user) {
-      return res.status(404).json('User not found');
-    }
-
-    req.user = user;
-    next();
-  } catch (error) {
-    res.status(500).json(error);
-  }
-}
-
 function createHash(string) {
   return bcrypt.hashSync(string, 8)
 }
@@ -74,5 +59,4 @@ module.exports = {
   updateOne,
   deleteOne,
   validateUser,
-  fetchUser,
 }

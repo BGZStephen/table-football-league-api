@@ -33,30 +33,6 @@ async function updateOne(req, res) {
   }
 }
 
-async function fetchLeague(req, res, next) {
-  try {
-    const id = req.params.id;
-    if (!id) {
-      return res.status(500).json({message: 'League ID is required'});
-    }
-
-    if (!/[A-Fa-f0-9]{24}/g.test(id)) {
-      return res.status(500).json({message: 'Invalid League Id'});
-    }
-
-    const league = await League.findById(ObjectId(id));
-    if (!league) {
-      return res.status(404).json({message: 'League not found'});
-    }
-
-    req.league = league;
-    next();
-  } catch (error) {
-    winston.error(error);
-    res.status(500).json(error);
-  }
-}
-
 async function duplicateLeagueUpdateCheck(currentLeagueId, leagueName) {
   const league = await League.findOne({name: leagueName});
   if (league && league._id !== currentLeagueId) {
@@ -67,5 +43,4 @@ async function duplicateLeagueUpdateCheck(currentLeagueId, leagueName) {
 module.exports = {
   deleteOne,
   updateOne,
-  fetchLeague,
 }

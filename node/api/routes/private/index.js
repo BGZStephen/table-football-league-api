@@ -1,13 +1,14 @@
 const express = require('express');
-const router = express.Router();
 const Leagues = require('./leagues');
 const Users = require('./users');
+const Middleware = require('../middleware');
+const router = express.Router();
 
-router.all('/users/:id', Users.validateUser, Users.fetchUser);
+router.all('/users/:id', Users.validateUser, Middleware.fetchResource);
 router.put('/users/:id', Users.updateOne);
 router.delete('/users/:id', Users.deleteOne);
 
-router.all('/leagues/:id', Leagues.fetchLeague);
+router.all('/leagues/:id', Middleware.fetchResource);
 router.delete('/leagues/:id', Leagues.deleteOne);
 router.put('/leagues/:id', Leagues.updateOne);
 
