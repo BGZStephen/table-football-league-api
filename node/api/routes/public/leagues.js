@@ -49,7 +49,6 @@ async function fetchLeague(req, res, next) {
     }
 
     if (!/[A-Fa-f0-9]{24}/g.test(id)) {
-      console.log(id)
       return res.status(500).json({message: 'Invalid League Id'});
     }
 
