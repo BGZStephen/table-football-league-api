@@ -1,18 +1,18 @@
 const request = require('supertest');
-const userId = '5a001134fd7485258ce7d132'
+const leagueId = '5a00d2b692561626081f3461'
 
-describe('Test the users DELETE route', () => {
+describe('Test the league DELETE route', () => {
   test('It should respond with 200', (done) => {
     request('http://localhost:3000')
-    .delete(`/users/${userId}`)
+    .delete(`/leagues/${leagueId}`)
     .then((response) => {
         expect(response.statusCode).toBe(200);
         done();
     });
   });
-  test('It should respond with 404 as user already deleted', (done) => {
+  test('It should respond with 404 as league already deleted', (done) => {
     request('http://localhost:3000')
-    .delete(`/users/${userId}`)
+    .delete(`/leagues/${leagueId}`)
     .then((response) => {
         expect(response.statusCode).toBe(404);
         done();

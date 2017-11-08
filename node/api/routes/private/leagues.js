@@ -4,8 +4,9 @@ const League = mongoose.model('League');
 const ObjectId = mongoose.Types.ObjectId;
 
 async function deleteOne(req, res) {
+  const league = req.league
   try {
-    await User.findById(ObjectId(req.params.id)).remove();
+    await league.remove();
     res.status(200).send();
   } catch (error) {
     winston.error(error);
