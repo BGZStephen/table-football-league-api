@@ -26,3 +26,35 @@ async function create(req, res, next) {
     res.status(500).json(error)
   }
 }
+
+async function getAll() {
+  try {
+    const fixtures = await Fixture.find({});
+    res.json(fixtures);
+  } catch (error) {
+    winston.error(error);
+    res.status(500).json(error);
+  }
+}
+
+async function getOne() {
+  const fixture = req.fixture;
+  res.json(fixture);
+}
+
+async function deleteOne() {
+  try {
+    const fixture = req.fixture;
+    await fixture.remove();
+    res.status(200).send()
+  } catch (error) {
+    winston.error(error);
+    res.status(500).json(error);
+  }
+}
+
+module.export = {
+  create,
+  getAll,
+  getOne,
+}
