@@ -8,6 +8,10 @@ const configs = {
       api_key: '$API_KEY',
       api_secret: '$API_SECRET'
     },
+    mailjet: {
+      apiKey: '$MAILJET_API_KEY',
+      secret: '$MAILJET_SECRET',
+    },
   },
   staging: {
     database: '$DATABASE_URL',
@@ -18,6 +22,10 @@ const configs = {
       api_key: '$API_KEY',
       api_secret: '$API_SECRET'
     },
+    mailjet: {
+      apiKey: '$MAILJET_API_KEY',
+      secret: '$MAILJET_SECRET',
+    },
   },
   production: {
     database: '$DATABASE_URL',
@@ -27,6 +35,10 @@ const configs = {
       cloud_name: '$CLOUD_NAME',
       api_key: '$API_KEY',
       api_secret: '$API_SECRET'
+    },
+    mailjet: {
+      apiKey: '$MAILJET_API_KEY',
+      secret: '$MAILJET_SECRET',
     },
   },
 }

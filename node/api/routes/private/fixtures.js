@@ -4,11 +4,11 @@ const mongoose = require('mongoose');
 const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
 
-async function create(req, res, next) {
+async function create(req, res) {
   try {
     validate(req.body, {
       fixtureDate: 'A date is required for the fixture',
-      teams: 'Teams are required'
+      teams: 'Teams are required',
       type: 'Fixture type is required',
     })
 
@@ -73,7 +73,7 @@ async function updateOne(req, res) {
   }
 }
 
-module.export = {
+module.exports = {
   create,
   getAll,
   getOne,

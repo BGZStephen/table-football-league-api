@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
 const validate = require('../../services/validate');
+const mailer = require('../../services/mailer');
 
 async function create(req, res, next) {
   try {
@@ -25,6 +26,7 @@ async function create(req, res, next) {
       password: createHash(req.body.password),
     })
 
+    await mailer.welcomeEmail(user)
     await user.save();
     res.json(user);
   } catch (error) {
