@@ -53,8 +53,30 @@ async function deleteOne() {
   }
 }
 
+async function updateOne(req, res) {
+  const updateFields = 'score teams fixtureDate type'.split(' ');
+  const updateParams = {};
+
+  try {
+    Object.keys(req.body).forEach(function (key) {
+      if(updateFields.indexOf(key)) {
+        updateParams[key] = req.body[key]
+      }
+    })
+
+    await Fixture.update({_id: ObjectId(req.params.id)}, updateParams);
+    const fixture = await Fixture.findById(ObjectId(req.params.id));
+    res.json(fixture);
+  } catch (error) {
+    winston.error(error);
+    res.status(500).json(error);
+  }
+}
+
 module.export = {
   create,
   getAll,
   getOne,
+  deleteOne,
+  updateOne,
 }
