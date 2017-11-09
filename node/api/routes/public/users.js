@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
+const validate = require('../../services/validate');
 
 async function create(req, res, next) {
   try {
@@ -91,19 +92,6 @@ async function checkExistingUser(expected, query) {
     } else {
       throw new Error('User already exists');
     }
-  }
-}
-
-function validate(object, params) {
-  const errorArray = [];
-  Object.keys(params).forEach(function(param) {
-    if(!object[param]) {
-      errorArray.push(params[param])
-    }
-  })
-
-  if(errorArray.length > 0) {
-    throw new Error(errorArray)
   }
 }
 

@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
+const validate = require('../validate');
 const config = require('../../config');
 const ejs = require('ejs');
-const validate = require('validate.js');
 const mailjet = require('node-mailjet').connect(config.mailJet.apiKey, config.mailJet.apiSecret, {
 	url: 'api.mailjet.com',
 	version: 'v3.1',
