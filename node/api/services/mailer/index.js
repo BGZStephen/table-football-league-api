@@ -11,21 +11,12 @@ const ejsRenderFile = Promise.promisify(ejs.renderFile);
 
 async function sendEmail(params) {
 
-	if (!params.from) {
-		throw new Error('From is a required parameter');
-	}
-
-	if (!params.to) {
-		throw new Error('To is a required parameter');
-	}
-
-	if (!params.subject) {
-		throw new Error('Subject is a required parameter');
-	}
-
-	if (!params.template) {
-		throw new Error('HTML template name is required');
-	}
+	valudate(params, {
+		from: 'From is a required parameter',
+		to: 'To is a required parameter',
+		subject: 'Subject is a required parameter',
+		template: 'HTML template name is required',
+	})
 
   const emailParams = {
     'Messages':[{
@@ -49,11 +40,7 @@ async function sendEmail(params) {
 
 async function welcomeEmail(params) {
 	validate(params, {
-		from: {presence: true},
-		to: {presence: true},
-		subject: {presence: true},
-		template: {presence: true},
-		user: {presence: true}
+		user: 'User is required for welcome email',
 	});
 
 	return await sendEmail(params);
