@@ -1,3 +1,4 @@
+const validate = require('../../services/validate')
 const winston = require('winston');
 const mongoose = require('mongoose');
 const Fixture = mongoose.model('Fixture');
@@ -6,39 +7,22 @@ const ObjectId = mongoose.Types.ObjectId;
 async function create(req, res, next) {
   try {
     validate(req.body, {
-      firstName: 'First name is required',
-      email: 'Email address is required',
-      password: 'Password is required',
-      confirmPassword: 'Please re-enter your password',
+      fixtureDate: 'A date is required for the fixture',
+      teams: 'Teams are required'
+      type: 'Fixture type is required',
     })
 
-    comparePassword(req.body.password, req.body.confirmPassword);
-    await checkExistingUser(null, {email: req.body.email});
-
-    const user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: createHash(req.body.password),
+    const fixture = new Fixture({
+      createdOn: Date.now(),
+      fixtureDate: req.body.fixtureDate,
+      teams: req.body.teams,
+      type: req.body.type,
     })
 
-    await user.save();
-    res.json(user);
+    await fixture.save();
+    res.json(fixture);
   } catch (error) {
     winston.error(error)
     res.status(500).json(error)
-  }
-
-  function validate(object, params) {
-    const errorArray = [];
-    Object.keys(params).forEach(function(param) {
-      if(!object[param]) {
-        errorArray.push(params[param])
-      }
-    })
-
-    if(errorArray.length > 0) {
-      throw new Error(errorArray)
-    }
   }
 }

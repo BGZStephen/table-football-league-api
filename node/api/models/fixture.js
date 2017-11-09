@@ -9,8 +9,14 @@ const FixtureSchema = Schema({
     two: {type: Schema.ObjectId, ref: 'Team'},
   },
   score: {
-    teamOne: Number,
-    teamTwo: Number
+    teamOne: {
+      type: Number,
+      default: 0
+    },
+    teamTwo: {
+      type: Number,
+      default: 0
+    },
   },
   type: String,
   league: {type: Schema.ObjectId, ref: 'League'},
