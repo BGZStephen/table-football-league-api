@@ -36,11 +36,7 @@ async function sendEmail(params) {
     }]
   };
 
-	try {
-		await mailjet.post('send').request(emailParams);
-	} catch (error) {
-		console.log(error)
-	}
+	await mailjet.post('send').request(emailParams);
 	return {success: true};
 }
 
