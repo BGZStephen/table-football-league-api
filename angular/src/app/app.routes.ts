@@ -1,9 +1,16 @@
 import { RouterModule, Routes } from '@angular/router';
 
-import { WebsiteHomeComponent } from './modules/website/components/website-components-barrel';
+import * as website from './modules/website/components/website-components-barrel';
+import * as dashboard from './modules/dashboard/components/dashboard-components-barrel';
 
 const APP_ROUTES: Routes = [
-  {path: '', component: WebsiteHomeComponent}
+  {path: 'dashboard', component: dashboard.DashboardViewWrapperComponent, children: [
+    {path: '', component: dashboard.DashboardHomeComponent},
+  ]},
+  {path: '', component: website.WebsiteViewWrapperComponent, children: [
+    {path: '', component: website.WebsiteHomeComponent},
+    {path: 'login', component: website.WebsiteLoginComponent},
+  ]},
 ]
 
 export const AppRoutes = RouterModule.forRoot(APP_ROUTES);
