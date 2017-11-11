@@ -1,0 +1,22 @@
+#website-view-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+
+  #website-navbar-wrapper {
+
+    @media(min-width: $screen-md) {
+      width: 180px;
+    }
+  }
+
+  #website-outlet-wrapper {
+    @media(min-width: $screen-md) {
+      width: calc(100vw - 180px);
+    }
+  }
+
+  @media(min-width: $screen-md) {
+    flex-direction: row;
+  }
+}
