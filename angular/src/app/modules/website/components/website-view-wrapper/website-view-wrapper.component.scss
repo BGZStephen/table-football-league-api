@@ -6,13 +6,13 @@
   #website-navbar-wrapper {
 
     @media(min-width: $screen-md) {
-      width: 180px;
+      width: 100px;
     }
   }
 
   #website-outlet-wrapper {
     @media(min-width: $screen-md) {
-      width: calc(100vw - 180px);
+      width: calc(100vw - 100px);
     }
   }
 

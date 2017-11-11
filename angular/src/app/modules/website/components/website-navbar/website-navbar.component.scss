@@ -1,0 +1,29 @@
+#website-navbar {
+  background: #222;
+  color: #DDD;
+  text-align: center;
+  min-height: 100vh;
+  #logo-container {
+    background: $primary-400;
+    padding: 10px;
+    img {
+      max-width: 100%;
+    }
+  }
+  ul {
+    li {
+      cursor: pointer;
+      padding: 20px 0;
+      transition: 0.3s ease all;
+
+      p {
+        margin-top: 5px;
+        text-transform: uppercase;
+      }
+
+      &:hover {
+        background: #444;
+      }
+    }
+  }
+}
