@@ -1,0 +1,22 @@
+#dashboard-view-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+
+  #dashboard-navbar-wrapper {
+
+    @media(min-width: $screen-md) {
+      width: 100px;
+    }
+  }
+
+  #dashboard-outlet-wrapper {
+    @media(min-width: $screen-md) {
+      width: calc(100vw - 100px);
+    }
+  }
+
+  @media(min-width: $screen-md) {
+    flex-direction: row;
+  }
+}
