@@ -7,26 +7,39 @@
   padding: 10px;
 
   #heading-container {
+    margin-top: 20px;
     text-align: center;
 
     h1 {
       color: #EEE;
-      font-size: 3.2em;
+      font-size: 2.2em;
       text-shadow: 4px 4px 8px #000;
+      @media(min-width: $screen-md) {
+        font-size: 3.2em;
+      }
     }
 
     p {
       color: #EEE;
-      font-size: 1.4em;
-      margin-top: 10px;
+      font-size: 1.2em;
+      margin-top: 20px;
       text-shadow: 2px 2px 4px #000;
+      @media(min-width: $screen-md) {
+        margin-top: 10px;
+        font-size: 1.4em;
+      }
+    }
+
+    @media(min-width: $screen-md) {
+      margin-top: 0;
     }
   }
 
   #features-container {
     color: #EEE;
     display: flex;
-    margin: 60px auto 0;
+    flex-direction: column;
+    margin: 40px auto 0;
     max-width: 1200px;
 
     h2 {
@@ -38,9 +51,9 @@
     }
 
     .feature {
+      margin-bottom: 40px;
       padding: 0 20px;
       text-align: center;
-      width: calc(100% / 3);
 
       hr {
         margin: 15px 0;
@@ -50,6 +63,11 @@
         margin: 0 auto;
         max-width: 90%;
         text-shadow: 2px 2px 4px #000;
+      }
+
+      @media(min-width: $screen-md) {
+        margin-bottom: 0;
+        width: calc(100% / 3);
       }
     }
 
@@ -93,24 +111,36 @@
         border-bottom: 2px solid $purple-800;
       }
     }
+
+    @media(min-width: $screen-md) {
+      flex-direction: row;
+      margin: 60px auto 0;
+    }
   }
 
   #actions-container {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    margin: 60px auto 0;
-    width: 360px;
+    margin: 0 auto;
+    width: 80%;
 
     button {
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 1.4em;
+      font-size: 1.2em;
       font-weight: 600;
-      padding: 15px 30px;
+      margin: 10px 0;
+      padding: 10px 20px;
       text-transform: uppercase;
       transition: 0.3s ease all;
       width: auto;
+
+      @media(min-width: $screen-md) {
+        font-size: 1.4em;
+        padding: 15px 30px;
+      }
     }
 
     .button-register {
@@ -131,6 +161,12 @@
         background: $purple-600;
         color: white;
       }
+    }
+
+    @media(min-width: $screen-md) {
+      flex-direction: row;
+      margin: 60px auto 0;
+      width: 360px;
     }
   }
 
