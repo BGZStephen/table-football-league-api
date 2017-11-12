@@ -1,10 +1,10 @@
 <div id="dashboard-navbar">
   <div id="logo-container">
     <h2>My Table Football</h2>
-    <i class="fa fa-bars"></i>
+    <i class="fa fa-bars" (click)="toggleMenuVisible()"></i>
     <img src="/assets/images/logo.png">
   </div>
-  <ul>
+  <ul [ngStyle]="menuVisibleStyle()">
     <li routerLink="/dashboard" routerLinkActive="active-route" [routerLinkActiveOptions]="{exact: true}">
       <i class="fa fa-home"></i><p>Home</p>
     </li>

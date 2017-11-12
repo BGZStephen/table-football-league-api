@@ -1,7 +1,6 @@
 #website-navbar {
   background: #222;
   color: #DDD;
-  min-height: 100vh;
   text-align: center;
 
   #logo-container {
@@ -46,6 +45,9 @@
   }
 
   ul {
+    overflow: hidden;
+    transition: 0.3s ease max-height;
+
     li {
       align-items: center;
       border-top: 1px solid #444;
@@ -88,6 +90,10 @@
         display: block;
         padding: 20px 0;
       }
+    }
+
+    @media(min-width: $screen-md) {
+      min-height: calc(100vh - 114px);
     }
   }
 }
