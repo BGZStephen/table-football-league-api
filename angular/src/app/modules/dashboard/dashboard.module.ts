@@ -8,6 +8,10 @@ import * as components from './components/dashboard-components-barrel';
     components.DashboardHomeComponent,
     components.DashboardNavbarComponent,
     components.DashboardViewWrapperComponent,
+    components.DashboardFixturesComponent,
+    components.DashboardTeamsComponent,
+    components.DashboardLeaguesComponent,
+    components.DashboardAccountComponent,
   ],
   imports: [
     CommonModule,

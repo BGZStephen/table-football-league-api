@@ -6,6 +6,10 @@ import * as dashboard from './modules/dashboard/components/dashboard-components-
 const APP_ROUTES: Routes = [
   {path: 'dashboard', component: dashboard.DashboardViewWrapperComponent, children: [
     {path: '', component: dashboard.DashboardHomeComponent},
+    {path: 'teams', component: dashboard.DashboardTeamsComponent},
+    {path: 'leagues', component: dashboard.DashboardLeaguesComponent},
+    {path: 'fixtures', component: dashboard.DashboardFixturesComponent},
+    {path: 'account', component: dashboard.DashboardAccountComponent},
   ]},
   {path: '', component: website.WebsiteViewWrapperComponent, children: [
     {path: '', component: website.WebsiteHomeComponent},

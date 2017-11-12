@@ -7,6 +7,7 @@
   #logo-container {
     align-items: center;
     background: $primary-400;
+    cursor: pointer;
     color: black;
     display: flex;
     justify-content: space-between;
@@ -52,6 +53,7 @@
       cursor: pointer;
       display: flex;
       padding: 15px;
+      select: none;
       transition: 0.3s ease all;
 
       i {
@@ -75,6 +77,11 @@
 
       &:hover {
         background: #444;
+      }
+
+      &.active-route {
+        background: $success-800;
+        outline: none;
       }
 
       @media(min-width: $screen-md) {
