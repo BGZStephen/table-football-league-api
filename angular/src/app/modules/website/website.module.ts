@@ -9,6 +9,8 @@ import * as components from './components/website-components-barrel';
     components.WebsiteHomeComponent,
     components.WebsiteLoginComponent,
     components.WebsiteViewWrapperComponent,
+    components.WebsiteRegisterComponent,
+    components.WebsiteContactComponent,
   ],
   imports: [
     CommonModule,
