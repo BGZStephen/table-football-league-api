@@ -52,6 +52,14 @@
     padding: 5px;
   }
 
+  .input-error {
+    background: $danger-300;
+    font-size: 0.8em;
+    margin-top: -20px;
+    margin-bottom: 20px;
+    padding: 5px;
+  }
+
   button {
     background: none;
     border: none;
