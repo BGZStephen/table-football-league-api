@@ -1,0 +1,86 @@
+#website-register {
+  background-image: url('/assets/images/website-home-background.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: $grey-800;
+  min-height: 100vh;
+  padding: 10px;
+  text-align: center;
+
+  h1 {
+    color: #EEE;
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    text-shadow: 4px 4px 8px #000;
+    @media(min-width: $screen-md) {
+      font-size: 2.8em;
+    }
+  }
+
+  #register-form-container {
+    max-width: 400px;
+    margin: 0 auto;
+
+    @media(min-width: $screen-md) {
+      margin-top: 60px;
+    }
+  }
+
+  form {
+    background: #222;
+    padding: 15px;
+    @media(min-width: $screen-md) {
+      padding: 20px;
+    }
+  }
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    align-self: flex-start;
+    color: #EEE;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  input {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    padding: 5px;
+  }
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 10px 0;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    transition: 0.3s ease all;
+    width: auto;
+
+    @media(min-width: $screen-md) {
+      font-size: 1.4em;
+      padding: 15px 30px;
+    }
+  }
+
+  .button-register {
+    background: $info-400;
+    border-bottom: 2px solid $info-800;
+
+    &:hover {
+      background: $info-600;
+      color: white;
+    }
+  }
+
+  @media(min-width: $screen-md) {
+    padding-top: 40px;
+  }
+}

@@ -1,3 +1,32 @@
-<p>
-  website-register works!
-</p>
+<div id="website-register">
+  <h1>Register</h1>
+  <div id="register-form-container">
+    <form #f="ngForm">
+      <div class="form-row">
+        <label>First name</label>
+        <input type="text">
+      </div>
+      <div class="form-row">
+        <label>Last name</label>
+        <input type="text">
+      </div>
+      <div class="form-row">
+        <label>Username</label>
+        <input type="text">
+      </div>
+      <div class="form-row">
+        <label>Email</label>
+        <input type="text">
+      </div>
+      <div class="form-row">
+        <label>Password</label>
+        <input type="password">
+      </div>
+      <div class="form-row">
+        <label>Confirm password</label>
+        <input type="password">
+      </div>
+      <button class="button-register" routerLink="/register">Register</button>
+    </form>
+  </div>
+</div>
