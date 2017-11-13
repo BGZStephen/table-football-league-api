@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ApiService } from 'app/services/api.service';
 
 @Component({
   selector: 'app-website-register',
   templateUrl: './website-register.component.html',
 })
+
 export class WebsiteRegisterComponent implements OnInit {
 
   formValues = {
@@ -27,15 +29,25 @@ export class WebsiteRegisterComponent implements OnInit {
     },
   };
 
-  constructor() { }
+  constructor(
+    private api: ApiService
+  ) { }
 
   ngOnInit() {
   }
 
-  onRegister(form) {
-    const validation = this.validateForm(form);
+  onRegister(user) {
+    const validation = this.validateForm(user);
     if (validation) {
-      // create user
+      this.api.users.create(user)
+      .subscribe(
+        user => {
+          console.log(user)
+        },
+        error => {
+          console.log(error);
+        }
+      )
     }
   }
 
