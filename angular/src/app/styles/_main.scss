@@ -1,6 +1,7 @@
 @import './globals/index';
 @import './variables/colors';
 @import './variables/media-queries';
+@import './services/notification.service';
 
 @import '../modules/website/components/website-view-wrapper/website-view-wrapper.component';
 @import '../modules/website/components/website-navbar/website-navbar.component';

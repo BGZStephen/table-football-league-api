@@ -1,0 +1,18 @@
+.notification-container {
+  color: white;
+  display: flex;
+  font-weight: 700;
+  height: 40px;
+  padding: 10px;
+  position: absolute;
+  top: calc(100vh - 40px);
+  width: 100%;
+}
+
+.notification-success {
+  background: $success-800
+}
+
+.notification-error {
+  background: $danger-800
+}

@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
+import { GlobalService } from './services/global.service';
+import { NotificationService } from './services/notification.service';
 import { ApiService } from './services/api.service'
 
 import { AppRoutes } from './app.routes';
@@ -22,7 +24,7 @@ import { AppComponent } from './app.component';
     WebsiteModule,
     DashboardModule,
   ],
-  providers: [ApiService],
+  providers: [GlobalService, ApiService, NotificationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ApiService } from 'app/services/api.service';
+import { GlobalService } from 'app/services/global.service';
 
 @Component({
   selector: 'app-website-register',
@@ -30,26 +31,27 @@ export class WebsiteRegisterComponent implements OnInit {
   };
 
   constructor(
-    private api: ApiService
+    private api: ApiService,
+    private globalService: GlobalService,
   ) { }
 
   ngOnInit() {
   }
 
   onRegister(user) {
-    // const validation = this.validateForm(user);
-    console.log(user)
-    // if (validation) {
+    const validation = this.validateForm(user);
+    if (validation) {
       this.api.users.create(user)
       .subscribe(
         user => {
-          console.log(user)
+          this.globalService.notification.show({message: 'Registration successful'});
         },
-        error => {
-          console.log(error);
+        errorRes => {
+          console.log(errorRes)
+          this.globalService.notification.error({message: errorRes.error});
         }
       )
-    // }
+    }
   }
 
   validateForm(form) {

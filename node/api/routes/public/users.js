@@ -32,7 +32,8 @@ async function create(req, res, next) {
     res.json(user);
   } catch (error) {
     winston.error(error)
-    res.status(500).json(error)
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 
