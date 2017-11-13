@@ -57,7 +57,8 @@ async function authenticate(req, res, next) {
     res.json({token});
   } catch (error) {
     winston.error(error)
-    res.status(500).json(error)
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 
@@ -72,7 +73,8 @@ async function getAll(req, res, next) {
     res.json(users);
   } catch (error) {
     winston.error(error)
-    res.status(500).json(error)
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 

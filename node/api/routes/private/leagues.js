@@ -10,7 +10,8 @@ async function deleteOne(req, res) {
     res.status(200).send();
   } catch (error) {
     winston.error(error);
-    res.status(500).json(error);
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 
@@ -30,7 +31,8 @@ async function updateOne(req, res) {
     res.json(league);
   } catch (error) {
     winston.error(error);
-    res.status(500).json(error);
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 

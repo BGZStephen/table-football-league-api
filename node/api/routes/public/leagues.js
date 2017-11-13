@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId;
 async function create(req, res) {
   try {
     if (!req.body.name) {
-      return res.status(500).json({message: 'League name is required'});
+      throw new Error ('League name is required');
     }
 
     await duplicateLeagueCheck(req.body.name);
@@ -20,7 +20,8 @@ async function create(req, res) {
     res.json(league);
   } catch (error) {
     winston.error(error);
-    res.status(500).json(error);
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 
@@ -34,7 +35,8 @@ async function getAll(req, res) {
     res.json(leagues);
   } catch (error) {
     winston.error(error)
-    res.status(500).json(error);
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 

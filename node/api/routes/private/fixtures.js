@@ -23,7 +23,8 @@ async function create(req, res) {
     res.json(fixture);
   } catch (error) {
     winston.error(error)
-    res.status(500).json(error)
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 
@@ -33,7 +34,8 @@ async function getAll() {
     res.json(fixtures);
   } catch (error) {
     winston.error(error);
-    res.status(500).json(error);
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 
@@ -49,7 +51,8 @@ async function deleteOne() {
     res.status(200).send()
   } catch (error) {
     winston.error(error);
-    res.status(500).json(error);
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 
@@ -69,7 +72,8 @@ async function updateOne(req, res) {
     res.json(fixture);
   } catch (error) {
     winston.error(error);
-    res.status(500).json(error);
+    res.statusMessage = error;
+    res.sendStatus(500);
   }
 }
 
