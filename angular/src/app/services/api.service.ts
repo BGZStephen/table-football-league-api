@@ -44,7 +44,7 @@ export class ApiService {
     delete: (id) => {
       const callParams = {
         type: 'delete',
-        url: `/league/${id}`,
+        url: `/leagues/${id}`,
       }
       return this.apiCall(callParams);
     },
@@ -52,7 +52,7 @@ export class ApiService {
     update: (league) => {
       const callParams = {
         type: 'put',
-        url: `/work-examples/${league._id}`,
+        url: `/leagues/${league._id}`,
         body: league
       }
       return this.apiCall(callParams);
@@ -147,10 +147,62 @@ export class ApiService {
     },
   }
 
+  users = {
+    get: (id) => {
+      const callParams = {
+        type: 'get',
+        url: `/users/${id}`,
+      }
+      return this.apiCall(callParams);
+    },
+
+    getAll: () => {
+      const callParams = {
+        type: 'get',
+        url: '/users'
+      }
+      return this.apiCall(callParams);
+    },
+
+    create: (user) => {
+      const callParams = {
+        type: 'post',
+        url: '/users',
+        body: user,
+      }
+      return this.apiCall(callParams);
+    },
+
+    delete: (id) => {
+      const callParams = {
+        type: 'delete',
+        url: `/users/${id}`,
+      }
+      return this.apiCall(callParams);
+    },
+
+    update: (user) => {
+      const callParams = {
+        type: 'put',
+        url: `/users/${user._id}`,
+        body: user
+      }
+      return this.apiCall(callParams);
+    },
+
+    authenticate: (user) => {
+      const callParams = {
+        type: 'post',
+        url: '/users/authenticate',
+        body: user,
+      }
+      return this.apiCall(callParams);
+    },
+  }
+
   apiCall(callParams) {
     const headers = new Headers();
     headers.append('Authorization', `${this.authorization}`);
     return this.http[`${callParams.type}`](`${this.baseUrl}${callParams.url}`, `${callParams.body ? callParams.body : {headers: headers}}`, `${callParams.body ? {headers: headers} : ''}`)
-    .map(res => res.json());
   }
 }
