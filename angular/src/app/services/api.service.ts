@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Http, Headers } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import 'rxjs/add/operator/map';
 
@@ -11,7 +11,7 @@ export class ApiService {
   authorization: String = environment.authorization;
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private router: Router,
   ) {}
 
@@ -201,8 +201,8 @@ export class ApiService {
   }
 
   apiCall(callParams) {
-    const headers = new Headers();
+    const headers = new HttpHeaders();
     headers.append('Authorization', `${this.authorization}`);
-    return this.http[`${callParams.type}`](`${this.baseUrl}${callParams.url}`, `${callParams.body ? callParams.body : {headers: headers}}`, `${callParams.body ? {headers: headers} : ''}`)
+    return this.http.post(`${this.baseUrl}${callParams.url}`, callParams.body ? callParams.body : '', callParams.body ? {headers: headers} : null);
   }
 }

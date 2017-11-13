@@ -9,6 +9,7 @@ const mailer = require('../../services/mailer');
 
 async function create(req, res, next) {
   try {
+    console.log(req.body)
     validate(req.body, {
       firstName: 'First name is required',
       email: 'Email address is required',

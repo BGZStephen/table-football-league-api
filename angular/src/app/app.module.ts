@@ -1,11 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppRoutes } from './app.routes';
+import { HttpClientModule } from '@angular/common/http';
 
-import { AppComponent } from './app.component';
+import { ApiService } from './services/api.service'
+
+import { AppRoutes } from './app.routes';
 
 import { WebsiteModule } from './modules/website/website.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
@@ -13,11 +17,12 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutes,
     WebsiteModule,
     DashboardModule,
   ],
-  providers: [],
+  providers: [ApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

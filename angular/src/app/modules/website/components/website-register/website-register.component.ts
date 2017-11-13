@@ -37,8 +37,9 @@ export class WebsiteRegisterComponent implements OnInit {
   }
 
   onRegister(user) {
-    const validation = this.validateForm(user);
-    if (validation) {
+    // const validation = this.validateForm(user);
+    console.log(user)
+    // if (validation) {
       this.api.users.create(user)
       .subscribe(
         user => {
@@ -48,7 +49,7 @@ export class WebsiteRegisterComponent implements OnInit {
           console.log(error);
         }
       )
-    }
+    // }
   }
 
   validateForm(form) {
