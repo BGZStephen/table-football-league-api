@@ -1,5 +1,7 @@
 <div id="website-contact">
-  <h1>Get in touch</h1>
+  <div id="heading-container">
+    <h1>Get in touch</h1>
+  </div>
   <div id="contact-form-container">
     <form #f="ngForm" (ngSubmit)="onSubmit(f.value)">
       <div class="form-row">
@@ -13,7 +15,10 @@
         </div>
       </div>
       <div class="form-row">
-        <textarea rows=5></textarea>
+        <div class="left left-100">
+          <label>Message</label>
+          <textarea rows=5></textarea>
+        </div>
       </div>
       <div class="form-row">
         <button class="button-orange">Submit</button>
