@@ -43,11 +43,11 @@ export class WebsiteRegisterComponent implements OnInit {
     if (validation) {
       this.api.users.create(user)
       .subscribe(
-        user => {
+        res => {
+          localStorage.setItem('token', res['token']);
           this.globalService.notification.show({message: 'Registration successful'});
         },
         errorRes => {
-          console.log(errorRes)
           this.globalService.notification.error({message: errorRes.error});
         }
       )

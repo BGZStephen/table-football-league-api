@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const config = require('../../config');
 const winston = require('winston');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
@@ -9,7 +10,6 @@ const mailer = require('../../services/mailer');
 
 async function create(req, res, next) {
   try {
-    console.log(req.body)
     validate(req.body, {
       firstName: 'First name is required',
       email: 'Email address is required',
@@ -27,9 +27,17 @@ async function create(req, res, next) {
       password: createHash(req.body.password),
     })
 
-    await mailer.welcomeEmail(user)
     await user.save();
-    res.json(user);
+
+    const token = jwt.sign({
+      exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
+      data: {
+        id: user._id,
+      }
+    }, config.jwtSecret);
+
+    await mailer.welcomeEmail(user)
+    res.json({token});
   } catch (error) {
     winston.error(error)
     res.statusMessage = error;
