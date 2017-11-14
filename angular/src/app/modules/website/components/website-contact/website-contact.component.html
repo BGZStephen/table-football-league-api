@@ -1,3 +1,23 @@
-<p>
-  website-contact works!
-</p>
+<div id="website-contact">
+  <h1>Get in touch</h1>
+  <div id="contact-form-container">
+    <form #f="ngForm" (ngSubmit)="onSubmit(f.value)">
+      <div class="form-row">
+        <div class="left">
+          <label>Name</label>
+          <input type="text" name="name" ngModel required #name>
+        </div>
+        <div class="right">
+          <label>Email</label>
+          <input type="text" name="email" ngModel required #email>
+        </div>
+      </div>
+      <div class="form-row">
+        <textarea rows=5></textarea>
+      </div>
+      <div class="form-row">
+        <button class="button-orange">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
