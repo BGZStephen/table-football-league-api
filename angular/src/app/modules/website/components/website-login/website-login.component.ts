@@ -30,11 +30,13 @@ export class WebsiteLoginComponent implements OnInit {
     if (validation) {
       this.api.users.authenticate(user)
       .subscribe(
-        user => {
+        res => {
+          localStorage.setItem('token', res['token']);
           this.globalService.notification.show({message: 'Login successful'});
+          this.globalService.redirection.delayed('/dashboard', 300);
         },
-        errorRes => {
-          this.globalService.notification.error({message: errorRes.error});
+        error => {
+          this.globalService.notification.error({message: error.statusText});
         }
       )
     }

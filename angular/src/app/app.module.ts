@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
 import { GlobalService } from './services/global.service';
+import { RedirectionService } from './services/redirection.service';
 import { NotificationService } from './services/notification.service';
 import { ApiService } from './services/api.service'
 
@@ -24,7 +25,7 @@ import { AppComponent } from './app.component';
     WebsiteModule,
     DashboardModule,
   ],
-  providers: [GlobalService, ApiService, NotificationService],
+  providers: [GlobalService, ApiService, NotificationService, RedirectionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,7 +1,7 @@
 <div id="website-login">
   <h1>Login</h1>
   <div id="login-form-container">
-    <form #f="ngForm" (ngSubmit)="onRegister(f.value)">
+    <form #f="ngForm" (ngSubmit)="onLogin(f.value)">
       <div class="form-row">
         <label>Email</label>
         <input type="text" name="email" #email required ngModel>
@@ -16,7 +16,7 @@
       <div class="input-error" *ngIf="formValues.password.hasError">
         <p>{{formValues.password.message}}
       </div>
-      <button class="button-login" routerLink="/register">Login</button>
+      <button class="button-login">Login</button>
     </form>
   </div>
 </div>

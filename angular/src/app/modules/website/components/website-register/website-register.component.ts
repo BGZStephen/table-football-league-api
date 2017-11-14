@@ -46,9 +46,10 @@ export class WebsiteRegisterComponent implements OnInit {
         res => {
           localStorage.setItem('token', res['token']);
           this.globalService.notification.show({message: 'Registration successful'});
+          this.globalService.redirection.delayed('/dashboard', 300);
         },
-        errorRes => {
-          this.globalService.notification.error({message: errorRes.error});
+        error => {
+          this.globalService.notification.error({message: error.statusText});
         }
       )
     }

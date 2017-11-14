@@ -52,7 +52,13 @@ async function authenticate(req, res, next) {
       password: 'Password is required',
     })
 
-    const user = Users.findOne({email: req.body.email})
+    const user = await User.findOne({email: req.body.email})
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    console.log(user.password)
     compareHash(user.password, req.body.password)
 
     const token = jwt.sign({
