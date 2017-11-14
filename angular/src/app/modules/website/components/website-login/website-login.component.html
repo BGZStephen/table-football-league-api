@@ -1,3 +1,22 @@
-<p>
-  website-login works!
-</p>
+<div id="website-login">
+  <h1>Login</h1>
+  <div id="login-form-container">
+    <form #f="ngForm" (ngSubmit)="onRegister(f.value)">
+      <div class="form-row">
+        <label>Email</label>
+        <input type="text" name="email" #email required ngModel>
+      </div>
+      <div class="input-error" *ngIf="formValues.email.hasError">
+        <p>{{formValues.email.message}}
+      </div>
+      <div class="form-row">
+        <label>Password</label>
+        <input type="password" name="password" #password required ngModel>
+      </div>
+      <div class="input-error" *ngIf="formValues.password.hasError">
+        <p>{{formValues.password.message}}
+      </div>
+      <button class="button-login" routerLink="/register">Login</button>
+    </form>
+  </div>
+</div>
