@@ -32,7 +32,7 @@ async function sendEmail(params) {
       }],
       'Subject': `${params.subject}`,
       'TextPart': `${params.textPart ? params.textPart : ''}`,
-      'HTMLPart': await ejsRenderFile(path.join(__dirname, `./templates/${params.template}`)),
+      'HTMLPart': await ejsRenderFile(path.join(__dirname, `./templates/${params.template}`), params.data ? {data: params.data} : {}),
     }]
   };
 
@@ -42,7 +42,7 @@ async function sendEmail(params) {
 
 async function welcomeEmail(user) {
 	if (!user) {
-		throw new Error({message: 'User required for welcome email'});
+		throw new Error('User required for welcome email');
 	}
 
 	const params = {
@@ -55,6 +55,23 @@ async function welcomeEmail(user) {
 	return await sendEmail(params);
 }
 
+async function contactFormEmail(message) {
+	if (!message) {
+		throw new Error('Message required for contact form submission');
+	}
+
+	const params = {
+		to: 'sjw948@gmail.com',
+		from: `stephen@stephenwright.co.uk`,
+		subject: `A new contact form message from ${message.name}`,
+		template: 'contact-form.ejs',
+		data: message,
+	}
+
+	return await sendEmail(params);
+}
+
 module.exports = {
 	welcomeEmail,
+	contactFormEmail,
 };
