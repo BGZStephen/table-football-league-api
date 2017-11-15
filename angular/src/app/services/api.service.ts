@@ -200,6 +200,17 @@ export class ApiService {
     },
   }
 
+  website = {
+    contactForm: (message) => {
+      const callParams = {
+        type: 'post',
+        url: '/website/contact-form',
+        body: message,
+      }
+      return this.apiCall(callParams);
+    },
+  }
+
   apiCall(callParams) {
     const headers = new HttpHeaders();
     headers.append('Authorization', `${this.authorization}`);
