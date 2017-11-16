@@ -16,14 +16,14 @@ export class WebsiteContactComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSubmit(message) {
-    this.api.website.contactForm(message)
+  onSubmit(form) {
+    this.api.website.contactForm(form.value)
     .subscribe(
       res => {
         this.globalService.notification.show({message: 'Message sent'});
+        form.resetForm();
       },
       error => {
-        console.log(error)
         this.globalService.notification.error({message: 'Error sending message, please try again'});
       }
     )
