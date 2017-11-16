@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { GlobalService } from 'app/services/global.service';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -9,7 +10,9 @@ export class DashboardNavbarComponent implements OnInit {
 
   menuVisible = false;
 
-  constructor() { }
+  constructor(
+    private globalService: GlobalService
+  ) { }
 
   ngOnInit() {
 
@@ -29,6 +32,11 @@ export class DashboardNavbarComponent implements OnInit {
     } else {
       return {'max-height': '0'};
     }
+  }
+
+  onLogout() {
+    localStorage.removeItem('token');
+    this.globalService.notification.show({message: 'Logout successful'});
   }
 
 }

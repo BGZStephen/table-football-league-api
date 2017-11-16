@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AppRoutes } from '../../app.routes';
 import * as components from './components/dashboard-components-barrel';
 
@@ -15,6 +16,7 @@ import * as components from './components/dashboard-components-barrel';
   ],
   imports: [
     CommonModule,
+    FormsModule,
     AppRoutes,
   ],
   providers: [],

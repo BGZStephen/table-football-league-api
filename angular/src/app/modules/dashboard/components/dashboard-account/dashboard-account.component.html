@@ -1,3 +1,45 @@
-<p>
-  dashboard-account works!
-</p>
+<div id="dashboard-account">
+  <div class="panel">
+    <div class="section">
+      <div class="section-head">
+        <p>Account details</p>
+      </div>
+      <div class="section-body">
+        <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+          <div class="form-row">
+            <label>First name</label>
+            <input type="text" name="firstName" #firstName name="firstName" ngModel>
+          </div>
+          <div class="form-row">
+            <label>Last name</label>
+            <input type="text" name="lastName" #lastName name="lastName" ngModel>
+          </div>
+          <div class="form-row">
+            <label>Username</label>
+            <input type="text" name="username" #username name="username" ngModel>
+          </div>
+          <div class="form-row">
+            <label>Email</label>
+            <input type="text" name="email" #email name="email" ngModel>
+          </div>
+          <div class="form-row" *ngIf="!passwordChange">
+            <p (click)="enablePasswordChange()">reset password</p>
+          </div>
+          <div *ngIf="passwordChange">
+            <div class="form-row">
+              <label>New password</label>
+              <input type="password" name="newPassword" #newPassword name="confirmNewPassword" ngModel>
+            </div>
+            <div class="form-row">
+              <label>Confirm password</label>
+              <input type="password" name="confirmNewPassword" #confirmNewPassword name="confirmNewPassword" ngModel>
+            </div>
+            <div class="form-row actions-row">
+              <button class="button button-primary">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
