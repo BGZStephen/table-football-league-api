@@ -4,7 +4,6 @@ const winston = require('winston');
 async function contactFormSubmission(req, res) {
   try {
     await mailer.contactFormEmail(req.body);
-    console.log('success')
     return res.status(200).json({success: true});
   } catch (error) {
     winston.error(error);

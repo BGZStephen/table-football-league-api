@@ -67,7 +67,6 @@ async function contactFormEmail(message) {
 		template: 'contact-form.ejs',
 		data: message,
 	}
-
 	return await sendEmail(params);
 }
 
