@@ -16,9 +16,35 @@ async function deleteOne(req, res) {
   }
 }
 
+async function getAll(req, res, next) {
+  try {
+    const users = await User.find({})
+
+    if (users.length === 0) {
+      return res.status(200).json({message: 'No users found'})
+    }
+
+    res.json(users);
+  } catch (error) {
+    winston.error(error)
+    res.statusMessage = error;
+    res.sendStatus(500);
+  }
+}
+
+async function getOne(req, res, next) {
+  res.json(req.user);
+}
+
+function comparePassword(password, passwordComparison) {
+  if (password !== passwordComparison) {
+    throw new Error('Passwords do not match')
+  }
+}
+
 async function updateOne(req, res) {
   const user = req.user;
-  const updateFields = 'firstName lastName email password'.split(' ');
+  const updateFields = 'firstName lastName email password username'.split(' ');
   const updateParams = {};
 
   try {
@@ -61,6 +87,8 @@ function createHash(string) {
 }
 
 module.exports = {
+  getOne,
+  getAll,
   updateOne,
   deleteOne,
   validateUser,

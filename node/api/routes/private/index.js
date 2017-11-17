@@ -5,7 +5,9 @@ const Fixtures = require('./fixtures');
 const Middleware = require('../middleware');
 const router = express.Router();
 
+router.get('/users', Users.getAll);
 router.all('/users/:id', Users.validateUser, Middleware.fetchResource);
+router.get('/users/:id', Users.getOne);
 router.put('/users/:id', Users.updateOne);
 router.delete('/users/:id', Users.deleteOne);
 

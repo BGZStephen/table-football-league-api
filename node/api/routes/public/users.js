@@ -24,6 +24,7 @@ async function create(req, res, next) {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
+      username: req.body.username,
       password: createHash(req.body.password),
     })
 
@@ -37,7 +38,12 @@ async function create(req, res, next) {
     }, config.jwtSecret);
 
     await mailer.welcomeEmail(user)
-    res.json({token});
+    res.json({
+      token: token,
+      user: {
+        _id: user._id,
+      }
+    });
   } catch (error) {
     winston.error(error)
     res.statusMessage = error;
@@ -58,7 +64,6 @@ async function authenticate(req, res, next) {
       throw new Error('User not found');
     }
 
-    console.log(user.password)
     compareHash(user.password, req.body.password)
 
     const token = jwt.sign({
@@ -68,7 +73,10 @@ async function authenticate(req, res, next) {
       }
     }, config.jwtSecret);
 
-    res.json({token});
+    res.json({
+      token: token,
+      user: JSON.stringify({_id: user._id}),
+    });
   } catch (error) {
     winston.error(error)
     res.statusMessage = error;
@@ -76,33 +84,6 @@ async function authenticate(req, res, next) {
   }
 }
 
-async function getAll(req, res, next) {
-  try {
-    const users = await User.find({})
-
-    if (users.length === 0) {
-      return res.status(200).json({message: 'No users found'})
-    }
-
-    res.json(users);
-  } catch (error) {
-    winston.error(error)
-    res.statusMessage = error;
-    res.sendStatus(500);
-  }
-}
-
-async function getOne(req, res, next) {
-  res.json(req.user);
-}
-
-function comparePassword(password, passwordComparison) {
-  if (password !== passwordComparison) {
-    throw new Error('Passwords do not match')
-  }
-}
-
-// expected will be a boolean
 async function checkExistingUser(expected, query) {
   const result = await User.findOne(query)
 
@@ -127,7 +108,5 @@ function compareHash(hash, comparison) {
 
 module.exports = {
   create,
-  getOne,
-  getAll,
   authenticate,
 }

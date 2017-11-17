@@ -11,6 +11,7 @@ const UserSchema = Schema({
     type: String,
     required: true,
   },
+  username: String,
   password: String,
   createdOn: Date,
   teams: [{type: Schema.ObjectId, ref: 'Team'}],
