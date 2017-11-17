@@ -212,8 +212,11 @@ export class ApiService {
   }
 
   apiCall(callParams) {
-    const headers = new HttpHeaders();
-    headers.append('Authorization', `${this.authorization}`);
-    return this.http.post(`${this.baseUrl}${callParams.url}`, callParams.body ? callParams.body : '', callParams.body ? {headers: headers} : null);
+    const jwt = localStorage.getItem('token');
+    let headers = new HttpHeaders({'Authorization': `${this.authorization}`});
+    if(jwt) {
+      headers = headers.set('token', jwt);
+    }
+    return this.http[callParams.type](`${this.baseUrl}${callParams.url}`, callParams.body ? callParams.body : {headers: headers}, callParams.body ? {headers: headers} : null);
   }
 }

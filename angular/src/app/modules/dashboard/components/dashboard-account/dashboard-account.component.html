@@ -8,19 +8,19 @@
         <form #f="ngForm" (ngSubmit)="onSubmit(f)">
           <div class="form-row">
             <label>First name</label>
-            <input type="text" name="firstName" #firstName name="firstName" ngModel>
+            <input type="text" name="firstName" #firstName name="firstName" ngModel="{{user.firstName}}">
           </div>
           <div class="form-row">
             <label>Last name</label>
-            <input type="text" name="lastName" #lastName name="lastName" ngModel>
+            <input type="text" name="lastName" #lastName name="lastName" ngModel="{{user.lastName}}">
           </div>
           <div class="form-row">
             <label>Username</label>
-            <input type="text" name="username" #username name="username" ngModel>
+            <input type="text" name="username" #username name="username" ngModel="{{user.username}}">
           </div>
           <div class="form-row">
             <label>Email</label>
-            <input type="text" name="email" #email name="email" ngModel>
+            <input type="text" name="email" #email name="email" ngModel="{{user.email}}">
           </div>
           <div class="form-row" *ngIf="!passwordChange">
             <p (click)="enablePasswordChange()">reset password</p>

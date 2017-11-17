@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ApiService } from 'app/services/api.service';
 
 @Component({
   selector: 'app-dashboard-account',
@@ -7,10 +8,24 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 export class DashboardAccountComponent implements OnInit {
 
   passwordChange = false;
+  user: object = {};
 
-  constructor() { }
+  constructor(
+    private apiService: ApiService
+  ) { }
 
   ngOnInit() {
+    const user = JSON.parse(localStorage.getItem('user'))
+    this.apiService.users.get(user._id)
+    .subscribe(
+      res => {
+        console.log(res)
+        this.user = res;
+      },
+      errorRes => {
+
+      }
+    )
   }
 
   enablePasswordChange() {

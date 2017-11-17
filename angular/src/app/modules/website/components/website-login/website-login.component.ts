@@ -32,6 +32,7 @@ export class WebsiteLoginComponent implements OnInit {
       .subscribe(
         res => {
           localStorage.setItem('token', res['token']);
+          localStorage.setItem('user', res['user']);
           this.globalService.notification.show({message: 'Login successful'});
           this.globalService.redirection.delayed('/dashboard', 300);
         },
