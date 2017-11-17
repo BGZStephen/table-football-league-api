@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const winston = require('winston');
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
+const jwt = require('jsonwebtoken');
+const config = require('../../config');
 
 async function deleteOne(req, res) {
   const user = req.user;
@@ -36,12 +38,6 @@ async function getOne(req, res, next) {
   res.json(req.user);
 }
 
-function comparePassword(password, passwordComparison) {
-  if (password !== passwordComparison) {
-    throw new Error('Passwords do not match')
-  }
-}
-
 async function updateOne(req, res) {
   const user = req.user;
   const updateFields = 'firstName lastName email password username'.split(' ');
@@ -69,8 +65,8 @@ async function updateOne(req, res) {
 
 async function validateUser(req, res, next) {
   try {
-    const decoded = jwt.verify(req.body.token, config.jwtSecret);
-    if(!ObjectId(decoded._id).equals(ObjectId(req.params.id))) {
+    const decoded = await jwt.verify(req.headers.token, config.jwtSecret);
+    if(!ObjectId(decoded.data.id).equals(ObjectId(req.params.id))) {
       res.statusMessage = 'Invalid token';
       return res.sendStatus(403);
     }

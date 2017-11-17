@@ -106,6 +106,12 @@ function compareHash(hash, comparison) {
   }
 }
 
+function comparePassword(password, passwordComparison) {
+  if (password !== passwordComparison) {
+    throw new Error('Passwords do not match')
+  }
+}
+
 module.exports = {
   create,
   authenticate,
