@@ -1,12 +1,14 @@
 const bcrypt = require('bcryptjs');
-const config = require('../../config');
-const winston = require('winston');
-const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const winston = require('winston');
+const config = require('../../config');
+const mailer = require('../../services/mailer');
+const errorHandler = require('../../services/error-handler');
+const validate = require('../../services/validate');
+
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
-const validate = require('../../services/validate');
-// const mailer = require('../../services/mailer');
 
 async function create(req, res, next) {
   try {
@@ -45,8 +47,6 @@ async function create(req, res, next) {
       }
     });
   } catch (error) {
-    winston.error(error)
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
@@ -61,7 +61,7 @@ async function authenticate(req, res, next) {
     const user = await User.findOne({email: req.body.email})
 
     if (!user) {
-      throw new Error('User not found');
+      return errorHandler.apiError(res, 'User not found', 404);
     }
 
     compareHash(user.password, req.body.password)
@@ -78,8 +78,6 @@ async function authenticate(req, res, next) {
       user: JSON.stringify({_id: user._id}),
     });
   } catch (error) {
-    winston.error(error)
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
@@ -89,9 +87,9 @@ async function checkExistingUser(expected, query) {
 
   if (result !== expected) {
     if (expected) {
-      throw new Error('User not found');
+      return errorHandler.apiError(res, 'User not found', 404);
     } else {
-      throw new Error('User already exists');
+      return errorHandler.apiError(res, 'User already exists', 500);
     }
   }
 }
@@ -102,13 +100,13 @@ function createHash(string) {
 
 function compareHash(hash, comparison) {
   if (!bcrypt.compareSync(comparison, hash)) {
-    throw new Error('Incorrect password');
+    return errorHandler.apiError(res, 'Incorrect password', 403);
   }
 }
 
 function comparePassword(password, passwordComparison) {
   if (password !== passwordComparison) {
-    throw new Error('Passwords do not match')
+    return errorHandler.apiError(res, 'Passwords do not match', 500);
   }
 }
 

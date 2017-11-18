@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
+const winston = require('winston');
+const config = require('../../config')
+const errorHandler = require('../../services/error-handler');
+
 const User = mongoose.model('User');
 const League = mongoose.model('League');
 const ObjectId = mongoose.Types.ObjectId;
-const winston = require('winston');
-const config = require('../../config')
 
 async function fetchResource(req, res, next) {
   const resources = {
@@ -13,11 +15,11 @@ async function fetchResource(req, res, next) {
 
   const id = req.params.id;
   if (!id) {
-    return res.status(500).json({message: 'ID is required'});
+    return errorHandler.apiError(res, 'ID is required', 500);
   }
 
   if (!/[A-Fa-f0-9]{24}/g.test(id)) {
-    return res.status(500).json({message: 'Invalid ID'});
+    return errorHandler.apiError(res, 'Invalid ID', 500);
   }
 
   // get route resource
@@ -30,7 +32,7 @@ async function fetchResource(req, res, next) {
   const resource = await resources[query].call(null, id);
 
   if(!resource) {
-    return res.status(404).json('Resource not found');
+    return errorHandler.apiError(res, 'Resource not found', 404);
   }
 
   req[query] = resource
@@ -40,15 +42,13 @@ async function fetchResource(req, res, next) {
 function authorizeRoute(req, res, next) {
   try {
     const authorization = req.headers.authorization;
-    console.log(config)
     if (!authorization || authorization !== config.authorization) {
-      throw new Error('Unauthorized access')
+      return errorHandler.apiError(res, 'Unauthorized access', 401);
     }
 
     next();
   } catch (error) {
     winston.error(error)
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }

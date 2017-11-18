@@ -1,14 +1,19 @@
 const mongoose = require('mongoose');
+const errorHandler = require('../../services/error-handler');
+
 const League = mongoose.model('League');
 const ObjectId = mongoose.Types.ObjectId;
 
 async function create(req, res) {
   try {
     if (!req.body.name) {
-      throw new Error ('League name is required');
+      return errorHandler.apiError(res, 'League name is required', 500);
     }
 
-    await duplicateLeagueCheck(req.body.name);
+    const noDuplicateLeague = await duplicateLeagueCheck(req.body.name);
+    if (!noDuplicateLeague) {
+      errorHandler.apiError(res, 'League name already in use', 500);
+    }
 
     const league = new League({
       createdOn: Date.now(),
@@ -20,7 +25,6 @@ async function create(req, res) {
     res.json(league);
   } catch (error) {
     winston.error(error);
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
@@ -35,7 +39,6 @@ async function getAll(req, res) {
     res.json(leagues);
   } catch (error) {
     winston.error(error)
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
@@ -43,8 +46,9 @@ async function getAll(req, res) {
 async function duplicateLeagueCheck(leagueName) {
   const league = await League.findOne({name: leagueName});
   if (league) {
-    throw new Error('League name already in use');
+    return false;
   }
+  return true;
 }
 
 module.exports = {

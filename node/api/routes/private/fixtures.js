@@ -1,6 +1,8 @@
-const validate = require('../../services/validate')
-const winston = require('winston');
 const mongoose = require('mongoose');
+const winston = require('winston');
+const errorHandler = require('../../services/error-handler');
+const validate = require('../../services/validate')
+
 const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -23,7 +25,6 @@ async function create(req, res) {
     res.json(fixture);
   } catch (error) {
     winston.error(error)
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
@@ -34,7 +35,6 @@ async function getAll() {
     res.json(fixtures);
   } catch (error) {
     winston.error(error);
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
@@ -51,7 +51,6 @@ async function deleteOne() {
     res.status(200).send()
   } catch (error) {
     winston.error(error);
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
@@ -72,7 +71,6 @@ async function updateOne(req, res) {
     res.json(fixture);
   } catch (error) {
     winston.error(error);
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }

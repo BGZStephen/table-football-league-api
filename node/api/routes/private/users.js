@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const winston = require('winston');
+const config = require('../../config');
+const errorHandler = require('../../services/error-handler');
+
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
-const jwt = require('jsonwebtoken');
-const config = require('../../config');
 
 async function deleteOne(req, res) {
   const user = req.user;
@@ -13,7 +15,6 @@ async function deleteOne(req, res) {
     res.status(200).send();
   } catch (error) {
     winston.error(error);
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
@@ -23,13 +24,12 @@ async function getAll(req, res, next) {
     const users = await User.find({})
 
     if (users.length === 0) {
-      return res.status(200).json({message: 'No users found'})
+      return errorHandler.apiError(res, 'No users found', 404);
     }
 
     res.json(users);
   } catch (error) {
     winston.error(error)
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
@@ -58,23 +58,15 @@ async function updateOne(req, res) {
     res.json(user);
   } catch (error) {
     winston.error(error);
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
 
 async function validateUser(req, res, next) {
-  try {
-    const decoded = await jwt.verify(req.headers.token, config.jwtSecret);
-    if(!ObjectId(decoded.data.id).equals(ObjectId(req.params.id))) {
-      res.statusMessage = 'Invalid token';
-      return res.sendStatus(403);
-    }
-  } catch (err) {
-    res.statusMessage = 'Invalid token';
-    return res.sendStatus(500);
+  const decoded = await jwt.verify(req.headers.token, config.jwtSecret);
+  if(!ObjectId(decoded.data.id).equals(ObjectId(req.params.id))) {
+    return errorHandler.apiError(res, 'Invalid token', 401);
   }
-
   next();
 }
 

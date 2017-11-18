@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const winston = require('winston');
+
 const League = mongoose.model('League');
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -10,7 +11,6 @@ async function deleteOne(req, res) {
     res.status(200).send();
   } catch (error) {
     winston.error(error);
-    res.statusMessage = error;
     res.sendStatus(500);
   }
 }
@@ -31,15 +31,7 @@ async function updateOne(req, res) {
     res.json(league);
   } catch (error) {
     winston.error(error);
-    res.statusMessage = error;
     res.sendStatus(500);
-  }
-}
-
-async function duplicateLeagueUpdateCheck(currentLeagueId, leagueName) {
-  const league = await League.findOne({name: leagueName});
-  if (league && league._id !== currentLeagueId) {
-    throw new Error('League name already in use');
   }
 }
 
