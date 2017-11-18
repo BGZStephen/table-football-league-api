@@ -11,7 +11,7 @@ const winston = require('winston');
 require('./models');
 
 // db connection
-mongoose.connect(config.database);
+mongoose.connect('mongodb://stephen:klapaucius@ds137540.mlab.com:37540/bgzstephen-table-football-league');
 
 mongoose.connection.on('connected', () => {
   winston.info('Database connection successful');
@@ -37,5 +37,6 @@ app.use(require('./routes/private'));
 
 const port = 3000;
 app.listen(port, () => {
+  app.emit("appStarted");
 	winston.info(`Server started successfully`);
 });

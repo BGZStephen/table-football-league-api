@@ -1,4 +1,4 @@
-const mailer = require('../../services/mailer');
+// const mailer = require('../../services/mailer');
 const winston = require('winston');
 
 async function contactFormSubmission(req, res) {
