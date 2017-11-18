@@ -5,6 +5,7 @@ const Fixtures = require('./fixtures');
 const Middleware = require('../middleware');
 const router = express.Router();
 
+router.all('/*', Middleware.authorizeRoute)
 router.get('/users', Users.getAll);
 router.all('/users/:id', Users.validateUser, Middleware.fetchResource);
 router.get('/users/:id', Users.getOne);

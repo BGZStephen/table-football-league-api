@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const League = mongoose.model('League');
 const ObjectId = mongoose.Types.ObjectId;
+const winston = require('winston');
+const config = require('../../config')
 
 async function fetchResource(req, res, next) {
   const resources = {
@@ -35,6 +37,23 @@ async function fetchResource(req, res, next) {
   next();
 }
 
+function authorizeRoute(req, res, next) {
+  try {
+    const authorization = req.headers.authorization;
+    console.log(config)
+    if (!authorization || authorization !== config.authorization) {
+      throw new Error('Unauthorized access')
+    }
+
+    next();
+  } catch (error) {
+    winston.error(error)
+    res.statusMessage = error;
+    res.sendStatus(500);
+  }
+}
+
 module.exports = {
   fetchResource,
+  authorizeRoute,
 }
