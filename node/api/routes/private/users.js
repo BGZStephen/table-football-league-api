@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const winston = require('winston');
 const config = require('../../config');
 const errorHandler = require('../../services/error-handler');
+const images = require('../../services/images');
 
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
@@ -62,6 +63,22 @@ async function updateOne(req, res) {
   }
 }
 
+async function setProfileImage(req, res, next) {
+  try {
+    const user = req.user;
+    const cloudinaryImage = await images.uploadOne(req.file.path)
+    if (!profileImageUrl) {
+      return errorHandler.apiError(res, 'Something went wrong uploading your image', 500);
+    }
+    user.profileImageUrl = cloudinaryImage.url;
+    await user.save();
+    res.sendStatus(200);
+  } catch (error) {
+    winston.error(error);
+    res.sendStatus(500);
+  }
+}
+
 async function validateUser(req, res, next) {
   const decoded = await jwt.verify(req.headers.token, config.jwtSecret);
   if(!ObjectId(decoded.data.id).equals(ObjectId(req.params.id))) {
@@ -80,4 +97,5 @@ module.exports = {
   updateOne,
   deleteOne,
   validateUser,
+  setProfileImage,
 }
