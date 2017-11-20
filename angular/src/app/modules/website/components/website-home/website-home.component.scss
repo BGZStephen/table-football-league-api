@@ -1,40 +1,4 @@
 #website-home {
-  background-image: url('/assets/images/website-home-background.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: $grey-800;
-  min-height: 100vh;
-  padding: 10px;
-
-  #heading-container {
-    margin-top: 20px;
-    text-align: center;
-
-    h1 {
-      color: #EEE;
-      font-size: 2.2em;
-      text-shadow: 4px 4px 8px #000;
-      @media(min-width: $screen-md) {
-        font-size: 3.2em;
-      }
-    }
-
-    p {
-      color: #EEE;
-      font-size: 1.2em;
-      margin-top: 20px;
-      text-shadow: 2px 2px 4px #000;
-      @media(min-width: $screen-md) {
-        margin-top: 10px;
-        font-size: 1.4em;
-      }
-    }
-
-    @media(min-width: $screen-md) {
-      margin-top: 0;
-    }
-  }
-
   #features-container {
     color: #EEE;
     display: flex;
@@ -168,11 +132,5 @@
       margin: 60px auto 0;
       width: 360px;
     }
-  }
-
-  @media(min-width: $screen-md) {
-    flex-direction: column;
-    display: flex;
-    justify-content: center;
   }
 }

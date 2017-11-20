@@ -1,22 +1,4 @@
 #website-login {
-  background-image: url('/assets/images/website-home-background.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: $grey-800;
-  min-height: 100vh;
-  padding: 10px;
-  text-align: center;
-
-  h1 {
-    color: #EEE;
-    font-size: 2.2em;
-    margin-bottom: 10px;
-    text-shadow: 4px 4px 8px #000;
-    @media(min-width: $screen-md) {
-      font-size: 2.8em;
-    }
-  }
-
   #login-form-container {
     max-width: 400px;
     margin: 0 auto;
@@ -86,9 +68,5 @@
       background: $purple-600;
       color: white;
     }
-  }
-
-  @media(min-width: $screen-md) {
-    padding-top: 40px;
   }
 }
