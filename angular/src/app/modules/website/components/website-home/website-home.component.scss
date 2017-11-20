@@ -89,44 +89,6 @@
     margin: 0 auto;
     width: 80%;
 
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.2em;
-      font-weight: 600;
-      margin: 10px 0;
-      padding: 10px 20px;
-      text-transform: uppercase;
-      transition: 0.3s ease all;
-      width: auto;
-
-      @media(min-width: $screen-md) {
-        font-size: 1.4em;
-        padding: 15px 30px;
-      }
-    }
-
-    .button-register {
-      background: $info-400;
-      border-bottom: 2px solid $info-800;
-
-      &:hover {
-        background: $info-600;
-        color: white;
-      }
-    }
-
-    .button-login {
-      background: $purple-400;
-      border-bottom: 2px solid $purple-800;
-
-      &:hover {
-        background: $purple-600;
-        color: white;
-      }
-    }
-
     @media(min-width: $screen-md) {
       flex-direction: row;
       margin: 60px auto 0;
