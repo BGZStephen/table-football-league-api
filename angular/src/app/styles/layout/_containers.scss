@@ -19,15 +19,6 @@
     margin: 20px 0;
     text-align: center;
 
-    h1 {
-      color: #EEE;
-      font-size: 2.2em;
-      text-shadow: 4px 4px 8px #000;
-      @media(min-width: $screen-md) {
-        font-size: 3.2em;
-      }
-    }
-
     @media(min-width: $screen-md) {
       margin: 0;
     }
