@@ -84,4 +84,30 @@ h1, h2, h3, h4, h5, h6 {
   &.header--red {
     color: $danger-800;
   }
+
+  &.header--white {
+    color: #EEE;
+  }
+
+  &.padded {
+    padding: 5px
+  }
+}
+
+h1, h2 {
+  &.header--shadow {
+    text-shadow: 2px 2px 4px #000;
+  }
+}
+
+h3, h4 {
+  &.header--shadow {
+    text-shadow: 2px 2px 3px #000;
+  }
+}
+
+h5, h6 {
+  &.header--shadow {
+    text-shadow: 1px 1px 1px #000;
+  }
 }
