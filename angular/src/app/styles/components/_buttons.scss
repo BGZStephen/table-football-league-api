@@ -2,46 +2,96 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.2em;
+  font-size: 1em;
   font-weight: 600;
   margin: 0 auto;
-  padding: 10px 20px;
+  padding: 10px 12px;
   text-transform: uppercase;
   transition: 0.3s ease all;
   width: auto;
 
+  &.button--small {
+    font-size: 0.8em;
+    padding: 5px 8px;
+  }
+
+  &.button--large {
+    font-size: 1.2em;
+    padding: 15px 20px;
+  }
+
+  &.button--orange {
+    background: $orange-400;
+    border-bottom: 2px solid $orange-800;
+
+    &:hover {
+      background: $orange-600;
+      color: white;
+    }
+  }
+
+  &.button--light-blue {
+    background: $info-400;
+    border-bottom: 2px solid $info-800;
+
+    &:hover {
+      background: $info-600;
+      color: white;
+    }
+  }
+
+  &.button--purple {
+    background: $purple-400;
+    border-bottom: 2px solid $purple-800;
+
+    &:hover {
+      background: $purple-600;
+      color: white;
+    }
+  }
+
+  &.button--red {
+    background: $danger-400;
+    border-bottom: 2px solid $danger-800;
+
+    &:hover {
+      background: $danger-600;
+      color: white;
+    }
+  }
+
+  &.button--green {
+    background: $success-400;
+    border-bottom: 2px solid $success-800;
+
+    &:hover {
+      background: $success-600;
+      color: white;
+    }
+  }
+
+  &.button--slate {
+    background: $slate-400;
+    border-bottom: 2px solid $slate-800;
+
+    &:hover {
+      background: $slate-600;
+      color: white;
+    }
+  }
+
+  &.button--blue {
+    background: $blue-400;
+    border-bottom: 2px solid $blue-800;
+
+    &:hover {
+      background: $blue-600;
+      color: white;
+    }
+  }
+
   @media(min-width: $screen-md) {
-    font-size: 1.4em;
-    padding: 15px 30px;
-  }
-}
-
-.button--orange {
-  background: $orange-400;
-  border-bottom: 2px solid $orange-800;
-
-  &:hover {
-    background: $orange-600;
-    color: white;
-  }
-}
-
-.button--light-blue {
-  background: $info-400;
-  border-bottom: 2px solid $info-800;
-
-  &:hover {
-    background: $info-600;
-    color: white;
-  }
-}
-
-.button--purple{
-  background: $purple-400;
-  border-bottom: 2px solid $purple-800;
-
-  &:hover {
-    background: $purple-600;
-    color: white;
+    font-size: 1em;
+    padding: 10px 12px;
   }
 }
