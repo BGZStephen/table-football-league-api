@@ -4,11 +4,14 @@
   padding: 10px;
 }
 
-.website-content-container {
+.container-background-image {
   background-image: url('/assets/images/website-home-background.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-color: $grey-800;
+}
+
+.website-content-container {
   min-height: 100vh;
   padding: 10px;
 

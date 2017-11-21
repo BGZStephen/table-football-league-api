@@ -12,6 +12,7 @@ import * as components from './components/website-components-barrel';
     components.WebsiteViewWrapperComponent,
     components.WebsiteRegisterComponent,
     components.WebsiteContactComponent,
+    components.WebsiteBrandGuidelinesComponent,
   ],
   imports: [
     CommonModule,

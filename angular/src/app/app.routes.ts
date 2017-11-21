@@ -16,6 +16,7 @@ const APP_ROUTES: Routes = [
     {path: 'login', component: website.WebsiteLoginComponent},
     {path: 'register', component: website.WebsiteRegisterComponent},
     {path: 'contact', component: website.WebsiteContactComponent},
+    {path: '__styles__', component: website.WebsiteBrandGuidelinesComponent},
   ]},
 ]
 
