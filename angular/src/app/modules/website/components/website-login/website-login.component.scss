@@ -3,42 +3,12 @@
     max-width: 400px;
     margin: 0 auto;
 
+    form {
+      background: #222;
+    }
+
     @media(min-width: $screen-md) {
       margin-top: 60px;
     }
-  }
-
-  form {
-    background: #222;
-    padding: 15px;
-    @media(min-width: $screen-md) {
-      padding: 20px;
-    }
-  }
-
-  .form-row {
-    display: flex;
-    flex-direction: column;
-  }
-
-  label {
-    align-self: flex-start;
-    color: #EEE;
-    margin-bottom: 6px;
-    text-transform: uppercase;
-  }
-
-  input {
-    font-size: 1.2em;
-    margin-bottom: 20px;
-    padding: 5px;
-  }
-
-  .input-error {
-    background: $danger-300;
-    font-size: 0.8em;
-    margin-top: -20px;
-    margin-bottom: 20px;
-    padding: 5px;
   }
 }

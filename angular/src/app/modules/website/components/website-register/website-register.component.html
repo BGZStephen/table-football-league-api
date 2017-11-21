@@ -1,46 +1,46 @@
 <div id="website-register" class="website-content-container container-background-image">
   <div id="heading-container">
-    <h1 class="header--white header--shadow">Register</h1>
+    <h1>Register</h1>
   </div>
   <div id="register-form-container">
     <form #f="ngForm" (ngSubmit)="onRegister(f.value)">
       <div class="form-row">
-        <label>First name</label>
+        <label class="label--white">First name</label>
         <input type="text" name="firstName" #firstName required ngModel>
       </div>
       <div class="input-error" *ngIf="formValues.firstName.hasError">
         <p>{{formValues.firstName.message}}
       </div>
       <div class="form-row">
-        <label>Last name</label>
+        <label class="label--white">Last name</label>
         <input type="text" name="lastName" #lastName required ngModel>
       </div>
       <div class="input-error" *ngIf="formValues.lastName.hasError">
         <p>{{formValues.lastName.message}}
       </div>
       <div class="form-row">
-        <label>Username</label>
+        <label class="label--white">Username</label>
         <input type="text" name="username" #username required ngModel>
       </div>
       <div class="input-error" *ngIf="formValues.username.hasError">
         <p>{{formValues.username.message}}
       </div>
       <div class="form-row">
-        <label>Email</label>
+        <label class="label--white">Email</label>
         <input type="text" name="email" #email required ngModel>
       </div>
       <div class="input-error" *ngIf="formValues.email.hasError">
         <p>{{formValues.email.message}}
       </div>
       <div class="form-row">
-        <label>Password</label>
+        <label class="label--white">Password</label>
         <input type="password" name="password" #password required ngModel>
       </div>
       <div class="input-error" *ngIf="formValues.password.hasError">
         <p>{{formValues.password.message}}
       </div>
       <div class="form-row">
-        <label>Confirm password</label>
+        <label class="label--white">Confirm password</label>
         <input type="password" name="confirmPassword" #confirmPassword required ngModel>
       </div>
       <div class="input-error" *ngIf="formValues.confirmPassword.hasError">

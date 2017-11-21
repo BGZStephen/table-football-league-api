@@ -1,0 +1,64 @@
+form {
+  padding: 10px;
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+
+    label {
+      display: inline-block;
+      width: 100%;
+
+      &.label--light-blue {
+        color: $info-400;
+      }
+
+      &.label--white {
+        color: #EEE;
+      }
+
+      &.label--blue {
+        color: $blue-400;
+      }
+
+      &.label--orange {
+        color: $orange-400;
+      }
+
+      &.label--purple {
+        color: $purple-400;
+      }
+
+      &.label--red {
+        color: $danger-400;
+      }
+
+      &.label--slate {
+        color: $slate-400;
+      }
+    }
+
+    input {
+      width: 100%;
+    }
+
+    textarea {
+      width: 100%;
+    }
+
+    .input-50 {
+      width: 100%;
+
+      @media(min-width: $screen-sm) {
+        width: calc(50% - 5px);
+      }
+    }
+
+    @media(min-width: $screen-sm) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  }
+}

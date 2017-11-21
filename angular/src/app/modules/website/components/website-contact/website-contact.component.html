@@ -5,20 +5,18 @@
   <div id="contact-form-container">
     <form #f="ngForm" (ngSubmit)="onSubmit(f)">
       <div class="form-row">
-        <div class="left">
-          <label>Name</label>
+        <div class="input-50">
+          <label class="label--white">Name</label>
           <input type="text" name="name" ngModel required #name>
         </div>
-        <div class="right">
-          <label>Email</label>
+        <div class="input-50">
+          <label class="label--white">Email</label>
           <input type="text" name="email" ngModel required #email>
         </div>
       </div>
       <div class="form-row">
-        <div class="left left-100">
-          <label>Message</label>
-          <textarea rows=5 name="message" ngModel required #message></textarea>
-        </div>
+        <label class="label--white">Message</label>
+        <textarea rows=5 name="message" ngModel required #message></textarea>
       </div>
       <div class="form-row">
         <button class="button button--orange">Submit</button>

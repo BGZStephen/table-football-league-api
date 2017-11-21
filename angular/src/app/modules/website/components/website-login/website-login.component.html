@@ -5,14 +5,14 @@
   <div id="login-form-container">
     <form #f="ngForm" (ngSubmit)="onLogin(f.value)">
       <div class="form-row">
-        <label>Email</label>
+        <label class="label--white">Email</label>
         <input type="text" name="email" #email required ngModel>
       </div>
       <div class="input-error" *ngIf="formValues.email.hasError">
         <p>{{formValues.email.message}}
       </div>
       <div class="form-row">
-        <label>Password</label>
+        <label class="label--white">Password</label>
         <input type="password" name="password" #password required ngModel>
       </div>
       <div class="input-error" *ngIf="formValues.password.hasError">
