@@ -1,13 +1,23 @@
 form {
-  padding: 10px;
+
+  &.form--dark {
+    background: $slate-800;
+  }
+
+  &.form--light {
+    background: #EEE;
+  }
 
   .form-row {
     display: flex;
     flex-direction: column;
     margin-bottom: 10px;
+    padding: 10px;
 
     label {
       display: inline-block;
+      margin-left: 5px;
+      margin-bottom: 5px;
       width: 100%;
 
       &.label--light-blue {
@@ -40,6 +50,20 @@ form {
     }
 
     input {
+      border: none;
+      font-weight: bold;
+      padding: 5px;
+
+      &.input--light {
+        background: #EEE;
+        color: $slate-800;
+      }
+
+      &.input--dark {
+        background: $slate-800;
+        color: #EEE;
+      }
+
       width: 100%;
     }
 
