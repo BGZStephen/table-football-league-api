@@ -1,5 +1,5 @@
 .navbar-container {
-  background: #222;
+  background: $primary-black-700;
   color: #DDD;
   text-align: center;
 
@@ -77,13 +77,12 @@
         }
       }
 
-      &:hover {
-        background: #444;
-      }
-
+      &:hover,
       &.active-route {
-        background: $success-800;
-        outline: none;
+        background: $primary-black-800;
+        border-top: 1px solid $primary-black-800;
+        border-bottom: 1px solid $primary-black-800;
+        color: white;
       }
 
       @media(min-width: $screen-md) {

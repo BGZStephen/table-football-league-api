@@ -1,5 +1,11 @@
 // colors
 
+$primary-black-800: #121212;
+$primary-black-700: lighten($primary-black-800, 5%);
+$primary-black-600: lighten($primary-black-800, 10%);
+$primary-black-500: lighten($primary-black-800, 15%);
+$primary-black-400: lighten($primary-black-800, 20%);
+
 $primary-800: #1565C0;
 $primary-700: #1976D2;
 $primary-600: #1E88E5;
@@ -97,17 +103,3 @@ $brown-600: #6D4C41;
 $brown-500: #795548;
 $brown-400: #8D6E63;
 $brown-300: #A1887F;
-
-$grey-800: #444444;
-$grey-700: #555555;
-$grey-600: #666666;
-$grey-500: #777777;
-$grey-400: #888888;
-$grey-300: #999999;
-
-$slate-800: #37474F;
-$slate-700: #455A64;
-$slate-600: #546E7A;
-$slate-500: #607D8B;
-$slate-400: #78909C;
-$slate-300: #90A4AE;

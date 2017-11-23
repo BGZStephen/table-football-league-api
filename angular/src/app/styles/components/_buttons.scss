@@ -70,16 +70,6 @@
     }
   }
 
-  &.button--slate {
-    background: $slate-400;
-    border-bottom: 2px solid $slate-800;
-
-    &:hover {
-      background: $slate-600;
-      color: white;
-    }
-  }
-
   &.button--blue {
     background: $blue-400;
     border-bottom: 2px solid $blue-800;

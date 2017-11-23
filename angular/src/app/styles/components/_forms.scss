@@ -1,7 +1,7 @@
 form {
 
   &.form--dark {
-    background: $slate-800;
+    background: $primary-black-800;
   }
 
   &.form--light {
@@ -45,7 +45,7 @@ form {
       }
 
       &.label--slate {
-        color: $slate-400;
+        color: $primary-black-400;
       }
     }
 
@@ -56,11 +56,11 @@ form {
 
       &.input--light {
         background: #EEE;
-        color: $slate-800;
+        color: $primary-black-800;
       }
 
       &.input--dark {
-        background: $slate-800;
+        background: $primary-black-800;
         color: #EEE;
       }
 
