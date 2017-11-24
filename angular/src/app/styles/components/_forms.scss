@@ -1,88 +1,24 @@
-form {
+.form-row {
+  align-items: center;
+  display: flex;
+  margin: 15px 0;
+  width: 100%;
 
-  &.form--dark {
-    background: $primary-black-800;
+  i {
+    color: white;
+    left: 30px;
+    position: relative;
   }
+}
 
-  &.form--light {
-    background: #EEE;
-  }
+input {
+  background: none;
+  border: 1px solid $primary-black-400;
+  color: #AAA;
+  padding: 10px 10px 10px 30px;
+  width: 100%;
 
-  .form-row {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-    padding: 10px;
-
-    label {
-      display: inline-block;
-      margin-left: 5px;
-      margin-bottom: 5px;
-      width: 100%;
-
-      &.label--light-blue {
-        color: $info-400;
-      }
-
-      &.label--white {
-        color: #EEE;
-      }
-
-      &.label--blue {
-        color: $blue-400;
-      }
-
-      &.label--orange {
-        color: $orange-400;
-      }
-
-      &.label--purple {
-        color: $purple-400;
-      }
-
-      &.label--red {
-        color: $danger-400;
-      }
-
-      &.label--slate {
-        color: $primary-black-400;
-      }
-    }
-
-    input {
-      border: none;
-      font-weight: bold;
-      padding: 5px;
-
-      &.input--light {
-        background: #EEE;
-        color: $primary-black-800;
-      }
-
-      &.input--dark {
-        background: $primary-black-800;
-        color: #EEE;
-      }
-
-      width: 100%;
-    }
-
-    textarea {
-      width: 100%;
-    }
-
-    .input-50 {
-      width: 100%;
-
-      @media(min-width: $screen-sm) {
-        width: calc(50% - 5px);
-      }
-    }
-
-    @media(min-width: $screen-sm) {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
+  &::placeholder {
+    color: #AAA;
   }
 }

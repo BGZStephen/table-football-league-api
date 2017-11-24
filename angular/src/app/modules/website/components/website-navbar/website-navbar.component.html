@@ -2,22 +2,7 @@
   <div class="navbar-container">
     <div id="logo-container">
       <h2>My Table Football</h2>
-      <i class="fa fa-bars" (click)="toggleMenuVisible()"></i>
-      <img src="/assets/images/logo.png" routerLink="/">
+      <i class="fa fa-bars"></i>
     </div>
-    <ul [ngStyle]="menuVisibleStyle()">
-      <li routerLink="/" routerLinkActive="active-route" [routerLinkActiveOptions]="{exact: true}">
-        <i class="fa fa-home"></i><p>Home </p>
-      </li>
-      <li routerLink="/register" routerLinkActive="active-route">
-        <i class="fa fa-pencil-square-o"></i><p>Register</p>
-      </li>
-      <li routerLink="/login" routerLinkActive="active-route">
-        <i class="fa fa-sign-in"></i><p>Login</p>
-      </li>
-      <li routerLink="/contact" routerLinkActive="active-route">
-        <i class="fa fa-envelope-o"></i><p>Contact</p>
-      </li>
-    </ul>
   </div>
 </div>

@@ -5,9 +5,8 @@
 
   #logo-container {
     align-items: center;
-    background: $primary-400;
     cursor: pointer;
-    color: black;
+    color: #AAA;
     display: flex;
     justify-content: space-between;
     padding-left: 15px;
@@ -30,69 +29,9 @@
       }
     }
 
-    img {
-      display: none;
-      @media(min-width: $screen-md) {
-        display: block;
-        max-width: 100%;
-      }
-    }
-
     @media(min-width: $screen-md) {
       display: block;
       padding: 10px;
-    }
-  }
-
-  ul {
-    overflow: hidden;
-    transition: 0.3s ease max-height;
-
-    li {
-      align-items: center;
-      border-top: 1px solid #444;
-      border-bottom: 1px solid #111;
-      cursor: pointer;
-      display: flex;
-      padding: 15px;
-      select: none;
-      transition: 0.3s ease all;
-
-      i {
-        font-size: 20px;
-        width: 30px;
-        @media(min-width: $screen-md) {
-          width: auto;
-          font-size: 24px;
-        }
-      }
-
-      p {
-        font-size: 0.8em;
-        margin-left: 10px;
-        text-transform: uppercase;
-        @media(min-width: $screen-md) {
-          margin-top: 8px;
-          margin-left: 0px;
-        }
-      }
-
-      &:hover,
-      &.active-route {
-        background: $primary-black-800;
-        border-top: 1px solid $primary-black-800;
-        border-bottom: 1px solid $primary-black-800;
-        color: white;
-      }
-
-      @media(min-width: $screen-md) {
-        display: block;
-        padding: 20px 0;
-      }
-    }
-
-    @media(min-width: $screen-md) {
-      min-height: calc(100vh - 134px);
     }
   }
 }

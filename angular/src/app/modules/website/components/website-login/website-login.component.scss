@@ -1,14 +1,5 @@
-#website-login {
-  #login-form-container {
-    max-width: 400px;
-    margin: 0 auto;
-
-    form {
-      background: #222;
-    }
-
-    @media(min-width: $screen-md) {
-      margin-top: 60px;
-    }
-  }
+p {
+  color: #777;
+  font-size: 0.9em;
+  text-align: center;
 }
