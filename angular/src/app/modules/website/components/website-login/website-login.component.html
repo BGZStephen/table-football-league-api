@@ -3,13 +3,13 @@
   <div id="login-form-container">
     <form #f="ngForm" (ngSubmit)="onLogin(f.value)">
       <div class="form-row">
-        <input type="text" placeholder="Email" name="email" #email required ngModel>
+        <i class="fa fa-envelope-o"></i><input type="text" placeholder="Email" name="email" #email required ngModel>
       </div>
       <div class="input-error" *ngIf="formValues.email.hasError">
         <p>{{formValues.email.message}}
       </div>
       <div class="form-row">
-        <input type="password" placeholder="Password" name="password" #password required ngModel>
+        <i class="fa fa-lock"></i><input type="password" placeholder="Password" name="password" #password required ngModel>
       </div>
       <div class="input-error" *ngIf="formValues.password.hasError">
         <p>{{formValues.password.message}}

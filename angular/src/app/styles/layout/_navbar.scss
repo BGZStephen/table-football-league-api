@@ -9,10 +9,10 @@
     color: #AAA;
     display: flex;
     justify-content: space-between;
-    padding-left: 15px;
     text-align: center;
 
     i {
+      cursor: pointer;
       font-size: 18px;
       padding: 15px;
       @media(min-width: $screen-md) {
