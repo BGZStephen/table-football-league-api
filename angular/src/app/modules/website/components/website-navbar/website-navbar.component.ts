@@ -6,27 +6,27 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class WebsiteNavbarComponent implements OnInit {
 
-  menuVisible = false;
+  menuVisible: boolean = false;
+  currentSubmenuActive: number = -1;
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit() {}
 
-  }
-
-  toggleMenuVisible() {
-    this.menuVisible = !this.menuVisible;
-  }
-
-  menuVisibleStyle() {
-    if (screen.width > 1024) {
-      this.menuVisible = true;
-      return {'max-height': 'calc(100vh - 134px)'}
-    } else if (this.menuVisible) {
-      const height = `${document.getElementById('website-navbar').getElementsByTagName('ul')[0].children.length * 52}px`
-      return {'max-height': `${height}`};
+  toggleSubmenuActive(index) {
+    if (index === this.currentSubmenuActive) {
+      this.currentSubmenuActive = -1;
     } else {
-      return {'max-height': '0'};
+      this.currentSubmenuActive = index;
+    }
+  }
+
+  submenuActiveStyle(index) {
+    if (index === this.currentSubmenuActive) {
+      const height = document.getElementsByClassName('navbar-submenu')[index].clientHeight;
+      return {'height': `${76 + height}px`}
+    } else {
+      return {'height': '76px'};
     }
   }
 }

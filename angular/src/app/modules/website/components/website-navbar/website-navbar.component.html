@@ -6,20 +6,20 @@
       <i class="fa fa-search"></i>
     </div>
     <ul>
-      <li>
-        <div class="navbar-item">
+      <li class="navbar-item">
+        <div class="navbar-item-content">
           <i class="fa fa-home fa-2x"></i>
           <span>Home</span>
         </div>
       </li>
-      <li>
-        <div class="navbar-item">
+      <li class="navbar-item">
+        <div class="navbar-item-content">
           <i class="fa fa-pencil fa-2x"></i>
           <span>Register</span>
         </div>
       </li>
-      <li>
-        <div class="navbar-item">
+      <li class="navbar-item" [ngStyle]="submenuActiveStyle()">
+        <div class="navbar-item-content" (click)="toggleSubmenuActive()">
           <i class="fa fa-sign-in fa-2x"></i>
           <span>Login</span>
         </div>

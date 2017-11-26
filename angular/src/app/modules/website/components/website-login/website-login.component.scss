@@ -5,11 +5,17 @@
     text-align: center;
   }
 
-  .form-row {
-    i {
-      color: white;
-      position: absolute;
-      left: 10px;
+  #login-form-container {
+    margin: 0 auto;
+    max-width: 420px;
+    .form-row {
+      i {
+        color: white;
+        position: absolute;
+        left: 10px;
+        width: 25px;
+        text-align: right;
+      }
     }
   }
 }

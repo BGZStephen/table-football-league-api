@@ -25,13 +25,14 @@
       padding: 15px;
       text-transform: uppercase;
       @media(min-width: $screen-md) {
-        display: none;
-      }
-    }
+        font-size: 0.8em;
+        text-align: center;
+        transition: 0.3s ease all;
 
-    @media(min-width: $screen-md) {
-      display: block;
-      padding: 10px;
+        &:hover {
+          color: #EEE;
+        }
+      }
     }
   }
 
@@ -40,6 +41,11 @@
   }
 
   .navbar-item {
+    overflow: hidden;
+    transition: 0.3s ease all;
+  }
+
+  .navbar-item-content {
     color: #AAA;
     cursor: pointer;
     display: flex;
@@ -48,6 +54,7 @@
     padding: 15px 10px;
     position: relative;
     transition: 0.3s ease all;
+    z-index: 5;
 
     .fa-caret-down {
       position: absolute;
@@ -64,6 +71,9 @@
       color: #EEE;
     }
 
+    @media(min-width: $screen-md) {
+      height: 76px;
+    }
   }
 
   @media(min-width: $screen-md) {
