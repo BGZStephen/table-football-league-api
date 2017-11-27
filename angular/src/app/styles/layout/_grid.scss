@@ -1,0 +1,39 @@
+@for $i from 1 through 12 {
+  .col-sm-#{$i} {
+    background: $primary-black-700;
+    color: white;
+    padding: 15px;
+    width: 100%;
+    @media(min-width: $screen-sm) {
+      background: $primary-black-700;
+      width: calc((100% / 12) * #{$i});
+    }
+  }
+}
+
+@for $i from 1 through 12 {
+  .col-md-#{$i} {
+    background: $primary-black-700;
+    width: 100%;
+    @media(min-width: $screen-md) {
+      background: $primary-black-700;
+      width: calc((100% / 12) * #{$i});
+    }
+  }
+}
+
+@for $i from 1 through 12 {
+  .col-lg-#{$i} {
+    background: $primary-black-700;
+    width: 100%;
+    @media(min-width: $screen-md) {
+      background: $primary-black-700;
+      width: calc((100% / 12) * #{$i});
+    }
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}

@@ -1,42 +1,5 @@
-.container-300 {
-  max-width: 300px;
-}
-
-.container-600 {
-  max-width: 600px;
-}
-
-.container-900 {
-  max-width: 900px;
-}
-
-.dashboard-cointent-container {
-  background: #EEE;
+.outlet-container {
+  background: $primary-black-800;
+  width: 100%;
   min-height: 100vh;
-  padding: 10px;
-}
-
-.container-background-image {
-  background-image: url('/assets/images/website-home-background.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: $primary-black-800;
-}
-
-.website-content-container {
-  min-height: 100vh;
-  padding: 10px;
-
-  #heading-container {
-    margin: 20px 0;
-    text-align: center;
-
-    @media(min-width: $screen-md) {
-      margin: 0;
-    }
-  }
-
-  @media(min-width: $screen-md) {
-    padding-top: 40px;
-  }
 }
