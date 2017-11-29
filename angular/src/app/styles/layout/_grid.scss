@@ -1,7 +1,9 @@
 @for $i from 1 through 12 {
   .col-sm-#{$i} {
+    align-items: center;
     background: $primary-black-700;
     color: white;
+    display: flex;
     margin: 0 5px;
     padding: 15px;
     width: calc(100% - 10px);
@@ -15,8 +17,10 @@
 
 @for $i from 1 through 12 {
   .col-md-#{$i} {
+    align-items: center;
     background: $primary-black-700;
     color: white;
+    display: flex;
     margin: 0 5px;
     width: calc(100% - 10px);
     @media(min-width: $screen-md) {
@@ -29,8 +33,10 @@
 
 @for $i from 1 through 12 {
   .col-lg-#{$i} {
+    align-items: center;
     background: $primary-black-700;
     color: white;
+    display: flex;
     margin: 0 5px;
     width: calc(100% - 10px);
     @media(min-width: $screen-md) {

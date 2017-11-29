@@ -1,17 +1,75 @@
-.button {
-  background: none;
+button {
+  background: $primary-black-800;
+  color: white;
   border: none;
   cursor: pointer;
   font-size: 1em;
   font-weight: 600;
-  margin: 0 auto;
-  padding: 10px 12px;
-  text-transform: uppercase;
+  margin: 0 5px;
   transition: 0.3s ease all;
-  width: auto;
+}
 
-  @media(min-width: $screen-md) {
-    font-size: 1em;
-    padding: 10px 12px;
+.button-sm {
+  padding: 3px 6px;
+}
+
+.button-md {
+  padding: 6px 12px;
+}
+
+.button-lg {
+  padding: 9px 18px;
+}
+
+.button-xl {
+  padding: 12px 24px;
+}
+
+.button--red {
+  background: $primary-red-400;
+  color: black;
+
+  &:hover {
+    background: $primary-red-500;
   }
+}
+
+.button--blue {
+  background: $primary-blue-400;
+  color: black;
+
+  &:hover {
+    background: $primary-blue-500;
+  }
+}
+
+.button--green {
+  background: $primary-green-400;
+  color: black;
+
+  &:hover {
+    background: $primary-green-500;
+  }
+}
+
+.button--yellow {
+  background: $primary-yellow-400;
+  color: black;
+
+  &:hover {
+    background: $primary-yellow-500;
+  }
+}
+
+.button--purple {
+  background: $primary-purple-400;
+  color: black;
+
+  &:hover {
+    background: $primary-purple-500;
+  }
+}
+
+.button--rounded {
+  border-radius: 15px;
 }
