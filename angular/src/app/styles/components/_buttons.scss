@@ -73,3 +73,106 @@ button {
 .button--rounded {
   border-radius: 15px;
 }
+
+.button-social {
+  height: 30px;
+  margin: 0 5px;
+  transition: 0.3s ease all;
+  width: 30px;
+}
+
+.button--facebook {
+  background: $facebook-light;
+
+  &:hover {
+    background: $facebook-primary;
+  }
+}
+
+.button--google-plus {
+  background: $google-plus-light;
+
+  &:hover {
+    background: $google-plus-primary;
+  }
+}
+
+.button--twitter {
+  background: $twitter-light;
+
+  &:hover {
+    background: $twitter-primary;
+  }
+}
+
+.button--youtube {
+  background: $youtube-light;
+
+  &:hover {
+    background: $youtube-primary;
+  }
+}
+
+.button--vimeo {
+  background: $vimeo-light;
+
+  &:hover {
+    background: $vimeo-primary;
+  }
+}
+
+.button--dribbble {
+  background: $dribbble-light;
+
+  &:hover {
+    background: $dribbble-primary;
+  }
+}
+
+.button--github {
+  background: $github-light;
+
+  &:hover {
+    background: $github-primary;
+  }
+}
+
+.button--instagram {
+  background: $instagram-light;
+
+  &:hover {
+    background: $instagram-primary;
+  }
+}
+
+.button--pinterest {
+  background: $pinterest-light;
+
+  &:hover {
+    background: $pinterest-primary;
+  }
+}
+
+.button--rss {
+  background: $rss-light;
+
+  &:hover {
+    background: $rss-primary;
+  }
+}
+
+.button--vk {
+  background: $vk-light;
+
+  &:hover {
+    background: $vk-primary;
+  }
+}
+
+.button--flickr {
+  background: $flickr-light;
+
+  &:hover {
+    background: $flickr-primary;
+  }
+}
