@@ -1,16 +1,21 @@
 @for $i from 1 through 12 {
   .col-sm-#{$i} {
     align-items: center;
-    background: $primary-black-700;
     color: white;
     display: flex;
-    margin: 0 5px;
-    padding: 15px;
+    margin-right: 10px;
     width: calc(100% - 10px);
     @media(min-width: $screen-sm) {
-      background: $primary-black-700;
-      margin: 0 10px;
-      width: calc(((100% / 12) * #{$i}) - 20px);
+      margin-right: 10px;
+      width: calc((100% / 12) * #{$i} - 10px);
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+
+    &:last-of-type {
+      margin-right: 0;
     }
   }
 }
@@ -18,15 +23,21 @@
 @for $i from 1 through 12 {
   .col-md-#{$i} {
     align-items: center;
-    background: $primary-black-700;
     color: white;
     display: flex;
-    margin: 0 5px;
+    margin-right: 10px;
     width: calc(100% - 10px);
     @media(min-width: $screen-md) {
-      background: $primary-black-700;
-      margin: 0 10px;
-      width: calc(((100% / 12) * #{$i}) - 20px);
+      margin-right: 10px;
+      width: calc((100% / 12) * #{$i} - 10px);
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+
+    &:last-of-type {
+      margin-right: 0;
     }
   }
 }
@@ -34,15 +45,21 @@
 @for $i from 1 through 12 {
   .col-lg-#{$i} {
     align-items: center;
-    background: $primary-black-700;
     color: white;
     display: flex;
-    margin: 0 5px;
+    margin-right: 10px;
     width: calc(100% - 10px);
     @media(min-width: $screen-md) {
-      background: $primary-black-700;
-      margin: 0 10px;
-      width: calc(((100% / 12) * #{$i}) - 20px);
+      margin-right: 10px;
+      width: calc((100% / 12) * #{$i} - 10px);
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+
+    &:last-of-type {
+      margin-right: 0;
     }
   }
 }
@@ -50,8 +67,10 @@
 .row {
   display: flex;
   flex-wrap: wrap;
-  padding: 0 3px 8px 3px;
-  @media (min-width: $screen-md) {
-    padding: 0 8px 13px 8px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+
+  &:last-of-type {
+    margin-bottom: 0;
   }
 }
