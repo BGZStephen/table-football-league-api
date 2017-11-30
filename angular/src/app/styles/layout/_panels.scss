@@ -1,0 +1,18 @@
+.panel {
+  background: $primary-black-700;
+  width: 100%;
+  .panel-head {
+    padding: 5px;
+  }
+
+  .panel-body {
+    padding: 5px;
+    @media (min-width: $screen-md) {
+      padding: 10px 5px;
+    }
+  }
+
+  .panel-footer {
+    padding: 5px;
+  }
+}
