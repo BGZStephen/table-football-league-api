@@ -1,65 +1,48 @@
+.col {
+  align-items: center;
+  color: white;
+  display: flex;
+  margin-right: 10px;
+  width: 100%;
+
+  &:first-of-type {
+    margin-left: 10px;
+  }
+
+  &:last-of-type {
+    margin-right: 10px;
+  }
+}
+
 @for $i from 1 through 12 {
   .col-sm-#{$i} {
-    align-items: center;
-    color: white;
-    display: flex;
-    margin-right: 10px;
-    width: calc(100% - 10px);
+    @extend .col;
+
     @media(min-width: $screen-sm) {
       margin-right: 10px;
-      width: calc((100% / 12) * #{$i} - 10px);
-
-      &:last-of-type {
-        margin-right: 0;
-      }
-    }
-
-    &:last-of-type {
-      margin-right: 0;
+      width: calc(((100% - 10px) / 12) * #{$i} - 10px);
     }
   }
 }
 
 @for $i from 1 through 12 {
   .col-md-#{$i} {
-    align-items: center;
-    color: white;
-    display: flex;
-    margin-right: 10px;
-    width: calc(100% - 10px);
+    @extend .col;
+
     @media(min-width: $screen-md) {
       margin-right: 10px;
       width: calc((100% / 12) * #{$i} - 10px);
-
-      &:last-of-type {
-        margin-right: 0;
-      }
-    }
-
-    &:last-of-type {
-      margin-right: 0;
     }
   }
 }
 
 @for $i from 1 through 12 {
   .col-lg-#{$i} {
-    align-items: center;
-    color: white;
-    display: flex;
-    margin-right: 10px;
-    width: calc(100% - 10px);
+    @extend .col;
+    
     @media(min-width: $screen-md) {
       margin-right: 10px;
       width: calc((100% / 12) * #{$i} - 10px);
-
-      &:last-of-type {
-        margin-right: 0;
-      }
-    }
-
-    &:last-of-type {
-      margin-right: 0;
     }
   }
 }
@@ -68,7 +51,6 @@
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 10px;
-  padding-left: 10px;
 
   &:last-of-type {
     margin-bottom: 0;
