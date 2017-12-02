@@ -1,0 +1,28 @@
+.alert {
+  padding: 8px;
+  WIDTH: 100%;
+}
+
+.alert-success {
+  @extend .alert;
+  background: $primary-green-100;
+  color: $primary-green-800;
+}
+
+.alert-info {
+  @extend .alert;
+  background: $primary-blue-100;
+  color: $primary-blue-800;
+}
+
+.alert-warning {
+  @extend .alert;
+  background: $primary-yellow-100;
+  color: $primary-yellow-800;
+}
+
+.alert-error {
+  @extend .alert;
+  background: $primary-red-100;
+  color: $primary-red-800;
+}

@@ -43,12 +43,21 @@ button {
   }
 }
 
-.button--green {
-  background: $primary-green-400;
+.button--teal {
+  background: $primary-teal-400;
   color: black;
 
   &:hover {
-    background: $primary-green-500;
+    background: $primary-teal-500;
+  }
+}
+
+.button--green {
+  background: $primary-green-700;
+  color: black;
+
+  &:hover {
+    background: $primary-green-800;
   }
 }
 
