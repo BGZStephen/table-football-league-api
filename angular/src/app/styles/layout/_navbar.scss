@@ -36,6 +36,15 @@
     }
   }
 
+  .primary-menu {
+    overflow: hidden;
+    transition: 0.5s ease all;
+
+    @media(min-width: $screen-md) {
+      transition: 0s ease all;
+    }
+  }
+
   ul, ol {
     list-style: none;
   }

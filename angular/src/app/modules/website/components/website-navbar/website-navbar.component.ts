@@ -34,4 +34,26 @@ export class WebsiteNavbarComponent implements OnInit {
       return {'height': '76px'};
     }
   }
+
+  toggleMenuVisible() {
+    this.menuVisible = !this.menuVisible;
+  }
+
+  menuResizeToggle() {
+    if (screen.width > 1024) {
+      this.menuVisible = true;
+    } else {
+      this.menuVisible = false;
+    }
+  }
+
+  primaryMenuStyle() {
+    if (screen.width > 1024) {
+      return {'max-height': `100vh`}
+    } else if (this.menuVisible) {
+      return {'max-height': `100vh`}
+    } else {
+      return {'max-height': '0'};
+    }
+  }
 }
