@@ -31,7 +31,7 @@
 
     @media(min-width: $screen-md) {
       margin-right: 10px;
-      width: calc((100% / 12) * #{$i} - 10px);
+      width: calc(((100% - 10px) / 12) * #{$i} - 10px);
     }
   }
 }
@@ -39,10 +39,10 @@
 @for $i from 1 through 12 {
   .col-lg-#{$i} {
     @extend .col;
-    
+
     @media(min-width: $screen-md) {
       margin-right: 10px;
-      width: calc((100% / 12) * #{$i} - 10px);
+      width: calc(((100% - 10px) / 12) * #{$i} - 10px);
     }
   }
 }
