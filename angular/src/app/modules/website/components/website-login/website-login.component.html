@@ -1,5 +1,7 @@
 <div id="website-login" class="outlet-container">
-  <p>login to your account</p>
+  <div class="heading-container">
+    <h1>login</h1>
+  </div>
   <div id="login-form-container">
     <form #f="ngForm" (ngSubmit)="onLogin(f.value)">
       <div class="form-row">
@@ -14,10 +16,13 @@
       <div class="input-error" *ngIf="formValues.password.hasError">
         <p>{{formValues.password.message}}
       </div>
-      <button class="button button-green">Login</button>
+      <div class="form-row">
+        <button class="button button-xl button--yellow">Login</button>
+      </div>
     </form>
-    <a>Forgot your password?</a>
-    <p>Don't have an account??</p>
-    <a>Create an account??</a>
+    <div class="form-row useful-links-container">
+      <a>Forgot your password?</a>
+      <a>Create an account</a>
+    </div>
   </div>
 </div>

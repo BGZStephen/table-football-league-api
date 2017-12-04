@@ -1,52 +1,54 @@
 <div id="website-register" class="outlet-container">
-  <div id="heading-container">
+  <div class="heading-container">
     <h1>Register</h1>
   </div>
   <div id="register-form-container">
     <form #f="ngForm" (ngSubmit)="onRegister(f.value)">
       <div class="form-row">
-        <label class="label--white">First name</label>
-        <input type="text" name="firstName" #firstName required ngModel>
+        <i class="fa fa-user"></i>
+        <input type="text" placeholder="Frist name"name="firstName" #firstName required ngModel>
       </div>
-      <div class="input-error" *ngIf="formValues.firstName.hasError">
+      <div class="alert--error" *ngIf="formValues.firstName.hasError">
         <p>{{formValues.firstName.message}}
       </div>
       <div class="form-row">
-        <label class="label--white">Last name</label>
-        <input type="text" name="lastName" #lastName required ngModel>
+        <i class="fa fa-user"></i>
+        <input type="text" placeholder="Last name" name="lastName" #lastName required ngModel>
       </div>
-      <div class="input-error" *ngIf="formValues.lastName.hasError">
+      <div class="alert--error" *ngIf="formValues.lastName.hasError">
         <p>{{formValues.lastName.message}}
       </div>
       <div class="form-row">
-        <label class="label--white">Username</label>
-        <input type="text" name="username" #username required ngModel>
+        <i class="fa fa-user"></i>
+        <input type="text" placeholder="Username" name="username" #username required ngModel>
       </div>
-      <div class="input-error" *ngIf="formValues.username.hasError">
+      <div class="alert--error" *ngIf="formValues.username.hasError">
         <p>{{formValues.username.message}}
       </div>
       <div class="form-row">
-        <label class="label--white">Email</label>
-        <input type="text" name="email" #email required ngModel>
+        <i class="fa fa-envelope-o"></i>
+        <input type="text" placeholder="Email" name="email" #email required ngModel>
       </div>
-      <div class="input-error" *ngIf="formValues.email.hasError">
+      <div class="alert--error" *ngIf="formValues.email.hasError">
         <p>{{formValues.email.message}}
       </div>
       <div class="form-row">
-        <label class="label--white">Password</label>
-        <input type="password" name="password" #password required ngModel>
+        <i class="fa fa-lock"></i>
+        <input type="password" placeholder="Passwrod" name="password" #password required ngModel>
       </div>
-      <div class="input-error" *ngIf="formValues.password.hasError">
+      <div class="alert--error" *ngIf="formValues.password.hasError">
         <p>{{formValues.password.message}}
       </div>
       <div class="form-row">
-        <label class="label--white">Confirm password</label>
-        <input type="password" name="confirmPassword" #confirmPassword required ngModel>
+        <i class="fa fa-lock"></i>
+        <input type="password" placeholder="Confirm password" name="confirmPassword" #confirmPassword required ngModel>
       </div>
-      <div class="input-error" *ngIf="formValues.confirmPassword.hasError">
+      <div class="alert--error" *ngIf="formValues.confirmPassword.hasError">
         <p>{{formValues.confirmPassword.message}}
       </div>
-      <button class="button button--light-blue" routerLink="/register">Register</button>
+      <div class="form-row">
+        <button class="button button-xl button--blue" rou terLink="/register">Register</button>
+      </div>
     </form>
   </div>
 </div>
