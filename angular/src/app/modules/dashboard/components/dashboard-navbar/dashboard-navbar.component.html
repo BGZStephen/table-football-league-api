@@ -7,7 +7,7 @@
     </div>
     <ul *ngIf="menuItems" class="primary-menu" (window:resize)="menuResizeToggle()" [ngStyle]="primaryMenuStyle()">
       <li class="navbar-item" *ngFor="let menuItem of menuItems; let i = index" [ngStyle]="submenuActiveStyle(i)">
-        <div class="navbar-item-content" routerLink="{{menuItem.link}}" (click)="toggleSubmenuActive(i)">
+        <div class="navbar-item-content" routerLink="{{menuItem.link}}" (click)="toggleSubmenuActive(i)" (click)="meniItem.clickAction()">
           <i class="{{menuItem.iconClass}}"></i>
           <span>{{menuItem.name}}</span>
         </div>

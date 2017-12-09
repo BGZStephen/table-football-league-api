@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { GlobalService } from 'app/services/global.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -16,10 +17,12 @@ export class DashboardNavbarComponent implements OnInit {
     {name: 'Teams', iconClass: 'fa fa-users fa-2x', link: '/dashboard/teams'},
     {name: 'Leagues', iconClass: 'fa fa-list-alt fa-2x', link: '/dashboard/leagues'},
     {name: 'Account', iconClass: 'fa fa-cog fa-2x', link: '/dashboard/account'},
-    {name: 'Logout', iconClass: 'fa fa-power-off fa-2x', link: '/'},
+    {name: 'Logout', iconClass: 'fa fa-power-off fa-2x', 'clickAction' : this.onLogout},
   ]
 
-  constructor() { }
+  constructor(
+    private router: Router,
+  ) { }
 
   ngOnInit() {}
 
@@ -60,6 +63,12 @@ export class DashboardNavbarComponent implements OnInit {
     } else {
       return {'max-height': '0'};
     }
+  }
+
+  onLogout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    this.router.navigate('/');
   }
 
 }
