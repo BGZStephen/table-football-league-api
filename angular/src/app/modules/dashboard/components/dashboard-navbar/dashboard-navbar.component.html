@@ -1,28 +1,16 @@
 <div id="dashboard-navbar">
   <div class="navbar-container">
     <div id="logo-container">
-      <h2>My Table Football</h2>
       <i class="fa fa-bars" (click)="toggleMenuVisible()"></i>
-      <img src="/assets/images/logo.png">
+      <h2 routerLink="/">My Foosball</h2>
+      <i class="fa fa-search"></i>
     </div>
-    <ul [ngStyle]="menuVisibleStyle()">
-      <li routerLink="/dashboard" routerLinkActive="active-route" [routerLinkActiveOptions]="{exact: true}">
-        <i class="fa fa-home"></i><p>Home</p>
-      </li>
-      <li routerLink="/dashboard/fixtures" routerLinkActive="active-route">
-        <i class="fa fa-handshake-o"></i><p>Fixtures</p>
-      </li>
-      <li routerLink="/dashboard/leagues" routerLinkActive="active-route">
-        <i class="fa fa-list-alt"></i><p>Leagues</p>
-      </li>
-      <li routerLink="/dashboard/teams" routerLinkActive="active-route">
-        <i class="fa fa-users"></i><p>Teams</p>
-      </li>
-      <li routerLink="/dashboard/account" routerLinkActive="active-route">
-        <i class="fa fa-cogs"></i><p>Account</p>
-      </li>
-      <li routerLink="/" (click)="onLogout()">
-        <i class="fa fa-power-off"></i><p>Logout</p>
+    <ul *ngIf="menuItems" class="primary-menu" (window:resize)="menuResizeToggle()" [ngStyle]="primaryMenuStyle()">
+      <li class="navbar-item" *ngFor="let menuItem of menuItems; let i = index" [ngStyle]="submenuActiveStyle(i)">
+        <div class="navbar-item-content" routerLink="{{menuItem.link}}" (click)="toggleSubmenuActive(i)">
+          <i class="{{menuItem.iconClass}}"></i>
+          <span>{{menuItem.name}}</span>
+        </div>
       </li>
     </ul>
   </div>

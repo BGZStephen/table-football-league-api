@@ -11,7 +11,7 @@ const winston = require('winston');
 require('./models');
 
 // db connection
-mongoose.connect('mongodb://stephen:klapaucius@ds137540.mlab.com:37540/bgzstephen-table-football-league');
+mongoose.connect(config.database);
 
 mongoose.connection.on('connected', () => {
   winston.info('Database connection successful');
