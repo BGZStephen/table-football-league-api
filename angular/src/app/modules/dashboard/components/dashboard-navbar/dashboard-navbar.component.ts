@@ -68,7 +68,7 @@ export class DashboardNavbarComponent implements OnInit {
   onLogout() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    this.router.navigate('/');
+    this.router.navigate(['/']);
   }
 
 }
