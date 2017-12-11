@@ -52,17 +52,21 @@
   .navbar-item {
     flex-direction: column;
     display: flex;
+    max-height: 45px;
     justify-content: center;
     overflow: hidden;
     transition: 0.3s ease all;
+
+    @media(min-width: $screen-md) {
+      max-height: none;
+    }
   }
 
   .navbar-item-content {
     color: #AAA;
     cursor: pointer;
+    align-items: center;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     height: 100%;
     position: relative;
     transition: 0.3s ease all;
@@ -73,6 +77,16 @@
       right: 10px;
     }
 
+    i {
+      font-size: 20px;
+      margin-left: 15px;
+      margin-right: 15px;
+
+      @media(min-width: $screen-md) {
+        font-size: 32px;
+      }
+    }
+
     span {
       font-size: 0.8em;
     }
@@ -81,6 +95,11 @@
     &.route-active {
       background: $primary-black-800;
       color: #EEE;
+    }
+
+    @media(min-width: $screen-md) {
+      flex-direction: column;
+      justify-content: center;
     }
   }
 
