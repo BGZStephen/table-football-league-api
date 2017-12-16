@@ -5,8 +5,6 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-dashboard-navbar',
   templateUrl: './dashboard-navbar.component.html',
-  styleUrls: ['./dashboard-navbar.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class DashboardNavbarComponent implements OnInit {
 
@@ -28,9 +26,7 @@ export class DashboardNavbarComponent implements OnInit {
     ]
   }
 
-  ngOnInit() {
-    this.globalService.notification.show({message: 'working'})
-  }
+  ngOnInit() {}
 
   toggleSubmenuActive = (index) => {
     if (index === this.currentSubmenuActive) {

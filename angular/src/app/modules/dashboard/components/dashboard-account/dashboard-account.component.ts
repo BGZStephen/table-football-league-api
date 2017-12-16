@@ -19,7 +19,6 @@ export class DashboardAccountComponent implements OnInit {
     this.apiService.users.get(user._id)
     .subscribe(
       res => {
-        console.log(res)
         this.user = res;
       },
       errorRes => {
