@@ -36,7 +36,7 @@ export class WebsiteLoginComponent implements OnInit {
           this.globalService.redirection.delayed('/dashboard', 300);
         },
         error => {
-          this.globalService.notification.error({message: error.statusText});
+          this.globalService.errorHandler.process(error);
         }
       )
     }

@@ -23,8 +23,8 @@ export class DashboardAccountComponent implements OnInit {
       res => {
         this.user = res;
       },
-      errorRes => {
-
+      error => {
+        this.globalService.errorHandler.process(error);
       }
     )
   }
