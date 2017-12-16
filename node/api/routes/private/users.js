@@ -46,10 +46,11 @@ async function updateOne(req, res) {
 
   try {
     Object.keys(req.body).forEach(function (key) {
-      if(updateFields.indexOf(key)) {
+      if(updateFields.indexOf(key) > -1) {
         user[key] = req.body[key]
       }
     })
+
 
     if(updateParams.password) {
       user.password = createHash(req.body.password);
