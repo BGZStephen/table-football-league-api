@@ -1,38 +1,32 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GlobalService } from 'app/services/global.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-navbar',
   templateUrl: './dashboard-navbar.component.html',
-  styleUrls: ['./dashboard-navbar.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class DashboardNavbarComponent implements OnInit {
 
   currentSubmenuActive: number = -1;
   menuVisible: boolean = false;
-  menuItems: Array<object> = [];
+  menuItems: Array<object> = [
+    {name: 'Home', iconClass: 'fa fa-home fa-2x', link: '/dashboard'},
+    {name: 'Fixtures', iconClass: 'fa fa-calendar fa-2x', link: '/dashboard/fixtures/register'},
+    {name: 'Teams', iconClass: 'fa fa-users fa-2x', link: '/dashboard/teams'},
+    {name: 'Leagues', iconClass: 'fa fa-list-alt fa-2x', link: '/dashboard/leagues'},
+    {name: 'Account', iconClass: 'fa fa-cog fa-2x', link: '/dashboard/account'},
+    {name: 'Logout', iconClass: 'fa fa-power-off fa-2x', clickAction: this.onLogout},
+  ];
 
   constructor(
     private globalService: GlobalService,
     private router: Router,
-  ) {
-    this.menuItems = [
-      {name: 'Home', iconClass: 'fa fa-home fa-2x', link: '/dashboard'},
-      {name: 'Fixtures', iconClass: 'fa fa-calendar fa-2x', link: '/dashboard/fixtures/register'},
-      {name: 'Teams', iconClass: 'fa fa-users fa-2x', link: '/dashboard/teams'},
-      {name: 'Leagues', iconClass: 'fa fa-list-alt fa-2x', link: '/dashboard/leagues'},
-      {name: 'Account', iconClass: 'fa fa-cog fa-2x', link: '/dashboard/account'},
-      {name: 'Logout', iconClass: 'fa fa-power-off fa-2x', clickAction: this.onLogout},
-    ]
-  }
+  ) { }
 
-  ngOnInit() {
-    this.globalService.notification.show({message: 'working'})
-  }
+  ngOnInit() {}
 
-  toggleSubmenuActive = (index) => {
+  toggleSubmenuActive(index) {
     if (index === this.currentSubmenuActive) {
       this.currentSubmenuActive = -1;
     } else {
@@ -40,7 +34,7 @@ export class DashboardNavbarComponent implements OnInit {
     }
   }
 
-  submenuActiveStyle = (index) => {
+  submenuActiveStyle(index) {
     if (index === this.currentSubmenuActive && document.getElementsByClassName('navbar-submenu')[index]) {
       const height = document.getElementsByClassName('navbar-submenu')[index].clientHeight;
       return {'height': `${76 + height}px`}
@@ -49,11 +43,11 @@ export class DashboardNavbarComponent implements OnInit {
     }
   }
 
-  toggleMenuVisible = () => {
+  toggleMenuVisible() {
     this.menuVisible = !this.menuVisible;
   }
 
-  menuResizeToggle = () => {
+  menuResizeToggle() {
     if (screen.width > 1024) {
       this.menuVisible = true;
     } else {
@@ -61,7 +55,7 @@ export class DashboardNavbarComponent implements OnInit {
     }
   }
 
-  primaryMenuStyle = () => {
+  primaryMenuStyle() {
     if (screen.width > 1024) {
       return {'max-height': `100vh`}
     } else if (this.menuVisible) {
@@ -71,8 +65,8 @@ export class DashboardNavbarComponent implements OnInit {
     }
   }
 
-  onLogout = () => {
-    this.globalService.notification.show({message: 'Logout successful'})
+  onLogout() {
+    // this.globalService.notification.show({message: 'Logout successful'})
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     this.router.navigate(['/']);

@@ -1,16 +1,16 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { GlobalService } from 'app/services/global.service';
 
 @Component({
   selector: 'app-dashboard-home',
   templateUrl: './dashboard-home.component.html',
-  styleUrls: ['./dashboard-home.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class DashboardHomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private globalService: GlobalService
+  ) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
 }

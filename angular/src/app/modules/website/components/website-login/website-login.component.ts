@@ -22,8 +22,7 @@ export class WebsiteLoginComponent implements OnInit {
     private globalService: GlobalService,
   ) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onLogin(user) {
     const validation = this.validateForm(user);
