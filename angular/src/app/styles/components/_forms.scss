@@ -15,6 +15,12 @@
   }
 }
 
+.input-error {
+  color: $primary-red-600;
+  font-size: 0.8em;
+  margin-left: 5px
+}
+
 input {
   background: none;
   border: 1px solid $primary-black-400;
