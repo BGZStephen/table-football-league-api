@@ -8,7 +8,7 @@ const configs = {
       api_key: '$API_KEY',
       api_secret: '$API_SECRET'
     },
-    mailjet: {
+    mailJet: {
       apiKey: '$MAILJET_API_KEY',
       secret: '$MAILJET_SECRET',
     },
@@ -22,7 +22,7 @@ const configs = {
       api_key: '$API_KEY',
       api_secret: '$API_SECRET'
     },
-    mailjet: {
+    mailJet: {
       apiKey: '$MAILJET_API_KEY',
       secret: '$MAILJET_SECRET',
     },
@@ -36,7 +36,7 @@ const configs = {
       api_key: '$API_KEY',
       api_secret: '$API_SECRET'
     },
-    mailjet: {
+    mailJet: {
       apiKey: '$MAILJET_API_KEY',
       secret: '$MAILJET_SECRET',
     },
