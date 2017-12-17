@@ -1,4 +1,4 @@
 require('./user');
 require('./team');
-require('./fixture');
 require('./league');
+require('./fixture');

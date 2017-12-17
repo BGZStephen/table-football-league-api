@@ -5,12 +5,12 @@ const LeagueSchema = Schema({
   createdOn: Date,
   name: {
     type: String,
-    unique: true
+    unique: true,
   },
   administrators: [{type: Schema.ObjectId, ref: 'User'}],
   teams: [{
     _id: {
-      type: Schema.ObjectId, ref: 'Team'
+      type: Schema.ObjectId, ref: 'Team',
     },
     wins: Number,
     losees: Number,

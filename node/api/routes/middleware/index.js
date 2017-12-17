@@ -37,7 +37,7 @@ async function fetchResource(req, res, next) {
     return errorHandler.apiError(res, 'Resource not found', 404);
   }
 
-  req[query] = resource
+  req[query] = resource;
   next();
 }
 
@@ -50,7 +50,7 @@ function authorizeRoute(req, res, next) {
 
     next();
   } catch (error) {
-    winston.error(error)
+    winston.error(error);
     res.sendStatus(500);
   }
 }
