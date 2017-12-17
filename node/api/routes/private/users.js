@@ -51,7 +51,6 @@ async function updateOne(req, res) {
       }
     })
 
-
     if(updateParams.password) {
       user.password = createHash(req.body.password);
     }

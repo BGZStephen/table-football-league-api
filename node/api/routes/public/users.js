@@ -84,13 +84,11 @@ async function authenticate(req, res, next) {
 
 async function checkExistingUser(expected, query) {
   const result = await User.findOne(query)
-
-  if (result !== expected) {
-    if (expected) {
-      return errorHandler.apiError(res, 'User not found', 404);
-    } else {
-      return errorHandler.apiError(res, 'User already exists', 500);
-    }
+  
+  if (expected && result !== expected) {
+    return errorHandler.apiError(res, 'User not found', 404);
+  } else {
+    return errorHandler.apiError(res, 'User already exists', 500);
   }
 }
 

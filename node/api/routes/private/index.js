@@ -1,9 +1,10 @@
 const express = require('express');
 const Multer  = require('multer')
 const Fixtures = require('./fixtures');
-const Leagues = require('./leagues');
 const Middleware = require('../middleware');
+const Leagues = require('./leagues');
 const Users = require('./users');
+const Teams = require('./teams');
 
 const upload = Multer({ dest: 'uploads/' })
 const router = express.Router();
@@ -23,6 +24,12 @@ router.get('/leagues/:id', Leagues.getOne);
 router.delete('/leagues/:id', Leagues.deleteOne);
 router.put('/leagues/:id', Leagues.updateOne);
 
+router.get('/teams', Teams.getAll);
+router.post('/teams', Teams.create);
+router.all('/teams/:id', Middleware.fetchResource);
+router.get('/teams/:id', Teams.getOne);
+router.delete('/teams/:id', Teams.deleteOne);
+router.put('/teams/:id', Teams.updateOne);
 
 router.post('/fixtures', Fixtures.create);
 router.get('/fixtures', Fixtures.getAll);

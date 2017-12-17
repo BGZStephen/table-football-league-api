@@ -5,21 +5,23 @@ const errorHandler = require('../../services/error-handler');
 
 const User = mongoose.model('User');
 const League = mongoose.model('League');
+const Team = mongoose.model('Team');
 const ObjectId = mongoose.Types.ObjectId;
 
 async function fetchResource(req, res, next) {
   const resources = {
     league: async function(id) {return await League.findById(ObjectId(id))},
     user: async function(id) {return await User.findById(ObjectId(id))},
+    team: async function(id) {return await Team.findById(ObjectId(id))},
   }
 
   const id = req.params.id;
   if (!id) {
-    return errorHandler.apiError(res, 'ID is required', 500);
+    return errorHandler.apiError(res, 'ID is required', 400);
   }
 
   if (!/[A-Fa-f0-9]{24}/g.test(id)) {
-    return errorHandler.apiError(res, 'Invalid ID', 500);
+    return errorHandler.apiError(res, 'Invalid ID', 400);
   }
 
   // get route resource

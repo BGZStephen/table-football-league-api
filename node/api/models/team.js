@@ -4,6 +4,12 @@ const Schema = mongoose.Schema;
 const TeamSchema = Schema({
   createdOn: Date,
   name: String,
+  statistics: {
+    wins: Number,
+    losses: Number,
+    goalsScored: Number,
+    goalsConceded: Number,
+  },
   players: [{type: Schema.ObjectId, ref: 'User'}],
   fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],
   leagues: [{type: Schema.ObjectId, ref: 'League'}],
@@ -41,6 +47,7 @@ TeamSchema.methods = {
 
     await this.save();
   },
+
   async updateLeagues(params) {
     params.add.forEach(function (league) {
       if (this.leagues.indexOf(league) === -1) {
@@ -56,6 +63,27 @@ TeamSchema.methods = {
 
     await this.save();
   },
+
+  async updateStatistics(params) {
+    if (params.win) {
+      this.statistics.wins += 1;
+    }
+
+    if (params.loss) {
+      this.statistics.wins += 1;
+    }
+
+    if (params.goalsScored) {
+      this.goalsScored += params.goalsScored
+    }
+
+    if (params.goalsConceded) {
+      this.goalsConceded += params.goalsConceded
+    }
+
+    await this.save()
+    return;
+  }
 }
 
 module.exports = mongoose.model('Team', TeamSchema);

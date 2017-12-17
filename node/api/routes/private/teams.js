@@ -97,17 +97,16 @@ async function checkExistingTeam(expected, query) {
   const result = await Team.findOne(query)
 
   if (expected && result !== expected) {
-    return errorHandler.apiError(res, 'User not found', 404);
+    return errorHandler.apiError(res, 'Team not found', 404);
   } else {
-    return errorHandler.apiError(res, 'User already exists', 500);
+    return errorHandler.apiError(res, 'Team already exists', 500);
   }
 }
 
 module.exports = {
+  create,
   getOne,
   getAll,
   updateOne,
   deleteOne,
-  validateUser,
-  setProfileImage,
 }

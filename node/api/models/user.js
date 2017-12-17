@@ -15,6 +15,10 @@ const UserSchema = Schema({
   password: String,
   createdOn: Date,
   profileImage: String,
+  statistics: {
+    wins: Number,
+    losses: Number,
+  },
   teams: [{type: Schema.ObjectId, ref: 'Team'}],
   fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],
   leagues: [{type: Schema.ObjectId, ref: 'League'}],
