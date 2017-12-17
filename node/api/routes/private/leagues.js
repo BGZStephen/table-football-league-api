@@ -64,13 +64,26 @@ async function deleteOne(req, res) {
 }
 
 async function updateOne(req, res) {
-  const updateFields = 'administrators name teams fixtures'.split(' ');
+  const league = req.league;
+  const updateFields = 'name'.split(' ');
   const updateParams = {};
 
   try {
     Object.keys(req.body).forEach(function (key) {
       if(updateFields.indexOf(key)) {
         updateParams[key] = req.body[key];
+      }
+
+      if (req.body.administrators) {
+        league.updateAdministrators(req.body.administrators);
+      }
+
+      if (req.body.teams) {
+        league.updateTeams(req.body.teams);
+      }
+
+      if (req.body.fixtures) {
+        league.updateFixtures(req.body.fixtures);
       }
     })
 

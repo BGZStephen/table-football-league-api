@@ -48,7 +48,55 @@ LeagueSchema.methods = {
         return team;
       }
     })
-  }
+  },
+
+  async updateFixtures(params) {
+    params.add.forEach(function (fixture) {
+      if (this.fixtures.indexOf(fixture) === -1) {
+        this.fixtures.push(fixture);
+      }
+    })
+
+    params.remove.forEach(function (fixture) {
+      if (this.fixtures.indexOf(fixture) >= 0) {
+        this.fixtures.splice(this.fixtures.indexOf(fixture), 1);
+      }
+    })
+
+    await this.save();
+  },
+
+  async updateAdministrators(params) {
+    params.add.forEach(function (administrator) {
+      if (this.administrators.indexOf(administrator) === -1) {
+        this.administrators.push(administrator);
+      }
+    })
+
+    params.remove.forEach(function (administrator) {
+      if (this.administrators.indexOf(administrator) >= 0) {
+        this.administrators.splice(this.administrators.indexOf(administrator), 1);
+      }
+    })
+
+    await this.save();
+  },
+
+  async updateTeams(params) {
+    params.add.forEach(function (team) {
+      if (this.teams.indexOf(team) === -1) {
+        this.teams.push(team);
+      }
+    })
+
+    params.remove.forEach(function (team) {
+      if (this.teams.indexOf(team) >= 0) {
+        this.teams.splice(this.teams.indexOf(team), 1);
+      }
+    })
+
+    await this.save();
+  },
 }
 
 module.exports = mongoose.model('League', LeagueSchema);
