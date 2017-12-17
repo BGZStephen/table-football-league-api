@@ -5,21 +5,35 @@ const FixtureSchema = Schema({
   createdOn: Date,
   fixtureDate: Date,
   teams: {
-    one: {type: Schema.ObjectId, ref: 'Team'},
-    two: {type: Schema.ObjectId, ref: 'Team'},
+    home: {type: Schema.ObjectId, ref: 'Team'},
+    away: {type: Schema.ObjectId, ref: 'Team'},
   },
   score: {
-    teamOne: {
+    homeTeam: {
       type: Number,
       default: 0
     },
-    teamTwo: {
+    awayTeam: {
       type: Number,
       default: 0
     },
+  },
+  played: {
+    type: Boolean,
+    default: false,
   },
   type: String,
   league: {type: Schema.ObjectId, ref: 'League'},
 })
+
+FixtureSchema.methods = {
+  async submitScore(params) {
+    this.score.homeTeam = params.score.homeTeam;
+    this.score.awayTeam = params.score.awayTeam;
+    this.played = true;
+
+    await this.save();
+  }
+}
 
 module.exports = mongoose.model('Fixture', FixtureSchema);

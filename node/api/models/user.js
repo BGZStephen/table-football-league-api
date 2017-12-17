@@ -33,6 +33,8 @@ UserSchema.methods = {
     if (params.loss) {
       this.statistics.loss += 1;
     }
+
+    await this.save();
   },
 
   async updateFixtures(params) {
@@ -47,6 +49,8 @@ UserSchema.methods = {
         this.fixtures.splice(this.fixtures.indexOf(fixture), 1);
       }
     })
+
+    await this.save();
   },
 
   async updateLeagues(params) {
@@ -61,6 +65,8 @@ UserSchema.methods = {
         this.leagues.splice(this.leagues.indexOf(league), 1);
       }
     })
+
+    await this.save();
   },
 
   async updateTeams(params) {
@@ -75,6 +81,8 @@ UserSchema.methods = {
         this.teams.splice(this.teams.indexOf(team), 1);
       }
     })
+
+    await this.save();
   }
 }
 
