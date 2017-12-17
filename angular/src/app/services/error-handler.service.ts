@@ -8,8 +8,8 @@ export class ErrorHandlerService {
     private notification: NotificationService,
   ) { }
 
-  process(error) {
-    const errorMessage = JSON.parse(error._body).message;
+  process(errorResponse) {
+    const errorMessage = errorResponse.error;
     this.notification.error({
       message: errorMessage,
     });
