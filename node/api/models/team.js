@@ -74,15 +74,14 @@ TeamSchema.methods = {
     }
 
     if (params.goalsScored) {
-      this.goalsScored += params.goalsScored
+      this.goalsScored += params.goalsScored;
     }
 
     if (params.goalsConceded) {
-      this.goalsConceded += params.goalsConceded
+      this.goalsConceded += params.goalsConceded;
     }
 
-    await this.save()
-    return;
+    await this.save();
   }
 }
 

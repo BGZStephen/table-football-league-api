@@ -22,7 +22,7 @@ async function deleteOne(req, res) {
 
 async function getAll(req, res, next) {
   try {
-    const users = await User.find({})
+    const users = await User.find({});
 
     if (users.length === 0) {
       return errorHandler.apiError(res, 'No users found', 404);
@@ -30,7 +30,7 @@ async function getAll(req, res, next) {
 
     res.json(users);
   } catch (error) {
-    winston.error(error)
+    winston.error(error);
     res.sendStatus(500);
   }
 }
@@ -47,7 +47,7 @@ async function updateOne(req, res) {
   try {
     Object.keys(req.body).forEach(function (key) {
       if(updateFields.indexOf(key) > -1) {
-        user[key] = req.body[key]
+        user[key] = req.body[key];
       }
     })
 
@@ -66,7 +66,7 @@ async function updateOne(req, res) {
 async function setProfileImage(req, res, next) {
   try {
     const user = req.user;
-    const cloudinaryImage = await images.uploadOne(req.file.path)
+    const cloudinaryImage = await images.uploadOne(req.file.path);
     if (!profileImageUrl) {
       return errorHandler.apiError(res, 'Something went wrong uploading your image', 500);
     }
@@ -88,7 +88,7 @@ async function validateUser(req, res, next) {
 }
 
 function createHash(string) {
-  return bcrypt.hashSync(string, 8)
+  return bcrypt.hashSync(string, 8);
 }
 
 module.exports = {

@@ -51,7 +51,7 @@ async function getAll(req, res, next) {
 
     res.json(teams);
   } catch (error) {
-    winston.error(error)
+    winston.error(error);
     res.sendStatus(400);
   }
 }
@@ -68,22 +68,22 @@ async function updateOne(req, res) {
   try {
 
     if (req.body.players) {
-      team.updatePlayers(req.body.players)
+      team.updatePlayers(req.body.players);
     }
 
     if (req.body.fixtures) {
-      team.updateFixtures(req.body.fixtures)
+      team.updateFixtures(req.body.fixtures);
     }
 
     if (req.body.leagues) {
-      team.updateLeagues(req.body.leagues)
+      team.updateLeagues(req.body.leagues);
     }
 
     Object.keys(req.body).forEach(function (key) {
       if(updateFields.indexOf(key) > -1) {
-        team[key] = req.body[key]
+        team[key] = req.body[key];
       }
-    })
+    });
 
     await team.save();
     res.json(team);
@@ -94,7 +94,7 @@ async function updateOne(req, res) {
 }
 
 async function checkExistingTeam(expected, query) {
-  const result = await Team.findOne(query)
+  const result = await Team.findOne(query);
 
   if (expected && result !== expected) {
     return errorHandler.apiError(res, 'Team not found', 404);

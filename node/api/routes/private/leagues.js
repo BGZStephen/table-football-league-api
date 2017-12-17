@@ -39,7 +39,7 @@ async function getAll(req, res) {
     const leagues = await League.find({});
     res.json(leagues);
   } catch (error) {
-    winston.error(error)
+    winston.error(error);
     res.sendStatus(500);
   }
 }
@@ -53,7 +53,7 @@ async function duplicateLeagueCheck(leagueName) {
 }
 
 async function deleteOne(req, res) {
-  const league = req.league
+  const league = req.league;
   try {
     await league.remove();
     res.status(200).send();
@@ -70,7 +70,7 @@ async function updateOne(req, res) {
   try {
     Object.keys(req.body).forEach(function (key) {
       if(updateFields.indexOf(key)) {
-        updateParams[key] = req.body[key]
+        updateParams[key] = req.body[key];
       }
     })
 

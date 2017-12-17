@@ -24,7 +24,7 @@ async function create(req, res) {
     await fixture.save();
     res.json(fixture);
   } catch (error) {
-    winston.error(error)
+    winston.error(error);
     res.sendStatus(500);
   }
 }
@@ -48,7 +48,7 @@ async function deleteOne() {
   try {
     const fixture = req.fixture;
     await fixture.remove();
-    res.status(200).send()
+    res.status(200).send();
   } catch (error) {
     winston.error(error);
     res.sendStatus(500);
@@ -62,7 +62,7 @@ async function updateOne(req, res) {
   try {
     Object.keys(req.body).forEach(function (key) {
       if(updateFields.indexOf(key)) {
-        updateParams[key] = req.body[key]
+        updateParams[key] = req.body[key];
       }
     })
 

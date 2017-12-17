@@ -58,13 +58,13 @@ async function authenticate(req, res, next) {
       password: 'Password is required',
     })
 
-    const user = await User.findOne({email: req.body.email})
+    const user = await User.findOne({email: req.body.email});
 
     if (!user) {
       return errorHandler.apiError(res, 'User not found', 404);
     }
 
-    compareHash(user.password, req.body.password)
+    compareHash(user.password, req.body.password);
 
     const token = jwt.sign({
       exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
@@ -83,8 +83,8 @@ async function authenticate(req, res, next) {
 }
 
 async function checkExistingUser(expected, query) {
-  const result = await User.findOne(query)
-  
+  const result = await User.findOne(query);
+
   if (expected && result !== expected) {
     return errorHandler.apiError(res, 'User not found', 404);
   } else {
@@ -93,7 +93,7 @@ async function checkExistingUser(expected, query) {
 }
 
 function createHash(string) {
-  return bcrypt.hashSync(string, 8)
+  return bcrypt.hashSync(string, 8);
 }
 
 function compareHash(hash, comparison) {
