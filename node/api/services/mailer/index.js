@@ -11,6 +11,14 @@ const mailjet = require('node-mailjet').connect(config.mailJet.apiKey, config.ma
 
 const ejsRenderFile = Promise.promisify(ejs.renderFile);
 
+/**
+ * Sends an email using the MailJet API
+ * @param {Object} params object to validate existance of keys on.
+ * @param {String} params.from senders email
+ * @param {String} params.to recipients email
+ * @param {String} params.subject email subject line
+ * @param {String} params.template ejs template name
+ */
 async function sendEmail(params) {
 
 	validate(params, {
@@ -40,6 +48,12 @@ async function sendEmail(params) {
 	return {success: true};
 }
 
+/**
+ * prepares a user welcome email to be sent
+ * @param {Object} user User object
+ * @param {String} user.email users email
+ * @param {String} user.name users name
+ */
 async function welcomeEmail(user) {
 	if (!user) {
 		throw new Error('User required for welcome email');
@@ -55,12 +69,19 @@ async function welcomeEmail(user) {
 	return await sendEmail(params);
 }
 
-async function contactFormEmail(message) {
+/**
+ * prepare a contact form submission to email
+ * @param {Object} contactFormParams params object
+ * @param {String} contactFormParams.email submitters email
+ * @param {String} contactFormParams.name submitters name
+ * @param {String} contactFormParams.message submitters message
+ */
+async function contactFormEmail(contactFormParams) {
 	if (!message) {
 		throw new Error('Message required for contact form submission');
 	}
 
-	const params = {
+	const emailParams = {
 		to: 'sjw948@gmail.com',
 		from: `stephen@stephenwright.co.uk`,
 		subject: `A new contact form message from ${message.name}`,
