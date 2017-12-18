@@ -56,7 +56,7 @@ async function deleteOne() {
 }
 
 async function updateOne(req, res) {
-  const updateFields = 'score teams fixtureDate type'.split(' ');
+  const updateFields = 'teams fixtureDate type'.split(' ');
   const updateParams = {};
 
   try {
@@ -75,10 +75,39 @@ async function updateOne(req, res) {
   }
 }
 
+async function submitScore(req, res) {
+  validate(req.body, {
+    homeTeam: 'A home team is required',
+    awayTeam: 'An away team is required',
+  })
+
+  const fixture = req.fixture;
+  const params = {
+    homeTeam: {
+      _id: req.body.homeTeam._id,
+      goalsScored: req.body.homeTeam.goalsScored,
+      goalsConceded: req.body.homeTeam.goalsScored,
+    },
+    awayTeam: {
+      _id: req.body.awayTeam._id,
+      goalsScored: req.body.awayTeam.goalsScored,
+      goalsConceded: req.body.awayTeam.goalsScored,
+    }
+  }
+  try {
+    await fixture.submitScore(params)
+    res.json(fixture)
+  } catch (error) {
+    winston.error(error);
+    res.sendStatus(400);
+  }
+}
+
 module.exports = {
   create,
   getAll,
   getOne,
   deleteOne,
   updateOne,
+  submitScore,
 }

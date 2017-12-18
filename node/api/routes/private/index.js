@@ -37,5 +37,6 @@ router.all('/fixtures/:id', Middleware.fetchResource);
 router.get('/fixtures/:id', Fixtures.getOne);
 router.put('/fixtures/:id', Fixtures.updateOne);
 router.delete('/fixtures/:id', Fixtures.deleteOne);
+router.post('/fixtures/:id/submit-score', Fixtures.submitScore);
 
 module.exports = router;
