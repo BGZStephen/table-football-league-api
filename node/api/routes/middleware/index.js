@@ -8,6 +8,14 @@ const League = mongoose.model('League');
 const Team = mongoose.model('Team');
 const ObjectId = mongoose.Types.ObjectId;
 
+/**
+ * Fetch a mongoose resource
+ * @param {Object} req express request object
+ * @param {Object} req.params url params
+ * @param {ObjectId} req.params.id resource ID
+ * @param {object} res express response object
+ * @param {callback} next middleware progression callback
+ */
 async function fetchResource(req, res, next) {
   const resources = {
     league: async function(id) {return await League.findById(ObjectId(id))},
@@ -41,6 +49,14 @@ async function fetchResource(req, res, next) {
   next();
 }
 
+/**
+ * Validate authorization token presence in headers
+ * @param {Object} req express request object
+ * @param {Object} req.headers request headers
+ * @param {String} [req.headers.authorization] authorization token
+ * @param {object} res express response object
+ * @param {callback} next middleware progression callback
+ */
 function authorizeRoute(req, res, next) {
   try {
     const authorization = req.headers.authorization;
