@@ -14,7 +14,7 @@ const UserSchema = Schema({
   username: String,
   password: String,
   createdOn: Date,
-  profileImage: String,
+  profileImageUrl: String,
   statistics: {
     wins: Number,
     losses: Number,
