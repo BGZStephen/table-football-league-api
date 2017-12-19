@@ -10,6 +10,21 @@ const validate = require('../../services/validate');
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
 
+/**
+ * @api {post} /users Create a User
+ * @apiName CreateUser
+ * @apiGroup User
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.body}
+ * @apiParam {req.body.firstName} user first name
+ * @apiParam {req.body.lastName} user last name
+ * @apiParam {req.body.email} user email
+ * @apiParam {req.body.password} user password
+ * @apiParam {req.body.confirmPassword} password to check with
+ *
+ * @apiSuccess {User, JWT} new User object + json web token.
+ */
 async function create(req, res, next) {
   try {
     validate(req.body, {
@@ -51,6 +66,18 @@ async function create(req, res, next) {
   }
 }
 
+/**
+ * @api {post} /users/authenticate authenticate a user
+ * @apiName AuthenticateUser
+ * @apiGroup User
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.body}
+ * @apiParam {req.body.email} user email
+ * @apiParam {req.body.password} entered password to compare against stored password
+ *
+ * @apiSuccess {User, JWT} User object + json web token.
+ */
 async function authenticate(req, res, next) {
   try {
     validate(req.body, {
@@ -82,6 +109,11 @@ async function authenticate(req, res, next) {
   }
 }
 
+/**
+ * Chexk existance of a user against an expected result
+ * @param {Boolean} expected expected outcome
+ * @param {Object} query an object representing a mongoose query to use for existance checking
+ */
 async function checkExistingUser(expected, query) {
   const result = await User.findOne(query);
 
@@ -92,16 +124,30 @@ async function checkExistingUser(expected, query) {
   }
 }
 
+/**
+ * Return a hash of a string
+ * @param {String} string
+ */
 function createHash(string) {
   return bcrypt.hashSync(string, 8);
 }
 
+/**
+ * Compare a hash with a string to check validity
+ * @param {Hash} hash hash to check
+ * @param {String} comparison string to validate hash with
+ */
 function compareHash(hash, comparison) {
   if (!bcrypt.compareSync(comparison, hash)) {
     return errorHandler.apiError(res, 'Incorrect password', 403);
   }
 }
 
+/**
+ * Compare two strings, if they don't match, error
+ * @param {String} password password to compare with
+ * @param {String} passwordComparison password to check
+ */
 function comparePassword(password, passwordComparison) {
   if (password !== passwordComparison) {
     return errorHandler.apiError(res, 'Passwords do not match', 500);
