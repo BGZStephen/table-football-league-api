@@ -97,7 +97,7 @@ async function getOne(req, res) {
 }
 
 /**
- * @api {put} /teams/:id get a team
+ * @api {put} /teams/:id update a team
  * @apiName UpdateOne
  * @apiGroup Team
  *
