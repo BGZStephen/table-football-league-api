@@ -31,7 +31,6 @@ async function deleteOne(req, res) {
   }
 }
 
-
 /**
  * @api {get} /users Get all users
  * @apiName GetAllUsers
@@ -143,7 +142,7 @@ async function setProfileImage(req, res) {
 
 /**
  * @api {all} /users/:id decode & validate a user JWT
- * @apiName SetProfileImage
+ * @apiName ValidateUser
  * @apiGroup User
  *
  * @apiParam {req} Express request object.

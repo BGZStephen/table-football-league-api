@@ -8,6 +8,19 @@ const User = mongoose.model('User');
 const Team = mongoose.model('Team');
 const ObjectId = mongoose.Types.ObjectId;
 
+/**
+ * @api {post} /teams create a new Team
+ * @apiName CreateTeam
+ * @apiGroup Team
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.body} team parameters object object.
+ * @apiParam {req.body.name} new Team name.
+ * @apiParam {req.body.players} Array of player ID's to form the team.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {object} new Team object.
+ */
 async function create(req, res) {
   try {
     validate(req.body, {
@@ -29,6 +42,18 @@ async function create(req, res) {
   }
 }
 
+/**
+ * @api {delete} /teams/:id delete a team
+ * @apiName DeleteOne
+ * @apiGroup Team
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.params} request url parameters
+ * @apiParam {req.params.id} team ID.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {StatusCode} new Team object.
+ */
 async function deleteOne(req, res) {
   const team = req.team;
 
@@ -56,10 +81,43 @@ async function getAll(req, res, next) {
   }
 }
 
+/**
+ * @api {get} /teams/:id get a team
+ * @apiName GetOne
+ * @apiGroup Team
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.team} Team onject fetched by middleware
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {object} Team object.
+ */
 async function getOne(req, res) {
   res.json(req.team);
 }
 
+/**
+ * @api {put} /teams/:id get a team
+ * @apiName UpdateOne
+ * @apiGroup Team
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.team} Team onject fetched by middleware
+ * @apiParam {req.body} Team update params object.
+ * @apiParam {req.body.name} updated Team name.
+ * @apiParam {req.body.players} players params object.
+ * @apiParam {req.body.players.add} array of players to add.
+ * @apiParam {req.body.players.remove} array of players to remove.
+ * @apiParam {req.body.fixtures} fixtures params object.
+ * @apiParam {req.body.fixtures.add} array of fixtures to add.
+ * @apiParam {req.body.fixtures.remove} array of fixtures to remove.
+ * @apiParam {req.body.leagues} leagues params object.
+ * @apiParam {req.body.leagues.add} array of leagues to add.
+ * @apiParam {req.body.leagues.remove} array of leagues to remove.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {object} updated Team object.
+ */
 async function updateOne(req, res) {
   const team = req.team;
   const updateFields = 'name'.split(' ');
@@ -93,6 +151,11 @@ async function updateOne(req, res) {
   }
 }
 
+/**
+ * Chexk existance of a team against an expected result
+ * @param {Boolean} expected expected outcome
+ * @param {Object} query an object representing a mongoose query to use for existance checking
+ */
 async function checkExistingTeam(expected, query) {
   const result = await Team.findOne(query);
 
