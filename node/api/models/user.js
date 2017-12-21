@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = Schema({
+  admin: {
+    type: Boolean,
+    default: false,
+  }
   firstName: {
     type: String,
     required: true,

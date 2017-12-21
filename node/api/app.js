@@ -33,7 +33,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(bodyParser.json());
 
 app.use(require('./routes/public'));
-app.use(require('./routes/private'));
+app.use('/private', require('./routes/private'));
+app.use('/admin', require('./routes/admin'));
 
 const port = 3000;
 app.listen(port, () => {
