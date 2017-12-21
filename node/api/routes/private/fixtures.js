@@ -6,17 +6,31 @@ const validate = require('../../services/validate')
 const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
 
+/**
+ * @api {post} /fixtures create a new Fixture
+ * @apiName CreateFixture
+ * @apiGroup Fixture
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.body} league parameters object object.
+ * @apiParam {req.body.date} date for the fixture.
+ * @apiParam {req.body.teams} both teams for the fixture.
+ * @apiParam {req.body.type} friendly / league fixture type.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {object} new Fixture object.
+ */
 async function create(req, res) {
   try {
     validate(req.body, {
-      fixtureDate: 'A date is required for the fixture',
+      date: 'A date is required for the fixture',
       teams: 'Teams are required',
       type: 'Fixture type is required',
     })
 
     const fixture = new Fixture({
       createdOn: Date.now(),
-      fixtureDate: req.body.fixtureDate,
+      date: req.body.date,
       teams: req.body.teams,
       type: req.body.type,
     })
@@ -29,6 +43,16 @@ async function create(req, res) {
   }
 }
 
+/**
+ * @api {get} /fixtures get all Fixtures
+ * @apiName GetAll
+ * @apiGroup Fixture
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {object} Fixture objects.
+ */
 async function getAll() {
   try {
     const fixtures = await Fixture.find({});
@@ -39,11 +63,32 @@ async function getAll() {
   }
 }
 
+/**
+ * @api {get} /fixtures/:id get one Fixture
+ * @apiName GetOne
+ * @apiGroup Fixture
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.fixture} Fixture object brought by middleware.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {object} Fixture object.
+ */
 async function getOne() {
-  const fixture = req.fixture;
-  res.json(fixture);
+  res.json(req.fixture);
 }
 
+/**
+ * @api {delete} /fixtures/:id delete one Fixture
+ * @apiName DelteOne
+ * @apiGroup Fixture
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.fixture} Fixture object brought by middleware.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {StatusCode} 200.
+ */
 async function deleteOne() {
   try {
     const fixture = req.fixture;
@@ -55,8 +100,22 @@ async function deleteOne() {
   }
 }
 
+/**
+ * @api {put} /fixtures/:id update one Fixture
+ * @apiName UpdateOne
+ * @apiGroup Fixture
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.body} Fixture update params
+ * @apiParam {req.body.teams} Updated teams for the fixture
+ * @apiParam {req.body.date} Updated date for the fixture
+ * @apiParam {req.body.type} Updated type for the fixture
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {object} Updated Fixture object.
+ */
 async function updateOne(req, res) {
-  const updateFields = 'teams fixtureDate type'.split(' ');
+  const updateFields = 'teams date type'.split(' ');
   const updateParams = {};
 
   try {
@@ -75,6 +134,23 @@ async function updateOne(req, res) {
   }
 }
 
+/**
+ * @api {put} /fixtures/:id/submit-score submit a fixture score
+ * @apiName SubmitScore
+ * @apiGroup Fixture
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.body} Fixture score params
+ * @apiParam {req.body.homeTeam} home team score parameters
+ * @apiParam {req.body.homeTeam.goalsScored} home team goals scored
+ * @apiParam {req.body.homeTeam.goalsConceded} home team goals conceded
+ * @apiParam {req.body.awayTeam} away team score parameters
+ * @apiParam {req.body.awayTeam.goalsScored} away team goals scored
+ * @apiParam {req.body.awayTeam.goalsConceded} away team goals conceded
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {object} Updated Fixture object.
+ */
 async function submitScore(req, res) {
   validate(req.body, {
     homeTeam: 'A home team is required',
