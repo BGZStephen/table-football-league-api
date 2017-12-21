@@ -2,8 +2,17 @@ import { RouterModule, Routes } from '@angular/router';
 
 import * as website from './modules/website/components/website-components-barrel';
 import * as dashboard from './modules/dashboard/components/dashboard-components-barrel';
+import * as adminDashboard from './modules/admin-dashboard/components/admin-dashboard-components-barrel';
 
 const APP_ROUTES: Routes = [
+  {path: 'admin-dashboard', component: dashboard.DashboardViewWrapperComponent, children: [
+    {path: '', component: adminDashboard.AdminDashboardHomeComponent},
+    {path: 'login', component: adminDashboard.AdminDashboardLoginComponent},
+    {path: 'teams', component: adminDashboard.AdminDashboardTeamsComponent},
+    {path: 'leagues', component: adminDashboard.AdminDashboardLeaguesComponent},
+    {path: 'fixtures', component: adminDashboard.AdminDashboardFixturesComponent},
+    {path: 'users', component: adminDashboard.AdminDashboardUsersComponent},
+  ]},
   {path: 'dashboard', component: dashboard.DashboardViewWrapperComponent, children: [
     {path: '', component: dashboard.DashboardHomeComponent},
     {path: 'teams', component: dashboard.DashboardTeamsComponent},
