@@ -2,6 +2,7 @@ const configs = {
   development: {
     database: '$DATABASE_URL',
     authorization: '$AUTHORIZATION',
+    adminAuthorization: '$ADMIN_AUTHORIZATION',
     jwtSecret: '$JWT_SECRET',
     cloudinary: {
       cloud_name: '$CLOUD_NAME',
@@ -16,6 +17,7 @@ const configs = {
   staging: {
     database: '$DATABASE_URL',
     authorization: '$AUTHORIZATION',
+    adminAuthorization: '$ADMIN_AUTHORIZATION',
     jwtSecret: '$JWT_SECRET',
     cloudinary: {
       cloud_name: '$CLOUD_NAME',
@@ -30,6 +32,7 @@ const configs = {
   production: {
     database: '$DATABASE_URL',
     authorization: '$AUTHORIZATION',
+    adminAuthorization: '$ADMIN_AUTHORIZATION',
     jwtSecret: '$JWT_SECRET',
     cloudinary: {
       cloud_name: '$CLOUD_NAME',
