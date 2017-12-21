@@ -29,6 +29,14 @@ const FixtureSchema = Schema({
 })
 
 FixtureSchema.methods = {
+  /**
+   * submit a score for this fixture and set it to played
+   * @param {Object} params
+   * @param {Object} params.homeTeam home team params
+   * @param {Object} params.homeTeam.score home team score
+   * @param {Object} params.awayTeam away team params
+   * @param {Object} params.awayTeam.score away team score
+   */
   async submitScore(params) {
     this.homeTeam.score = params.homeTeam.score;
     this.awayTeam.score = params.awayTeam.score;
@@ -41,6 +49,14 @@ FixtureSchema.methods = {
     await this.save();
   },
 
+  /**
+   * submit a fixture score to it's league
+   * @param {Object} params
+   * @param {Object} params.homeTeam home team params
+   * @param {Object} params.homeTeam.score home team score
+   * @param {Object} params.awayTeam away team params
+   * @param {Object} params.awayTeam.score away team score
+   */
   async submitLeagueScore(params) {
     const league = await League.findById(this.leagueId);
 
@@ -48,14 +64,12 @@ FixtureSchema.methods = {
       await league.updateTeamStatistics({
         id: params.homeTeam._id,
         win: true,
-        loss: false,
         goalsScored: params.homeTeam.score,
         goalsConceded: params.awayTeam.score,
       });
 
       await league.updateTeamStatistics({
         id: params.awayTeam._id,
-        win: false,
         loss: true,
         goalsScored: params.awayTeam.score,
         goalsConceded: params.homeTeam.score,
@@ -64,14 +78,12 @@ FixtureSchema.methods = {
       await league.updateTeamStatistics({
         id: params.awayTeam._id,
         win: true,
-        loss: false,
         goalsScored: params.awayTeam.score,
         goalsConceded: params.homeTeam.score,
       });
 
       await league.updateTeamStatistics({
         id: params.homeTeam._id,
-        win: false,
         loss: true,
         goalsScored: params.homeTeam.score,
         goalsConceded: params.awayTeam.score,

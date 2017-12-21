@@ -21,6 +21,15 @@ const LeagueSchema = Schema({
 })
 
 LeagueSchema.methods = {
+  /**
+   * updated a teams statistics in the league
+   * @param {Object} params
+   * @param {ObjectId} params._id team ID
+   * @param {Boolean} params.win boolean depicting a win
+   * @param {Boolean} params.loss boolean depicting a loss
+   * @param {Number} params.goalsScored goals scored by team
+   * @param {Number} params.goalsConceded goals conceded by team
+   */
   async updateTeamStatistics(params) {
     const team = this.getTeamById(params._id);
     if (params.win) {
@@ -42,6 +51,11 @@ LeagueSchema.methods = {
     await this.save();
   },
 
+  /**
+   * get a team by passing an ID
+   * @param {Object} params
+   * @param {ObjectId} id team ID
+   */
   async getTeamById(id) {
     this.teams.forEach(function (team) {
       if (team._id === id) {
@@ -50,6 +64,13 @@ LeagueSchema.methods = {
     })
   },
 
+  /**
+   * update a leagues fixtures
+   * @param {Object} params
+   * @param {Object} params update params
+   * @param {Array} params.add Array of fixture ID's to add
+   * @param {Array} params.remove Array of fixture ID's to remove
+   */
   async updateFixtures(params) {
     params.add.forEach(function (fixture) {
       if (this.fixtures.indexOf(fixture) === -1) {
@@ -66,6 +87,13 @@ LeagueSchema.methods = {
     await this.save();
   },
 
+  /**
+   * update a leagues Administrators
+   * @param {Object} params
+   * @param {Object} params update params
+   * @param {Array} params.add Array of User ID's to add
+   * @param {Array} params.remove Array of User ID's to remove
+   */
   async updateAdministrators(params) {
     params.add.forEach(function (administrator) {
       if (this.administrators.indexOf(administrator) === -1) {
@@ -82,6 +110,13 @@ LeagueSchema.methods = {
     await this.save();
   },
 
+  /**
+   * update a leagues Teams
+   * @param {Object} params
+   * @param {Object} params update params
+   * @param {Array} params.add Array of Team ID's to add
+   * @param {Array} params.remove Array of Team ID's to remove
+   */
   async updateTeams(params) {
     params.add.forEach(function (team) {
       if (this.teams.indexOf(team) === -1) {
