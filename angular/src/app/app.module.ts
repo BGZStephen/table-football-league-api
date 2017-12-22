@@ -26,6 +26,7 @@ import { AppComponent } from './app.component';
     AppRoutes,
     WebsiteModule,
     DashboardModule,
+    AdminDashboardModule,
   ],
   providers: [GlobalService, ApiService, NotificationService, RedirectionService, ErrorHandlerService],
   bootstrap: [AppComponent]

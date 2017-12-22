@@ -5,7 +5,7 @@ const UserSchema = Schema({
   admin: {
     type: Boolean,
     default: false,
-  }
+  },
   firstName: {
     type: String,
     required: true,
