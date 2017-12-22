@@ -198,6 +198,15 @@ export class ApiService {
       }
       return this.apiCall(callParams);
     },
+
+    authenticateAdminUser: (user) => {
+      const callParams = {
+        type: 'post',
+        url: '/admin/users/authenticate',
+        body: user,
+      }
+      return this.apiCall(callParams);
+    },
   }
 
   website = {

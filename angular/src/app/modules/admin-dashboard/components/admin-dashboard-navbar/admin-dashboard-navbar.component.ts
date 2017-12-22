@@ -71,7 +71,7 @@ export class AdminDashboardNavbarComponent implements OnInit {
     this.globalService.notification.show({message: 'Logout successful'})
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    this.router.navigate(['/']);
+    this.router.navigate(['/admin/login']);
   }
 
 }

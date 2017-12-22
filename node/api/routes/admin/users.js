@@ -58,6 +58,17 @@ async function authenticateAdminUser(req, res, next) {
   }
 }
 
+/**
+ * Compare a hash with a string to check validity
+ * @param {Hash} hash hash to check
+ * @param {String} comparison string to validate hash with
+ */
+function compareHash(hash, comparison) {
+  if (!bcrypt.compareSync(comparison, hash)) {
+    return errorHandler.apiError(res, 'Incorrect password', 403);
+  }
+}
+
 module.exports = {
   authenticateAdminUser,
 }

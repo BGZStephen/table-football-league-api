@@ -5,9 +5,9 @@ import * as dashboard from './modules/dashboard/components/dashboard-components-
 import * as adminDashboard from './modules/admin-dashboard/components/admin-dashboard-components-barrel';
 
 const APP_ROUTES: Routes = [
+  {path: 'admin/login', component: adminDashboard.AdminDashboardLoginComponent},
   {path: 'admin', component: adminDashboard.AdminDashboardViewWrapperComponent, children: [
     {path: '', component: adminDashboard.AdminDashboardHomeComponent},
-    {path: 'login', component: adminDashboard.AdminDashboardLoginComponent},
     {path: 'teams', component: adminDashboard.AdminDashboardTeamsComponent},
     {path: 'leagues', component: adminDashboard.AdminDashboardLeaguesComponent},
     {path: 'fixtures', component: adminDashboard.AdminDashboardFixturesComponent},
