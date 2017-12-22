@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GlobalService } from 'app/services/global.service';
 import { Router } from '@angular/router';
 
