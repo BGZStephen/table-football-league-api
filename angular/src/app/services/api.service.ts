@@ -50,7 +50,7 @@ export class ApiService {
     },
 
     getAll: () => {
-      const callParams = {type: 'get', url: '/teams'}
+      const callParams = {type: 'get', url: '/admin/teams'}
       return this.apiCall(callParams);
     },
 
@@ -104,7 +104,7 @@ export class ApiService {
     },
 
     getAll: () => {
-      const callParams = {type: 'get', url: '/private/users'}
+      const callParams = {type: 'get', url: '/admin/users'}
       return this.apiCall(callParams);
     },
 
@@ -136,8 +136,7 @@ export class ApiService {
 
   website = {
     contactForm: (message) => {
-      const callParams = {type: 'post',
-        url: '/website/contact-form', body: message}
+      const callParams = {type: 'post', url: '/website/contact-form', body: message}
       return this.apiCall(callParams);
     },
   }

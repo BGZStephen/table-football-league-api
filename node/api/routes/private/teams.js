@@ -66,21 +66,6 @@ async function deleteOne(req, res) {
   }
 }
 
-async function getAll(req, res, next) {
-  try {
-    const teams = await Team.find({})
-
-    if (teams.length === 0) {
-      return errorHandler.apiError(res, 'No teams found', 400);
-    }
-
-    res.json(teams);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(400);
-  }
-}
-
 /**
  * @api {get} /teams/:id get a team
  * @apiName GetOne

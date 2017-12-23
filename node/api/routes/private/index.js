@@ -10,7 +10,6 @@ const upload = Multer({ dest: 'uploads/' })
 const router = express.Router();
 
 router.all('/*', Middleware.authorizeRoute);
-router.get('/users', Users.getAll);
 router.all('/users/:id', Users.validateUser, Middleware.fetchResource);
 router.get('/users/:id', Users.getOne);
 router.put('/users/:id', Users.updateOne);

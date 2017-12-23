@@ -32,31 +32,6 @@ async function deleteOne(req, res) {
 }
 
 /**
- * @api {get} /users Get all users
- * @apiName GetAllUsers
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {Object} mongoose Users object.
- */
-async function getAll(req, res, next) {
-  try {
-    const users = await User.find({});
-
-    if (users.length === 0) {
-      return errorHandler.apiError(res, 'No users found', 404);
-    }
-
-    res.json(users);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
-
-/**
  * @api {get} /users/:id Get one user
  * @apiName GetUser
  * @apiGroup User
@@ -172,7 +147,6 @@ function createHash(string) {
 
 module.exports = {
   getOne,
-  getAll,
   updateOne,
   deleteOne,
   validateUser,

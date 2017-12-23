@@ -59,6 +59,31 @@ async function authenticateAdminUser(req, res, next) {
 }
 
 /**
+ * @api {get} /admin/users Get all users
+ * @apiName GetAllUsers
+ * @apiGroup User
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {Object} mongoose Users object.
+ */
+async function getAll(req, res, next) {
+  try {
+    const users = await User.find({});
+
+    if (users.length === 0) {
+      return errorHandler.apiError(res, 'No users found', 404);
+    }
+
+    res.json(users);
+  } catch (error) {
+    winston.error(error);
+    res.sendStatus(500);
+  }
+}
+
+/**
  * Compare a hash with a string to check validity
  * @param {Hash} hash hash to check
  * @param {String} comparison string to validate hash with
@@ -71,4 +96,5 @@ function compareHash(hash, comparison) {
 
 module.exports = {
   authenticateAdminUser,
+  getAll,
 }
