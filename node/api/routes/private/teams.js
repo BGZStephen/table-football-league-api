@@ -154,7 +154,6 @@ async function checkExistingTeam(expected, query) {
 module.exports = {
   create,
   getOne,
-  getAll,
   updateOne,
   deleteOne,
 }

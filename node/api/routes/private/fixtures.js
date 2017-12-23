@@ -44,26 +44,6 @@ async function create(req, res) {
 }
 
 /**
- * @api {get} /fixtures get all Fixtures
- * @apiName GetAll
- * @apiGroup Fixture
- *
- * @apiParam {req} Express request object.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {object} Fixture objects.
- */
-async function getAll() {
-  try {
-    const fixtures = await Fixture.find({});
-    res.json(fixtures);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
-
-/**
  * @api {get} /fixtures/:id get one Fixture
  * @apiName GetOne
  * @apiGroup Fixture
@@ -181,7 +161,6 @@ async function submitScore(req, res) {
 
 module.exports = {
   create,
-  getAll,
   getOne,
   deleteOne,
   updateOne,
