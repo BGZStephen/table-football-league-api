@@ -71,11 +71,6 @@ async function authenticateAdminUser(req, res, next) {
 async function getAll(req, res, next) {
   try {
     const users = await User.find({});
-
-    if (users.length === 0) {
-      return errorHandler.apiError(res, 'No users found', 404);
-    }
-
     res.json(users);
   } catch (error) {
     winston.error(error);

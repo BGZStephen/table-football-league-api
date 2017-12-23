@@ -23,7 +23,7 @@ export class ApiService {
     },
 
     getAll: () => {
-      const callParams = {type: 'get', url: '/leagues'}
+      const callParams = {type: 'get', url: '/admin/leagues'}
       return this.apiCall(callParams);
     },
 
@@ -77,7 +77,7 @@ export class ApiService {
     },
 
     getAll: () => {
-      const callParams = {type: 'get', url: '/fixtures'}
+      const callParams = {type: 'get', url: '/admin/fixtures'}
       return this.apiCall(callParams);
     },
 

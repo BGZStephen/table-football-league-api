@@ -19,11 +19,6 @@ const Team = mongoose.model('Team');
 async function getAll(req, res, next) {
   try {
     const teams = await Team.find({})
-
-    if (teams.length === 0) {
-      return errorHandler.apiError(res, 'No teams found', 400);
-    }
-
     res.json(teams);
   } catch (error) {
     winston.error(error);
