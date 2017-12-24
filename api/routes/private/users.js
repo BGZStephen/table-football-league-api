@@ -53,6 +53,20 @@ async function getTeams(req, res) {
   res.json(teams);
 }
 
+async function getFixtures(req, res) {
+  const user = req.user;
+  const fixtures = await user.getFixtures();
+
+  res.json(fixtures);
+}
+
+async function getLeagues(req, res) {
+  const user = req.user;
+  const leagues = await user.getLeagues();
+
+  res.json(leagues);
+}
+
 /**
  * @api {put} /users/:id Update one user
  * @apiName GetAllUsers
@@ -155,6 +169,8 @@ function createHash(string) {
 module.exports = {
   deleteOne,
   getOne,
+  getLeagues,
+  getFixtures,
   getTeams,
   setProfileImage,
   updateOne,

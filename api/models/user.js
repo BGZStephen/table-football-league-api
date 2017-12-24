@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Team = mongoose.model('Team');
+const League = mongoose.model('League');
+const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
 
 const UserSchema = Schema({
@@ -94,9 +96,37 @@ UserSchema.methods = {
   },
 
   async getTeams() {
-    const teams = await Team.find({players: ObjectId(this._id)})
+    const teams = await Team.find({players: ObjectId(this._id)});
     return teams;
-  }
+  },
+
+  async getLeagues() {
+    const teams = this.getTeams();
+    let leagues = [];
+
+    for (team of teams) {
+      let teamLeagues = await League.find({teams: {_id: ObjectId(this._id)}});
+      if (teamLeagues) {
+        leagues = leagues.concat(teamLeagues);
+      }
+    }
+
+    return leagues;
+  },
+
+  async getFixtures() {
+    const teams = this.getTeams();
+    let fixtures = [];
+
+    for (team of teams) {
+      let teamFixtures = await Fixture.find({teams: ObjectId(this._id)});
+      if (teamFixtures) {
+        fixtures = fixtures.concat(teamFixtures);
+      }
+    }
+
+    return fixtures;
+  },
 }
 
 module.exports = mongoose.model('User', UserSchema);

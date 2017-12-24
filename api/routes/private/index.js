@@ -15,6 +15,8 @@ router.get('/users/:id', Users.getOne);
 router.put('/users/:id', Users.updateOne);
 router.delete('/users/:id', Users.deleteOne);
 router.post('/users/:id/teams', Users.getTeams);
+router.post('/users/:id/leagues', Users.getLeagues);
+router.post('/users/:id/fixtures', Users.getFixtures);
 router.post('users/:id/profile-image', upload.single('profileImage'), Users.setProfileImage);
 
 router.post('/leagues', Leagues.create);
