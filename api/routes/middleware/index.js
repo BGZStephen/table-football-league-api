@@ -50,17 +50,61 @@ async function fetchResource(req, res, next) {
 }
 
 /**
- * Validate authorization token presence in headers
+ * Validate website authorization token presence in headers for website api calls
  * @param {Object} req express request object
  * @param {Object} req.headers request headers
  * @param {String} [req.headers.authorization] authorization token
  * @param {object} res express response object
  * @param {callback} next middleware progression callback
  */
-function authorizeRoute(req, res, next) {
+function authorizeWebsiteRoute(req, res, next) {
   try {
     const authorization = req.headers.authorization;
-    if (!authorization || (authorization !== config.authorization)) {
+    if (!authorization || (authorization !== config.authorization.website)) {
+      return errorHandler.apiError(res, 'Unauthorized access', 401);
+    }
+
+    next();
+  } catch (error) {
+    winston.error(error);
+    res.sendStatus(500);
+  }
+}
+
+/**
+ * Validate website authorization token presence in headers for dashboard api calls
+ * @param {Object} req express request object
+ * @param {Object} req.headers request headers
+ * @param {String} [req.headers.authorization] authorization token
+ * @param {object} res express response object
+ * @param {callback} next middleware progression callback
+ */
+function authorizeDashboardRoute(req, res, next) {
+  try {
+    const authorization = req.headers.authorization;
+    if (!authorization || (authorization !== config.authorization.dashboard)) {
+      return errorHandler.apiError(res, 'Unauthorized access', 401);
+    }
+
+    next();
+  } catch (error) {
+    winston.error(error);
+    res.sendStatus(500);
+  }
+}
+
+/**
+ * Validate website authorization token presence in headers for admin api calls
+ * @param {Object} req express request object
+ * @param {Object} req.headers request headers
+ * @param {String} [req.headers.authorization] authorization token
+ * @param {object} res express response object
+ * @param {callback} next middleware progression callback
+ */
+function authorizeAdminRoute(req, res, next) {
+  try {
+    const authorization = req.headers.authorization;
+    if (!authorization || (authorization !== config.authorization.admin)) {
       return errorHandler.apiError(res, 'Unauthorized access', 401);
     }
 
@@ -95,6 +139,7 @@ function authorizeAdminRoute(req, res, next) {
 
 module.exports = {
   fetchResource,
-  authorizeRoute,
-  authorizeAdminRoute
+  authorizeWebsiteRoute,
+  authorizeAdminRoute,
+  authorizeDashboardRoute,
 }

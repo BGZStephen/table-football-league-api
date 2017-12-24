@@ -4,6 +4,7 @@ const Website = require('./website');
 const Middleware = require('../middleware');
 const router = express.Router();
 
+router.all('/*', Middleware.authorizeWebsiteRoute)
 router.post('/users', Users.create);
 router.post('/users/authenticate', Users.authenticate);
 

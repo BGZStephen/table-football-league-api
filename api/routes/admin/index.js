@@ -7,7 +7,7 @@ const Fixtures = require('./fixtures');
 
 const router = express.Router();
 
-router.all('/', Middleware.authorizeAdminRoute);
+router.all('/*', Middleware.authorizeAdminRoute);
 router.get('/users', Users.getAll);
 router.post('/users/authenticate', Users.authenticateAdminUser);
 
