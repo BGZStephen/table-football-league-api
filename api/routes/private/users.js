@@ -46,6 +46,13 @@ async function getOne(req, res) {
   res.json(req.user);
 }
 
+async function getTeams(req, res) {
+  const user = req.user;
+  const teams = await user.getTeams();
+
+  res.json(teams);
+}
+
 /**
  * @api {put} /users/:id Update one user
  * @apiName GetAllUsers
@@ -146,9 +153,10 @@ function createHash(string) {
 }
 
 module.exports = {
-  getOne,
-  updateOne,
   deleteOne,
-  validateUser,
+  getOne,
+  getTeams,
   setProfileImage,
+  updateOne,
+  validateUser,
 }

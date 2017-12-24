@@ -17,7 +17,6 @@ const ObjectId = mongoose.Types.ObjectId;
  * @param {callback} next middleware progression callback
  */
 async function fetchResource(req, res, next) {
-  console.log(req.body)
   const resources = {
     league: async function(id) {return await League.findById(ObjectId(id))},
     user: async function(id) {return await User.findById(ObjectId(id))},

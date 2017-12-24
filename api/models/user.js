@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const Team = mongoose.model('Team');
+const ObjectId = mongoose.Types.ObjectId;
+
 const UserSchema = Schema({
   admin: {
     type: Boolean,
@@ -88,6 +91,11 @@ UserSchema.methods = {
     })
 
     await this.save();
+  },
+
+  async getTeams() {
+    const teams = await Team.find({players: ObjectId(this._id)})
+    return teams;
   }
 }
 
