@@ -35,7 +35,13 @@ async function create(req, res, next) {
     })
 
     comparePassword(req.body.password, req.body.confirmPassword);
-    await checkExistingUser(null, {email: req.body.email});
+    if (await userAlreadyExists({email: req.body.email})) {
+      return errorHandler.apiError(res, 'Email address already in use', 400);
+    };
+
+    if (await userAlreadyExists({username: req.body.username})) {
+      return errorHandler.apiError(res, 'Username already in use', 400);
+    };
 
     const user = new User({
       firstName: req.body.firstName,
@@ -114,14 +120,14 @@ async function authenticate(req, res, next) {
  * @param {Boolean} expected expected outcome
  * @param {Object} query an object representing a mongoose query to use for existance checking
  */
-async function checkExistingUser(expected, query) {
-  const result = await User.findOne(query);
+async function userAlreadyExists(query) {
+  const user = await User.findOne(query);
 
-  if (expected && result !== expected) {
-    return errorHandler.apiError(res, 'User not found', 404);
-  } else {
-    return errorHandler.apiError(res, 'User already exists', 500);
+  if (user) {
+    return true;
   }
+
+  return false;
 }
 
 /**

@@ -17,6 +17,7 @@ const ObjectId = mongoose.Types.ObjectId;
  * @param {callback} next middleware progression callback
  */
 async function fetchResource(req, res, next) {
+  console.log(req.body)
   const resources = {
     league: async function(id) {return await League.findById(ObjectId(id))},
     user: async function(id) {return await User.findById(ObjectId(id))},
@@ -105,28 +106,6 @@ function authorizeAdminRoute(req, res, next) {
   try {
     const authorization = req.headers.authorization;
     if (!authorization || (authorization !== config.authorization.admin)) {
-      return errorHandler.apiError(res, 'Unauthorized access', 401);
-    }
-
-    next();
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
-
-/**
- * Validate authorization token presence in headers
- * @param {Object} req express request object
- * @param {Object} req.headers request headers
- * @param {String} [req.headers.authorization] admin authorization token
- * @param {object} res express response object
- * @param {callback} next middleware progression callback
- */
-function authorizeAdminRoute(req, res, next) {
-  try {
-    const authorization = req.headers.authorization;
-    if (!authorization || (authorization !== config.adminAuthorization)) {
       return errorHandler.apiError(res, 'Unauthorized access', 401);
     }
 
