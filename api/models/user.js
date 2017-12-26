@@ -101,11 +101,11 @@ UserSchema.methods = {
   },
 
   async getLeagues() {
-    const teams = this.getTeams();
+    const teams = await this.getTeams();
     let leagues = [];
 
-    for (team of teams) {
-      let teamLeagues = await League.find({teams: {_id: ObjectId(this._id)}});
+    for (const team of teams) {
+      let teamLeagues = await League.find({teams: {_id: ObjectId(team._id)}});
       if (teamLeagues) {
         leagues = leagues.concat(teamLeagues);
       }
@@ -115,7 +115,7 @@ UserSchema.methods = {
   },
 
   async getFixtures() {
-    const teams = this.getTeams();
+    const teams = await this.getTeams();
     let fixtures = [];
 
     for (team of teams) {
