@@ -7,7 +7,7 @@
  * @param {String} params.message error message to return if validation fails.
  * @param {String} params.type expected object value type.
  */
-function validateObject(object, params) {
+function validate(object, params) {
   const errorArray = [];
   Object.keys(params).forEach(function(param) {
     if(!object[param]) {

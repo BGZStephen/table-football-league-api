@@ -29,7 +29,7 @@ async function create(req, res) {
     })
 
     await checkExistingTeam(null, {name: req.body.name});
-    await checkUsersExist(req.body.players)
+    const users = await checkUsersExist(req.body.players);
 
     const team = new Team({
       name: req.body.name,
@@ -37,6 +37,7 @@ async function create(req, res) {
     })
 
     await team.save();
+    await updateUsersTeams(users, team._id);
     res.json(team);
   } catch (error) {
     res.sendStatus(400);
@@ -153,15 +154,34 @@ async function checkExistingTeam(expected, query) {
 }
 
 /**
- * Chexk existance of a team against an expected result
+ * check that an array of userId's corresponds to valid users. If users exist, return them.
  * @param {Array} users array of users
  * @param {String} errorMessage error message to show if check fails
  */
 async function checkUsersExist(users, errorMessage) {
+  const validUsers = []
   for (const user of users) {
-    if (!User.findOne(ObjectId(user))) {
+    const validUser = await User.findOne(ObjectId(user))
+    if (!validUser) {
       return errorHandler.apiError(res, `${errorMessage} Player not found.`, 400);
+    } else {
+      validUsers.push(validUser)
     }
+  }
+
+  return validUsers;
+}
+
+/**
+ * update
+ * @param {Array} users array of users to update
+ * @param {ObjectId} teamId team ID to add to users teams
+ */
+async function updateUsersTeams(users, teamId) {
+  for (const user of users) {
+    await user.updateTeams({
+      add: [teamId],
+    });
   }
 }
 
