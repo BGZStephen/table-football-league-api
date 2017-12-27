@@ -23,9 +23,9 @@ const ObjectId = mongoose.Types.ObjectId;
 async function create(req, res) {
   try {
     validate(req.body, {
-      date: 'A date is required for the fixture',
-      teams: 'Teams are required',
-      type: 'Fixture type is required',
+      date: {message: 'A date is required for the fixture', type: 'date'},
+      teams: {message: 'Teams are required', type: 'array'},
+      type: {message: 'Fixture type is required', type: 'string'},
     })
 
     const fixture = new Fixture({
@@ -133,8 +133,8 @@ async function updateOne(req, res) {
  */
 async function submitScore(req, res) {
   validate(req.body, {
-    homeTeam: 'A home team is required',
-    awayTeam: 'An away team is required',
+    homeTeam: {message: 'A home team is required', type: 'string'},
+    awayTeam: {message: 'An away team is required', type: 'string'},
   })
 
   const fixture = req.fixture;

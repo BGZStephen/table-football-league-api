@@ -18,15 +18,19 @@ function validateObject(object, params) {
       return errorArray.push(params[param])
     }
 
-    if (param.type === 'number' && typeof value !== 'number') {
+    if (param.type === 'number' && typeof object[param] !== 'number') {
       return errorArray.push(params[param])
     }
 
-    if (param.type === 'object' && typeof value !== 'object') {
+    if (param.type === 'object' && typeof object[param] !== 'object') {
       return errorArray.push(params[param])
     }
 
-    if (param.type === 'array' && (typeof value !== 'object' && value.constructor !== Array)) {
+    if (param.type === 'array' && (typeof object[param] !== 'object' && object[param].constructor !== Array)) {
+      return errorArray.push(params[param])
+    }
+
+    if (param.type === 'date' && (object[param] instanceof Date === false)) {
       return errorArray.push(params[param])
     }
   })

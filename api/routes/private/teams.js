@@ -24,11 +24,12 @@ const ObjectId = mongoose.Types.ObjectId;
 async function create(req, res) {
   try {
     validate(req.body, {
-      name: 'Team name is required',
-      players: 'At least one player is required',
+      name: {message: 'Team name is required', type: 'string'},
+      players: {message: 'At least one player is required', type: 'array'}
     })
 
     await checkExistingTeam(null, {name: req.body.name});
+    await checkUsersExist(req.body.players)
 
     const team = new Team({
       name: req.body.name,
@@ -148,6 +149,19 @@ async function checkExistingTeam(expected, query) {
     return errorHandler.apiError(res, 'Team not found', 404);
   } else {
     return errorHandler.apiError(res, 'Team already exists', 500);
+  }
+}
+
+/**
+ * Chexk existance of a team against an expected result
+ * @param {Array} users array of users
+ * @param {String} errorMessage error message to show if check fails
+ */
+async function checkUsersExist(users, errorMessage) {
+  for (const user of users) {
+    if (!User.findOne(ObjectId(user))) {
+      return errorHandler.apiError(res, `${errorMessage} Player not found.`, 400);
+    }
   }
 }
 

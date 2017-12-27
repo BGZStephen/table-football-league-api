@@ -25,11 +25,12 @@ const ObjectId = mongoose.Types.ObjectId;
 async function authenticateAdminUser(req, res, next) {
   try {
     validate(req.body, {
-      email: 'Email address is required',
-      password: 'Password is required',
+      email: {message: 'Email address is required', type: 'string'},
+      password: {message: 'Password is required', type: 'string'},
     })
 
     const user = await User.findOne({email: req.body.email});
+    console.log(user)
 
     if (!user) {
       return errorHandler.apiError(res, 'User not found', 404);

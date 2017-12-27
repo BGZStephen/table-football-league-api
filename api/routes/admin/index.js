@@ -9,11 +9,11 @@ const router = express.Router();
 
 router.all('/*', Middleware.authorizeAdminRoute);
 router.get('/users', Users.getAll);
+router.post('/users/authenticate', Users.authenticateAdminUser);
 router.all('/users/:id*', Middleware.fetchResource);
 router.get('/users/:id', Users.getOne);
 router.put('/users/:id', Users.updateOne);
 router.delete('/users/:id', Users.deleteOne);
-router.post('/users/authenticate', Users.authenticateAdminUser);
 
 router.get('/teams', Teams.getAll);
 

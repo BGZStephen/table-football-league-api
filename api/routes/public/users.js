@@ -28,10 +28,10 @@ const ObjectId = mongoose.Types.ObjectId;
 async function create(req, res, next) {
   try {
     validate(req.body, {
-      firstName: 'First name is required',
-      email: 'Email address is required',
-      password: 'Password is required',
-      confirmPassword: 'Please re-enter your password',
+      firstName: {message: 'First name is required', type: 'string'},
+      email: {message: 'Email address is required', type: 'string'},
+      password: {message: 'Password is required', type: 'string'},
+      confirmPassword: {message: 'Please re-enter your password', type: 'string'},
     })
 
     comparePassword(req.body.password, req.body.confirmPassword);
@@ -87,8 +87,8 @@ async function create(req, res, next) {
 async function authenticate(req, res, next) {
   try {
     validate(req.body, {
-      email: 'Email address is required',
-      password: 'Password is required',
+      email: {message: 'Email address is required', type: 'string'},
+      password: {message: 'Password is required', type: 'string'},
     })
 
     const user = await User.findOne({email: req.body.email});
