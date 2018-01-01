@@ -7,19 +7,10 @@ const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
 
 const UserSchema = Schema({
-  admin: {
-    type: Boolean,
-    default: false,
-  },
-  firstName: {
-    type: String,
-    required: true,
-  },
+  admin: {type: Boolean, default: false},
+  firstName: {type: String, required: true},
   lastName: String,
-  email: {
-    type: String,
-    required: true,
-  },
+  email: {type: String, required: true},
   username: String,
   password: String,
   createdOn: Date,
@@ -28,6 +19,10 @@ const UserSchema = Schema({
   statistics: {
     wins: Number,
     losses: Number,
+  },
+  poisition: {
+    striker: {type: Boolean, default: false},
+    defender: {type: Boolean, default: false},
   },
   teams: [{type: Schema.ObjectId, ref: 'Team'}],
   fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],
