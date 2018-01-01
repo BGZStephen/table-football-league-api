@@ -46,6 +46,15 @@ async function getOne(req, res) {
   res.json(req.user);
 }
 
+async function getByEmail(req, res) {
+  console.log(req.body)
+  const query = req.body;
+
+  const user = await User.findOne({email: req.body.email})
+
+  res.json(user);
+}
+
 async function getTeams(req, res) {
   const user = req.user;
   const teams = await user.getTeams();
@@ -168,6 +177,7 @@ function createHash(string) {
 
 module.exports = {
   deleteOne,
+  getByEmail,
   getOne,
   getLeagues,
   getFixtures,

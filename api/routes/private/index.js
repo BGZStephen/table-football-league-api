@@ -10,6 +10,7 @@ const upload = Multer({ dest: 'uploads/' })
 const router = express.Router();
 
 router.all('/*', Middleware.authorizeDashboardRoute);
+router.post('/users/getByEmail', Users.getByEmail);
 router.all('/users/:id*', Users.validateUser, Middleware.fetchResource);
 router.get('/users/:id', Users.getOne);
 router.put('/users/:id', Users.updateOne);
