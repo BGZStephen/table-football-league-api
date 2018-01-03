@@ -56,6 +56,21 @@ async function getOne(req, res) {
 }
 
 /**
+ * @api {get} /leagues get all leagues
+ * @apiName GetAll
+ * @apiGroup League
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {object} League object.
+ */
+async function getAll(req, res) {
+  const leagues = await League.find({});
+  res.json(leagues);
+}
+
+/**
  * @api {delete} /leagues/:id delete a league
  * @apiName DeleteOne
  * @apiGroup League
@@ -153,4 +168,5 @@ module.exports = {
   updateOne,
   create,
   getOne,
+  getAll,
 }

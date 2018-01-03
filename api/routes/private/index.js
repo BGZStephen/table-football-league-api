@@ -20,6 +20,7 @@ router.post('/users/:id/leagues', Users.getLeagues);
 router.post('/users/:id/fixtures', Users.getFixtures);
 router.post('users/:id/profile-image', upload.single('profileImage'), Users.setProfileImage);
 
+router.get('/leagues', Leagues.getAll);
 router.post('/leagues', Leagues.create);
 router.all('/leagues/:id*', Middleware.fetchResource);
 router.get('/leagues/:id', Leagues.getOne);
