@@ -11,10 +11,10 @@ const UserSchema = Schema({
   admin: {type: Boolean, default: false},
   firstName: {type: String, required: true},
   lastName: String,
-  email: {type: String, required: true},
+  email: {type: String, required: true, unique: true},
   username: String,
   password: String,
-  createdOn: Date,
+  createdOn: {type: Date, default: () => new Date()},
   lastSignIn: Date,
   profileImageUrl: String,
   statistics: {
@@ -30,10 +30,12 @@ const UserSchema = Schema({
   leagues: [{type: Schema.ObjectId, ref: 'League'}],
 })
 
-UserSchema.pre('save', function() {
+UserSchema.pre('save', function(next) {
   if (this.isModified('password')) {
-    this.password = bcrypt.hashSync(string, 8)
+    this.password = bcrypt.hashSync(this.password, 8)
   }
+
+  next();
 })
 
 UserSchema.methods = {
