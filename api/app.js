@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const winston = require('winston');
+const errorUtils = require('./utils/error-utils');
 
 // make models globally available
 require('./models');
@@ -36,7 +37,12 @@ app.use('/admin', require('./routes/admin'));
 app.use('/private', require('./routes/private'));
 app.use(require('./routes/public'));
 
-const port = 3000;
+// error handlers
+app.use(errorUtils.logErrors);
+app.use(errorUtils.clientErrorHandler);
+app.use(errorUtils.errorHandler);
+
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   app.emit("appStarted");
 	winston.info(`Server started successfully`);
