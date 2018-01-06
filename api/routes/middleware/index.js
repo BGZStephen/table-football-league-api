@@ -61,13 +61,12 @@ function authorizeWebsiteRoute(req, res, next) {
   try {
     const authorization = req.headers.authorization;
     if (!authorization || (authorization !== config.authorization.website)) {
-      return errorHandler.apiError(res, 'Unauthorized access', 401);
+      throw ({message: 'Unauthorized access', statusCode: 401});
     }
 
     next();
   } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
+    next(error);
   }
 }
 
@@ -83,13 +82,12 @@ function authorizeDashboardRoute(req, res, next) {
   try {
     const authorization = req.headers.authorization;
     if (!authorization || (authorization !== config.authorization.dashboard)) {
-      return errorHandler.apiError(res, 'Unauthorized access', 401);
+      throw ({message: 'Unauthorized access', statusCode: 401});
     }
 
     next();
   } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
+    next(error);
   }
 }
 
@@ -110,8 +108,7 @@ function authorizeAdminRoute(req, res, next) {
 
     next();
   } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
+    next(error);
   }
 }
 

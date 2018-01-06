@@ -6,6 +6,7 @@ const config = require('../../config');
 const mailer = require('../../services/mailer');
 const errorHandler = require('../../services/error-handler');
 const validate = require('../../services/validate');
+const AsyncWrap = require('../../utils/async-wrapper');
 
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
@@ -25,52 +26,47 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {User, JWT} new User object + json web token.
  */
-async function create(req, res, next) {
-  try {
-    validate(req.body, {
-      firstName: {message: 'First name is required', type: 'string'},
-      email: {message: 'Email address is required', type: 'string'},
-      password: {message: 'Password is required', type: 'string'},
-      confirmPassword: {message: 'Please re-enter your password', type: 'string'},
-    })
+const create = AsyncWrap(async function create(req, res, next) {
+  validate(req.body, {
+    firstName: {message: 'First name is required', type: 'string'},
+    email: {message: 'Email address is required', type: 'string'},
+    password: {message: 'Password is required', type: 'string'},
+    confirmPassword: {message: 'Please re-enter your password', type: 'string'},
+  })
 
-    comparePassword(req.body.password, req.body.confirmPassword);
-    if (await userAlreadyExists({email: req.body.email})) {
-      return errorHandler.apiError(res, 'Email address already in use', 400);
-    };
+  if (await userAlreadyExists({email: req.body.email})) {
+    return errorHandler.apiError(res, 'Email address already in use', 400);
+  };
 
-    if (await userAlreadyExists({username: req.body.username})) {
-      return errorHandler.apiError(res, 'Username already in use', 400);
-    };
+  if (await userAlreadyExists({username: req.body.username})) {
+    return errorHandler.apiError(res, 'Username already in use', 400);
+  };
 
-    const user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      username: req.body.username,
-      password: createHash(req.body.password),
-    })
+  const user = new User({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    username: req.body.username,
+    password: createHash(req.body.password),
+  })
 
-    await user.save();
+  await user.save();
 
-    const token = jwt.sign({
-      exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
-      data: {
-        id: user._id,
-      }
-    }, config.jwtSecret);
+  const token = jwt.sign({
+    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
+    data: {
+      id: user._id,
+    }
+  }, config.jwtSecret);
 
-    await mailer.welcomeEmail(user)
-    res.json({
-      token: token,
-      user: {
-        _id: user._id,
-      }
-    });
-  } catch (error) {
-    res.sendStatus(500);
-  }
-}
+  await mailer.welcomeEmail(user)
+  res.json({
+    token: token,
+    user: {
+      _id: user._id,
+    }
+  });
+})
 
 /**
  * @api {post} /users/authenticate authenticate a user
@@ -97,7 +93,7 @@ async function authenticate(req, res, next) {
       return errorHandler.apiError(res, 'User not found', 404);
     }
 
-    compareHash(user.password, req.body.password);
+    // user.validatePassword(req.body.password);
 
     const token = jwt.sign({
       exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
@@ -126,38 +122,7 @@ async function userAlreadyExists(query) {
   if (user) {
     return true;
   }
-
   return false;
-}
-
-/**
- * Return a hash of a string
- * @param {String} string
- */
-function createHash(string) {
-  return bcrypt.hashSync(string, 8);
-}
-
-/**
- * Compare a hash with a string to check validity
- * @param {Hash} hash hash to check
- * @param {String} comparison string to validate hash with
- */
-function compareHash(hash, comparison) {
-  if (!bcrypt.compareSync(comparison, hash)) {
-    return errorHandler.apiError(res, 'Incorrect password', 403);
-  }
-}
-
-/**
- * Compare two strings, if they don't match, error
- * @param {String} password password to compare with
- * @param {String} passwordComparison password to check
- */
-function comparePassword(password, passwordComparison) {
-  if (password !== passwordComparison) {
-    return errorHandler.apiError(res, 'Passwords do not match', 500);
-  }
 }
 
 module.exports = {

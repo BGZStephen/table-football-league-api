@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const bcrypt = require('bcryptjs');
 
+const Schema = mongoose.Schema;
 const Team = mongoose.model('Team');
 const League = mongoose.model('League');
 const Fixture = mongoose.model('Fixture');
@@ -27,6 +28,12 @@ const UserSchema = Schema({
   teams: [{type: Schema.ObjectId, ref: 'Team'}],
   fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],
   leagues: [{type: Schema.ObjectId, ref: 'League'}],
+})
+
+UserSchema.pre('save', function() {
+  if (this.isModified('password')) {
+    this.password = bcrypt.hashSync(string, 8)
+  }
 })
 
 UserSchema.methods = {
@@ -122,6 +129,12 @@ UserSchema.methods = {
 
     return fixtures;
   },
+
+  validatePassword(password) {
+    if (!bcrypt.compareSync(password, this.password)) {
+      throw new Error({message: 'Incorrect password', statusCode: 403});
+    }
+  }
 }
 
 module.exports = mongoose.model('User', UserSchema);
