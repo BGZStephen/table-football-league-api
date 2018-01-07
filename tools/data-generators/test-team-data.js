@@ -1,28 +1,28 @@
 module.exports = [
   {
     name: 'Les grenouilles',
-    playerEmails: [
+    userEmails: [
       'jon@test.com',
       'clement@test.com'
     ]
   },
   {
     name: 'Rob\'s dream team',
-    playerEmails: [
+    userEmails: [
       'rob@test.com',
       'joe@test.com'
     ]
   },
   {
     name: 'Exit strategy united',
-    playerEmails: [
+    userEmails: [
       'will@test.com',
       'marc@test.com'
     ]
   },
   {
     name: 'Atletico Wriggle',
-    playerEmails: [
+    userEmails: [
       'stephen@test.com',
       'jon@test.com'
     ]

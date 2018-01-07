@@ -34,12 +34,13 @@ async function generateTestTeams() {
   for (let testTeam of testTeams) {
     const team = new Team({
       name: testTeam.name,
-      players: []
     })
 
-    for (const playerEmail of testTeam.playerEmails) {
-      const player = await User.findOne({email: playerEmail})
-      team.players.push(player._id);
+    for (const userEmail of testTeam.userEmails) {
+      const user = await User.findOne({email: userEmail})
+      team.addUser(user._id);
+      user.addTeam(team._id);
+      await user.save();
     }
 
     try {
@@ -52,14 +53,15 @@ async function generateTestTeams() {
 
 async function generateTestLeagues() {
   const testLeagues = require('./test-league-data');
-  const teams = await Team.find({});
+  const teams = await Team.find({}).populate('users');
 
   for (let testLeague of testLeagues) {
     const league = new League(testLeague)
-    league.teams = [];
+    await league.save();
 
     for (const team of teams) {
-      league.teams.push(team._id);
+      await team.addTeamToLeague(league._id);
+      await team.save();
     }
 
     try {

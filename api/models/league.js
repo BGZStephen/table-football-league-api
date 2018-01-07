@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = mongoose.Types.ObjectId;
 
-const Team = mongoose.model('Team');
+const Team = require('./team');
 
 const LeagueSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
@@ -85,7 +86,7 @@ LeagueSchema.methods = {
 
   addTeam(teamId) {
     const team = this.teams.filter((team) => team._id === teamId)
-    if (!team) {
+    if (team.length === 0) {
       this.teams.push({_id: teamId});
     }
   },

@@ -27,7 +27,6 @@ const ObjectId = mongoose.Types.ObjectId;
  * @apiSuccess {User, JWT} new User object + json web token.
  */
 const create = AsyncWrap(async function create(req, res) {
-  console.log('working')
   validate(req.body, {
     firstName: {message: 'First name is required', type: 'string'},
     email: {message: 'Email address is required', type: 'string'},

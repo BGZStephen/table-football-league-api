@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const Team = require('./team');
+const League = require('./league');
+const Fixture = require('./fixture');
 
 const Schema = mongoose.Schema;
-const Team = mongoose.model('Team');
-const League = mongoose.model('League');
-const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
 
 const UserSchema = Schema({

@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = mongoose.Types.ObjectId;
+
+const League = require('./league')
 
 const TeamSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
@@ -21,31 +24,32 @@ TeamSchema.pre('save', async function(next) {
 
 TeamSchema.methods = {
   addUser(userId) {
-    const userIndex = this.teams.indexOf(teamId)
-    if (teamIndex === -1) {
-      this.teams.push(teamId);
+    const userIndex = this.users.indexOf(userId)
+    if (userIndex === -1) {
+      this.users.push(userId);
     }
   },
 
   removeUser(userId) {
-    const userIndex = this.teams.indexOf(teamId)
-    if (teamIndex >= 0) {
-      this.teams.splice(userIndex, 1);
+    const userIndex = this.users.indexOf(userId)
+    if (userIndex >= 0) {
+      this.users.splice(userIndex, 1);
     }
   },
 
   async addTeamToLeague(leagueId) {
-    const league = await League.findById(leagueId)
+    const league = await League.findById(ObjectId(leagueId))
 
     if (league) {
+      this.leagues.push(leagueId);
+      await this.save();
       await league.addTeam(this._id);
       await league.save();
-    }
 
-    await this.users.populate();
-    for (const user of users) {
-      await user.addLeague(leagueId);
-      await user.save();
+      for (const user of this.users) {
+        await user.addLeague(leagueId);
+        await user.save();
+      }
     }
   },
 
@@ -57,8 +61,8 @@ TeamSchema.methods = {
       await league.save();
     }
 
-    await this.users.populate();
-    for (const user of users) {
+    await this.populate('users');
+    for (const user of this.users) {
       await user.removeLeague(leagueId);
       await user.save();
     }
@@ -72,8 +76,8 @@ TeamSchema.methods = {
       await fixture.save();
     }
 
-    await this.users.populate();
-    for (const user of users) {
+    await this.populate('users');
+    for (const user of this.users) {
       await user.addFixture(fixtureId);
       await user.save();
     }
@@ -87,8 +91,8 @@ TeamSchema.methods = {
       await fixture.save();
     }
 
-    await this.users.populate();
-    for (const user of users) {
+    await this.populate('users');
+    for (const user of this.users) {
       await user.removeFixture(fixtureId);
       await user.save();
     }
