@@ -96,19 +96,19 @@ TeamSchema.methods = {
 
   addWin() {
     this.statistics.wins += 1;
-  }
+  },
 
   addLoss() {
     this.statistics.losses += 1;
-  }
+  },
 
   updateGoalsScored(goals) {
     this.goalsScored += goals
-  }
+  },
 
   updateGoalsConceded(goals) {
     this.goalsConceded += params.goalsConceded;
-  }
+  },
 }
 
 module.exports = mongoose.model('Team', TeamSchema);
