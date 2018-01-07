@@ -14,7 +14,7 @@ module.exports = [
   {
     firstName: 'Jon',
     lastName: 'V',
-    email: 'Jon@test.com',
+    email: 'jon@test.com',
     username: 'Jon',
     password: 'password',
     poisition: {

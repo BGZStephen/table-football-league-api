@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const TeamSchema = Schema({
   createdOn: Date,
-  name: String,
+  name: {type: String, unique: true},
   statistics: {
     wins: Number,
     losses: Number,
