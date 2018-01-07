@@ -39,64 +39,69 @@ UserSchema.pre('save', function(next) {
 })
 
 UserSchema.methods = {
-  async updateStatistics(params) {
-    if (params.win) {
-      this.statistics.wins += 1;
+  addWin() {
+    this.statistics.wins += 1;
+  },
+
+  addLoss() {
+    this.statistics.loss += 1;
+  },
+
+  addFixture(fixtureId) {
+    this.fixtures.push(fixtureId);
+  },
+
+  addFixtures(fixtureIds) {
+    for (const fixtureId of fixtureIds) {
+      const fixtureIndex = this.fixtures.indexOf(fixtureId)
+      if (fixtureIndex === -1) {
+        this.fixtures.push(fixtureId);
+      }
     }
+  },
 
-    if (params.loss) {
-      this.statistics.loss += 1;
+  removeFixture(fixtureId) {
+    const fixtureIndex = this.fixtures.indexOf(fixtureId)
+    if (fixtureIndex >= 0) {
+      this.fixtures.splice(fixtureIndex, 1);
     }
-
-    await this.save();
   },
 
-  async updateFixtures(params) {
-    params.add.forEach(function (fixture) {
-      if (this.fixtures.indexOf(fixture) === -1) {
-        this.fixtures.push(fixture);
+  removeFixtures(fixtureIds) {
+    for (const fixtureId of fixtureIds) {
+      const fixtureIndex = this.fixtures.indexOf(fixtureId)
+      if (fixtureIndex >= 0) {
+        this.fixtures.splice(fixtureIndex, 1);
       }
-    })
-
-    params.remove.forEach(function (fixture) {
-      if (this.fixtures.indexOf(fixture) >= 0) {
-        this.fixtures.splice(this.fixtures.indexOf(fixture), 1);
-      }
-    })
-
-    await this.save();
+    }
   },
 
-  async updateLeagues(params) {
-    params.add.forEach(function (league) {
-      if (this.leagues.indexOf(league) === -1) {
-        this.leagues.push(league);
-      }
-    })
-
-    params.remove.forEach(function (league) {
-      if (this.leagues.indexOf(league) >= 0) {
-        this.leagues.splice(this.leagues.indexOf(league), 1);
-      }
-    })
-
-    await this.save();
+  addLeague(leagueId) {
+    const leagueIndex = this.leagues.indexOf(leagueId)
+    if (leagueIndex === -1) {
+      this.leagues.push(leagueId);
+    }
   },
 
-  async updateTeams(params) {
-    params.add.forEach(function (team) {
-      if (this.teams.indexOf(team) === -1) {
-        this.teams.push(team);
-      }
-    })
+  removeLeague(leagueId) {
+    const leagueIndex = this.leagues.indexOf(leagueId)
+    if (leagueIndex >= 0) {
+      this.leagues.splice(leagueIndex, 1);
+    }
+  }
 
-    params.remove.forEach(function (team) {
-      if (this.teams.indexOf(team) >= 0) {
-        this.teams.splice(this.teams.indexOf(team), 1);
-      }
-    })
+  addTeam(teamId) {
+    const teamIndex = this.teams.indexOf(teamId)
+    if (teamIndex === -1) {
+      this.teams.push(teamId);
+    }
+  },
 
-    await this.save();
+  removeTeam(teamId) {
+    const teamIndex = this.teams.indexOf(teamId)
+    if (teamIndex >= 0) {
+      this.teams.splice(teamIndex, 1);
+    }
   },
 
   async getTeams() {
