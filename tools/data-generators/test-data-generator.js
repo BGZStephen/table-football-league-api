@@ -4,19 +4,21 @@ const mongoose = require('mongoose');
 
 const User = mongoose.model('User');
 const Team = mongoose.model('Team');
+const League = mongoose.model('League');
 
 generateTestData();
 
 async function generateTestData() {
   await generateTestUsers();
   await generateTestTeams();
+  await generateTestLeagues();
   process.exit();
 }
 
 async function generateTestUsers() {
-  const TestUsers = require('./test-user-data');
+  const testUsers = require('./test-user-data');
 
-  for (let testUser of TestUsers) {
+  for (let testUser of testUsers) {
     const user = new User(testUser)
     try {
       await user.save();
@@ -27,9 +29,9 @@ async function generateTestUsers() {
 }
 
 async function generateTestTeams() {
-  const TestTeams = require('./test-team-data');
+  const testTeams = require('./test-team-data');
 
-  for (let testTeam of TestTeams) {
+  for (let testTeam of testTeams) {
     const team = new Team({
       name: testTeam.name,
       players: []
@@ -37,7 +39,6 @@ async function generateTestTeams() {
 
     for (const playerEmail of testTeam.playerEmails) {
       const player = await User.findOne({email: playerEmail})
-      console.log(player);
       team.players.push(player._id);
     }
 
@@ -45,6 +46,26 @@ async function generateTestTeams() {
       await team.save();
     } catch (error) {
       // console.log(error);
+    }
+  }
+}
+
+async function generateTestLeagues() {
+  const testLeagues = require('./test-league-data');
+  const teams = await Team.find({});
+
+  for (let testLeague of testLeagues) {
+    const league = new League(testLeague)
+    league.teams = [];
+
+    for (const team of teams) {
+      league.teams.push(team._id);
+    }
+
+    try {
+      await league.save();
+    } catch (error) {
+      console.log(error);
     }
   }
 }

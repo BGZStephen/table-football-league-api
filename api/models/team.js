@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const TeamSchema = Schema({
-  createdOn: Date,
+  createdOn: {type: Date, default: () => new Date()},
   name: {type: String, unique: true},
   statistics: {
     wins: Number,

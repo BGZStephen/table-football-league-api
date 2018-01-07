@@ -2,11 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const LeagueSchema = Schema({
-  createdOn: Date,
-  name: {
-    type: String,
-    unique: true,
-  },
+  createdOn: {type: Date, default: () => new Date()},
+  name: {type: String, unique: true},
   administrators: [{type: Schema.ObjectId, ref: 'User'}],
   teams: [{
     _id: {
