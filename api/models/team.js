@@ -20,6 +20,20 @@ TeamSchema.pre('save', async function(next) {
 })
 
 TeamSchema.methods = {
+  addUser(userId) {
+    const userIndex = this.teams.indexOf(teamId)
+    if (teamIndex === -1) {
+      this.teams.push(teamId);
+    }
+  },
+
+  removeUser(userId) {
+    const userIndex = this.teams.indexOf(teamId)
+    if (teamIndex >= 0) {
+      this.teams.splice(userIndex, 1);
+    }
+  },
+
   async addTeamToLeague(leagueId) {
     const league = await League.findById(leagueId)
 
@@ -47,20 +61,6 @@ TeamSchema.methods = {
     for (const user of users) {
       await user.removeLeague(leagueId);
       await user.save();
-    }
-  },
-
-  addUser(userId) {
-    const userIndex = this.teams.indexOf(teamId)
-    if (teamIndex === -1) {
-      this.teams.push(teamId);
-    }
-  },
-
-  removeUser(userId) {
-    const userIndex = this.teams.indexOf(teamId)
-    if (teamIndex >= 0) {
-      this.teams.splice(userIndex, 1);
     }
   },
 
@@ -94,56 +94,20 @@ TeamSchema.methods = {
     }
   },
 
-  async updateFixtures(params) {
-    params.add.forEach(function (fixture) {
-      if (this.fixtures.indexOf(fixture) === -1) {
-        this.fixtures.push(fixture);
-      }
-    })
+  addWin() {
+    this.statistics.wins += 1;
+  }
 
-    params.remove.forEach(function (fixture) {
-      if (this.fixtures.indexOf(fixture) >= 0) {
-        this.fixtures.splice(this.fixtures.indexOf(fixture), 1);
-      }
-    })
+  addLoss() {
+    this.statistics.losses += 1;
+  }
 
-    await this.save();
-  },
+  updateGoalsScored(goals) {
+    this.goalsScored += goals
+  }
 
-  async updateLeagues(params) {
-    params.add.forEach(function (league) {
-      if (this.leagues.indexOf(league) === -1) {
-        this.leagues.push(league);
-      }
-    })
-
-    params.remove.forEach(function (league) {
-      if (this.leagues.indexOf(league) >= 0) {
-        this.leagues.splice(this.leagues.indexOf(league), 1);
-      }
-    })
-
-    await this.save();
-  },
-
-  async updateStatistics(params) {
-    if (params.win) {
-      this.statistics.wins += 1;
-    }
-
-    if (params.loss) {
-      this.statistics.wins += 1;
-    }
-
-    if (params.goalsScored) {
-      this.goalsScored += params.goalsScored;
-    }
-
-    if (params.goalsConceded) {
-      this.goalsConceded += params.goalsConceded;
-    }
-
-    await this.save();
+  updateGoalsConceded(goals) {
+    this.goalsConceded += params.goalsConceded;
   }
 }
 
