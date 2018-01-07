@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const Team = mongoose.model('Team');
+
 const LeagueSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
   name: {type: String, unique: true},
@@ -17,7 +19,33 @@ const LeagueSchema = Schema({
   fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],
 })
 
+LeagueSchema.pre('save', async function(next) {
+  if (this.isModified('teams')) {
+    for (const team of this.teams) {
+      await this.addLeagueToTeam(team._id)
+    }
+  }
+})
+
 LeagueSchema.methods = {
+  async addLeagueToTeam(teamId) {
+    const team = await Team.findById(teamId)
+    if (team && team.leagues.indexOf(this._id) === -1) {
+      team.leagues.push(this._id);
+      await team.save();
+    }
+  },
+
+  async removeLeagueFromTeam(teamId) {
+    const team = await Team.findById(teamId)
+    const leagueIndex = team.leagues.indexOf(this._id);
+
+    if (leagueIndex) {
+      team.leagues.splice(leagueIndex, 1);
+      await league.save();
+    }
+  },
+
   /**
    * updated a teams statistics in the league
    * @param {Object} params

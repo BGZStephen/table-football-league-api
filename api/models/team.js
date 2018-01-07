@@ -15,10 +15,10 @@ const TeamSchema = Schema({
   leagues: [{type: Schema.ObjectId, ref: 'League'}],
 })
 
-TeamScheme.pre('save', function(next) {
+TeamSchema.pre('save', async function(next) {
   if (this.isModified('players')) {
     for (const player of this.players) {
-      this.addTeamToUser(player)
+      await this.addTeamToUser(player)
     }
   }
   next();
@@ -27,19 +27,21 @@ TeamScheme.pre('save', function(next) {
 TeamSchema.methods = {
   async addTeamToUser(userId) {
     const user = await User.findById(userId)
-    user.teams.push(this._id);
-    await user.save();
+    if (user.teams.indexOf(this._id) === -1) {
+      user.teams.push(this._id);
+      await user.save();
+    }
   },
 
   async removeTeamFromUser(userId) {
     const user = await User.findById(userId)
-    const teamIndex = user.teams.indexOf(userId)
+    const teamIndex = user.teams.indexOf(this._id)
 
     if (teamIndex) {
       user.teams.splice(teamIndex, 1);
       await user.save();
     }
-  }
+  },
 
   async updatePlayers(params) {
     params.add.forEach(function (userId) {
@@ -51,7 +53,7 @@ TeamSchema.methods = {
     params.remove.forEach(function (userId) {
       const userIndex = this.players.indexOf(userId)
       if (playerIndex >= 0) {
-        this.removeTeamFromUser(userId)
+        this.removeTeamFromUser(userId);
         this.players.splice(userIndex, 1);
       }
     })
