@@ -20,32 +20,10 @@ const LeagueSchema = Schema({
 })
 
 LeagueSchema.pre('save', async function(next) {
-  if (this.isModified('teams')) {
-    for (const team of this.teams) {
-      await this.addLeagueToTeam(team._id)
-    }
-  }
+  next();
 })
 
 LeagueSchema.methods = {
-  async addLeagueToTeam(teamId) {
-    const team = await Team.findById(teamId)
-    if (team && team.leagues.indexOf(this._id) === -1) {
-      team.leagues.push(this._id);
-      await team.save();
-    }
-  },
-
-  async removeLeagueFromTeam(teamId) {
-    const team = await Team.findById(teamId)
-    const leagueIndex = team.leagues.indexOf(this._id);
-
-    if (leagueIndex) {
-      team.leagues.splice(leagueIndex, 1);
-      await league.save();
-    }
-  },
-
   /**
    * updated a teams statistics in the league
    * @param {Object} params
@@ -56,7 +34,8 @@ LeagueSchema.methods = {
    * @param {Number} params.goalsConceded goals conceded by team
    */
   async updateTeamStatistics(params) {
-    const team = this.getTeamById(params._id);
+    const team = this.teams.filter((team) => team._id === params._id)[0];
+
     if (params.win) {
       team.wins += 1;
     }
@@ -81,7 +60,7 @@ LeagueSchema.methods = {
    * @param {Object} params
    * @param {ObjectId} id team ID
    */
-  async getTeamById(id) {
+  getTeamById(id) {
     this.teams.forEach(function (team) {
       if (team._id === id) {
         return team;
@@ -112,50 +91,35 @@ LeagueSchema.methods = {
     await this.save();
   },
 
-  /**
-   * update a leagues Administrators
-   * @param {Object} params
-   * @param {Object} params update params
-   * @param {Array} params.add Array of User ID's to add
-   * @param {Array} params.remove Array of User ID's to remove
-   */
-  async updateAdministrators(params) {
-    params.add.forEach(function (administrator) {
-      if (this.administrators.indexOf(administrator) === -1) {
-        this.administrators.push(administrator);
-      }
-    })
+  addAdministrator(userId) {
+    const userIndex = this.administrators.indexOf(userId)
 
-    params.remove.forEach(function (administrator) {
-      if (this.administrators.indexOf(administrator) >= 0) {
-        this.administrators.splice(this.administrators.indexOf(administrator), 1);
-      }
-    })
-
-    await this.save();
+    if (userIndex === -1) {
+      this.administrators.push(userId)
+    }
   },
 
-  /**
-   * update a leagues Teams
-   * @param {Object} params
-   * @param {Object} params update params
-   * @param {Array} params.add Array of Team ID's to add
-   * @param {Array} params.remove Array of Team ID's to remove
-   */
-  async updateTeams(params) {
-    params.add.forEach(function (team) {
-      if (this.teams.indexOf(team) === -1) {
-        this.teams.push(team);
-      }
-    })
+  removeAdministrator(userId) {
+    const userIndex = this.administrators.indexOf(userId)
 
-    params.remove.forEach(function (team) {
-      if (this.teams.indexOf(team) >= 0) {
-        this.teams.splice(this.teams.indexOf(team), 1);
-      }
-    })
+    if (userIndex >= 0) {
+      this.administrators.splice(userIndex, 1)
+    }
+  },
 
-    await this.save();
+  addTeam(teamId) {
+    const team = this.teams.filter((team) => team._id === teamId)
+    if (!team) {
+      this.teams.push({_id: teamId});
+    }
+  },
+
+  removeTeam(teamId) {
+    for (let i = 0; i < this.teams.length; i++) {
+      if (this.teams[i]._id === teamId) {
+        this.teams.splice(i, 1);
+      }
+    }
   },
 }
 
