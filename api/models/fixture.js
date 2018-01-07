@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const League = mongoose.model('League');
+const Team = mongoose.model('Team');
+const User = mongoose.model('User');
 
 const Schema = mongoose.Schema;
-const League = mongoose.model('League');
 
 const FixtureSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
@@ -27,19 +29,25 @@ const FixtureSchema = Schema({
 
 FixtureSchema.pre('save', async function(next) {
   if (this.isModified('teams')) {
-    await this.populate('teams');
+    const teams = await Team.find({_id: {$in: this.teams}});
+    let users = []
 
     for (const team of teams) {
+      users = await User.find({_id: {$in: team.users}});
       team.addFixture(this._id);
       await team.save();
     }
 
+    for (const user of users) {
+      user.addFixture(this._id);
+      await user.save();
+    }
   }
 
   if (this.leagueId && this.isModified('leagueId')) {
-    await this.populate('leagueId');
-    this.leagueId.addFixture(this._id)
-    await this.leagueId.save();
+    const league = await League.findById(this.leagueId);
+    await league.addFixture(this._id);
+    await league.save();
   }
 
   next();

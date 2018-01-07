@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
-const Team = require('./team');
+const Team = mongoose.model('Team');
 
 const LeagueSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},

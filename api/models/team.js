@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const Fixture = mongoose.model('League')
-const League = mongoose.model('League')
 const User = mongoose.model('User')
 
 const ObjectId = mongoose.Types.ObjectId;

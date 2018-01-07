@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const Team = require('./team');
-const League = require('./league');
-const Fixture = require('./fixture');
 
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
@@ -102,37 +99,6 @@ UserSchema.methods = {
     if (teamIndex >= 0) {
       this.teams.splice(teamIndex, 1);
     }
-  },
-
-  async getTeams() {
-    const teams = await Team.find({players: ObjectId(this._id)});
-    return teams;
-  },
-
-  async getLeagues() {
-    let leagues = [];
-
-    for (const team of this.teams) {
-      let teamLeagues = await League.find({teams: {_id: ObjectId(team._id)}});
-      if (teamLeagues) {
-        leagues = leagues.concat(teamLeagues);
-      }
-    }
-
-    return leagues;
-  },
-
-  async getFixtures() {
-    let fixtures = [];
-
-    for (const team of this.teams) {
-      let teamFixtures = await Fixture.find({teams: ObjectId(this._id)});
-      if (teamFixtures) {
-        fixtures = fixtures.concat(teamFixtures);
-      }
-    }
-
-    return fixtures;
   },
 
   validatePassword(password) {
