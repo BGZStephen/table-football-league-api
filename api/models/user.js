@@ -88,7 +88,7 @@ UserSchema.methods = {
     if (leagueIndex >= 0) {
       this.leagues.splice(leagueIndex, 1);
     }
-  }
+  },
 
   addTeam(teamId) {
     const teamIndex = this.teams.indexOf(teamId)
@@ -110,10 +110,9 @@ UserSchema.methods = {
   },
 
   async getLeagues() {
-    const teams = await this.getTeams();
     let leagues = [];
 
-    for (const team of teams) {
+    for (const team of this.teams) {
       let teamLeagues = await League.find({teams: {_id: ObjectId(team._id)}});
       if (teamLeagues) {
         leagues = leagues.concat(teamLeagues);
@@ -124,10 +123,9 @@ UserSchema.methods = {
   },
 
   async getFixtures() {
-    const teams = await this.getTeams();
     let fixtures = [];
 
-    for (team of teams) {
+    for (const team of this.teams) {
       let teamFixtures = await Fixture.find({teams: ObjectId(this._id)});
       if (teamFixtures) {
         fixtures = fixtures.concat(teamFixtures);

@@ -10,55 +10,88 @@ const TeamSchema = Schema({
     goalsScored: Number,
     goalsConceded: Number,
   },
-  players: [{type: Schema.ObjectId, ref: 'User'}],
+  users: [{type: Schema.ObjectId, ref: 'User'}],
   fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],
   leagues: [{type: Schema.ObjectId, ref: 'League'}],
 })
 
 TeamSchema.pre('save', async function(next) {
-  if (this.isModified('players')) {
-    for (const player of this.players) {
-      await this.addTeamToUser(player)
-    }
-  }
   next();
 })
 
 TeamSchema.methods = {
-  async addTeamToUser(userId) {
-    const user = await User.findById(userId)
-    if (user.teams.indexOf(this._id) === -1) {
-      user.teams.push(this._id);
+  async addTeamToLeague(leagueId) {
+    const league = await League.findById(leagueId)
+
+    if (league) {
+      await league.addTeam(this._id);
+      await league.save();
+    }
+
+    await this.users.populate();
+    for (const user of users) {
+      await user.addLeague(leagueId);
       await user.save();
     }
   },
 
-  async removeTeamFromUser(userId) {
-    const user = await User.findById(userId)
-    const teamIndex = user.teams.indexOf(this._id)
+  async removeTeamFromLeague(leagueId) {
+    const league = await League.findById(leagueId);
 
-    if (teamIndex) {
-      user.teams.splice(teamIndex, 1);
+    if (user) {
+      await league.removeTeam(this._id);
+      await league.save();
+    }
+
+    await this.users.populate();
+    for (const user of users) {
+      await user.removeLeague(leagueId);
       await user.save();
     }
   },
 
-  async updatePlayers(params) {
-    params.add.forEach(function (userId) {
-      if (this.players.indexOf(userId) === -1) {
-        this.players.push(userId);
-      }
-    })
+  addUser(userId) {
+    const userIndex = this.teams.indexOf(teamId)
+    if (teamIndex === -1) {
+      this.teams.push(teamId);
+    }
+  },
 
-    params.remove.forEach(function (userId) {
-      const userIndex = this.players.indexOf(userId)
-      if (playerIndex >= 0) {
-        this.removeTeamFromUser(userId);
-        this.players.splice(userIndex, 1);
-      }
-    })
+  removeUser(userId) {
+    const userIndex = this.teams.indexOf(teamId)
+    if (teamIndex >= 0) {
+      this.teams.splice(userIndex, 1);
+    }
+  },
 
-    await this.save();
+  async addTeamToFixture(fixtureId) {
+    const fixture = await Fixture.findById(fixtureId)
+
+    if (fixture) {
+      await fixture.addTeam(this._id);
+      await fixture.save();
+    }
+
+    await this.users.populate();
+    for (const user of users) {
+      await user.addFixture(fixtureId);
+      await user.save();
+    }
+  },
+
+  async removeTeamFromFixture(fixtureId) {
+    const fixture = await Fixture.findById(fixtureId);
+
+    if (fixture) {
+      await fixture.removeTeam(this._id);
+      await fixture.save();
+    }
+
+    await this.users.populate();
+    for (const user of users) {
+      await user.removeFixture(fixtureId);
+      await user.save();
+    }
   },
 
   async updateFixtures(params) {
