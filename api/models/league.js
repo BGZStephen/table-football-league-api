@@ -55,45 +55,22 @@ LeagueSchema.methods = {
     await this.save();
   },
 
-  /**
-   * get a team by passing an ID
-   * @param {Object} params
-   * @param {ObjectId} id team ID
-   */
-  getTeamById(id) {
-    this.teams.forEach(function (team) {
-      if (team._id === id) {
-        return team;
-      }
-    })
+  addFixture(fixtureId) {
+    const fixtureIndex = this.fixtures.indexOf(fixture);
+    if (fixtureIndex === -1) {
+      this.fixtures.push(fixtureId);
+    }
   },
 
-  /**
-   * update a leagues fixtures
-   * @param {Object} params
-   * @param {Object} params update params
-   * @param {Array} params.add Array of fixture ID's to add
-   * @param {Array} params.remove Array of fixture ID's to remove
-   */
-  async updateFixtures(params) {
-    params.add.forEach(function (fixture) {
-      if (this.fixtures.indexOf(fixture) === -1) {
-        this.fixtures.push(fixture);
-      }
-    })
-
-    params.remove.forEach(function (fixture) {
-      if (this.fixtures.indexOf(fixture) >= 0) {
-        this.fixtures.splice(this.fixtures.indexOf(fixture), 1);
-      }
-    })
-
-    await this.save();
+  removeFixture(fixtureId) {
+    const fixtureIndex = this.fixtures.indexOf(fixture);
+    if (fixtureIndex >= 0) {
+      this.fixtures.splice(fixtureIndex, 1);
+    }
   },
 
   addAdministrator(userId) {
     const userIndex = this.administrators.indexOf(userId)
-
     if (userIndex === -1) {
       this.administrators.push(userId)
     }
@@ -101,7 +78,6 @@ LeagueSchema.methods = {
 
   removeAdministrator(userId) {
     const userIndex = this.administrators.indexOf(userId)
-
     if (userIndex >= 0) {
       this.administrators.splice(userIndex, 1)
     }
