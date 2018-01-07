@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const ObjectId = mongoose.Types.ObjectId;
+const Fixture = mongoose.model('League')
+const League = mongoose.model('League')
+const User = mongoose.model('User')
 
-const League = require('./league')
+const ObjectId = mongoose.Types.ObjectId;
+const Schema = mongoose.Schema;
 
 const TeamSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
@@ -23,78 +25,51 @@ TeamSchema.pre('save', async function(next) {
 })
 
 TeamSchema.methods = {
-  addUser(userId) {
+  async addUser(userId) {
     const userIndex = this.users.indexOf(userId)
     if (userIndex === -1) {
       this.users.push(userId);
+      await this.save();
     }
   },
 
-  removeUser(userId) {
+  async removeUser(userId) {
     const userIndex = this.users.indexOf(userId)
     if (userIndex >= 0) {
       this.users.splice(userIndex, 1);
+      await this.save();
     }
   },
 
-  async addTeamToLeague(leagueId) {
-    const league = await League.findById(ObjectId(leagueId))
-
-    if (league) {
+  async addLeague(leagueId) {
+    const leagueIndex = this.leagues.indexOf(leagueId)
+    if (leagueIndex === -1) {
       this.leagues.push(leagueId);
       await this.save();
-      await league.addTeam(this._id);
-      await league.save();
-
-      for (const user of this.users) {
-        await user.addLeague(leagueId);
-        await user.save();
-      }
     }
   },
 
-  async removeTeamFromLeague(leagueId) {
-    const league = await League.findById(leagueId);
-
-    if (user) {
-      await league.removeTeam(this._id);
-      await league.save();
-    }
-
-    await this.populate('users');
-    for (const user of this.users) {
-      await user.removeLeague(leagueId);
-      await user.save();
+  async removeLeague(leagueId) {
+    const leagueIndex = this.leagues.indexOf(leagueId)
+    if (leagueIndex >= 0) {
+      this.leagues.splice(leagueIndex, 1);
+      await this.save();
     }
   },
 
-  async addTeamToFixture(fixtureId) {
-    const fixture = await Fixture.findById(fixtureId)
-
-    if (fixture) {
-      await fixture.addTeam(this._id);
-      await fixture.save();
-    }
-
-    await this.populate('users');
-    for (const user of this.users) {
-      await user.addFixture(fixtureId);
-      await user.save();
+  async addFixture(fixtureId) {
+    const fixtureIndex = this.fixtures.indexOf(fixtureId)
+    if (fixtureIndex === -1) {
+      this.leagues.push(fixtureId);
+      await this.save();
     }
   },
 
-  async removeTeamFromFixture(fixtureId) {
-    const fixture = await Fixture.findById(fixtureId);
-
-    if (fixture) {
-      await fixture.removeTeam(this._id);
-      await fixture.save();
-    }
-
-    await this.populate('users');
-    for (const user of this.users) {
-      await user.removeFixture(fixtureId);
-      await user.save();
+  async removeFixture(fixtureId) {
+    const fixtureIndex = this.fixtures.indexOf(fixtureId)
+    if (fixtureIndex >= 0) {
+      this.fixtures.splice(fixtureIndex, 1);
+      await this.save();
     }
   },
 
