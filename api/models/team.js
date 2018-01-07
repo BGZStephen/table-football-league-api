@@ -15,17 +15,44 @@ const TeamSchema = Schema({
   leagues: [{type: Schema.ObjectId, ref: 'League'}],
 })
 
+TeamScheme.pre('save', function(next) {
+  if (this.isModified('players')) {
+    for (const player of this.players) {
+      this.addTeamToUser(player)
+    }
+  }
+  next();
+})
+
 TeamSchema.methods = {
+  async addTeamToUser(userId) {
+    const user = await User.findById(userId)
+    user.teams.push(this._id);
+    await user.save();
+  },
+
+  async removeTeamFromUser(userId) {
+    const user = await User.findById(userId)
+    const teamIndex = user.teams.indexOf(userId)
+
+    if (teamIndex) {
+      user.teams.splice(teamIndex, 1);
+      await user.save();
+    }
+  }
+
   async updatePlayers(params) {
-    params.add.forEach(function (player) {
-      if (this.players.indexOf(player) === -1) {
-        this.players.push(player);
+    params.add.forEach(function (userId) {
+      if (this.players.indexOf(userId) === -1) {
+        this.players.push(userId);
       }
     })
 
-    params.remove.forEach(function (player) {
-      if (this.players.indexOf(player) >= 0) {
-        this.players.splice(this.players.indexOf(player), 1);
+    params.remove.forEach(function (userId) {
+      const userIndex = this.players.indexOf(userId)
+      if (playerIndex >= 0) {
+        this.removeTeamFromUser(userId)
+        this.players.splice(userIndex, 1);
       }
     })
 
