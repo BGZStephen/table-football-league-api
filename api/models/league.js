@@ -21,23 +21,12 @@ const LeagueSchema = Schema({
 })
 
 LeagueSchema.pre('save', async function(next) {
-  if (this.isModified('teams') {
-    const teams = await Team.find(
-      {_id: {$in: this.teams.map((team) => team._id)}}
-    );
+  if (this.isModified('teams')) {
+    await this.populate('teams').execPopulate();
 
-    for (const team of teams) {
+    for (const team of this.teams) {
       await team.addLeague(this._id);
       await team.save();
-    }
-
-    const users = await User.find(
-      {_id: {$in: teams.map(team => team.users).reduce((a, b) => a.concat(b))}}
-    );
-    
-    for (const user of users) {
-      await user.addLeague(this._id);
-      await user.save();
     }
   }
 

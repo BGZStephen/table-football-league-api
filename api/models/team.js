@@ -27,8 +27,12 @@ TeamSchema.methods = {
     const userIndex = this.users.indexOf(userId)
     if (userIndex === -1) {
       this.users.push(userId);
-      await this.save();
     }
+
+    const user = await User.findById(ObjectId(userId));
+    user.addTeam(this._id);
+    await user.save();
+    await this.save();
   },
 
   async removeUser(userId) {
@@ -43,8 +47,15 @@ TeamSchema.methods = {
     const leagueIndex = this.leagues.indexOf(leagueId)
     if (leagueIndex === -1) {
       this.leagues.push(leagueId);
-      await this.save();
     }
+
+    await this.populate('users').execPopulate();
+    for (const user of users) {
+      user.addLeague(leagueId);
+      await user.save()
+    }
+
+    await this.save();
   },
 
   async removeLeague(leagueId) {
@@ -59,8 +70,15 @@ TeamSchema.methods = {
     const fixtureIndex = this.fixtures.indexOf(fixtureId)
     if (fixtureIndex === -1) {
       this.leagues.push(fixtureId);
-      await this.save();
     }
+
+    await this.populate('users').execPopulate();
+    for (const user of users) {
+      user.addFixture(fixturteId)
+      await user.save()
+    }
+    
+    await this.save();
   },
 
   async removeFixture(fixtureId) {
