@@ -25,14 +25,48 @@ TeamSchema.pre('save', async function(next) {
 TeamSchema.methods = {
   async addUser(userId) {
     const userIndex = this.users.indexOf(userId)
+    const updatedDocuments = []
     if (userIndex === -1) {
       this.users.push(userId);
     }
 
     const user = await User.findById(ObjectId(userId));
     user.addTeam(this._id);
-    await user.save();
-    await this.save();
+
+    updatedDocuments.push(this);
+    updatedDocuments.push(user);
+
+    return {
+      documents: updatedDocuments,
+      save: async function () {
+        for (const document of this.documents) {
+          await document.save();
+        }
+      }
+    }
+  },
+
+  async addUsers(userIds) {
+    userIds = userIds.filter((userId) => this.users.indexOf(userId) === -1);
+    const users = await User.find({_id: {$in: userIds}}).select('_id teams');
+    const updatedDocuments = [];
+
+    for (const user of users) {
+      this.users.push(user._id);
+      await user.addTeam(this._id);
+      updatedDocuments.push(user);
+    }
+
+    updatedDocuments.push(this);
+
+    return {
+      documents: updatedDocuments,
+      save: async function () {
+        for (const document of this.documents) {
+          await document.save();
+        }
+      }
+    }
   },
 
   async removeUser(userId) {
@@ -44,18 +78,29 @@ TeamSchema.methods = {
   },
 
   async addLeague(leagueId) {
-    const leagueIndex = this.leagues.indexOf(leagueId)
+    const leagueIndex = this.leagues.indexOf(leagueId);
+    const updatedDocuments = [];
+
     if (leagueIndex === -1) {
       this.leagues.push(leagueId);
     }
 
     await this.populate('users').execPopulate();
     for (const user of users) {
-      user.addLeague(leagueId);
-      await user.save()
+      await user.addLeague(leagueId);
+      updatedDocuments.push(user)
     }
 
-    await this.save();
+    updatedDocuments.push(this);
+
+    return {
+      documents: updatedDocuments,
+      save: async function () {
+        for (const document of this.documents) {
+          await document.save();
+        }
+      }
+    }
   },
 
   async removeLeague(leagueId) {
@@ -68,6 +113,8 @@ TeamSchema.methods = {
 
   async addFixture(fixtureId) {
     const fixtureIndex = this.fixtures.indexOf(fixtureId)
+    const updatedDocuments = [];
+
     if (fixtureIndex === -1) {
       this.leagues.push(fixtureId);
     }
@@ -75,10 +122,19 @@ TeamSchema.methods = {
     await this.populate('users').execPopulate();
     for (const user of users) {
       user.addFixture(fixturteId)
-      await user.save()
+      updatedDocuments.push(user);
     }
-    
-    await this.save();
+
+    updatedDocuments.push(this);
+
+    return {
+      documents: updatedDocuments,
+      save: async function () {
+        for (const document of this.documents) {
+          await document.save();
+        }
+      }
+    }
   },
 
   async removeFixture(fixtureId) {
