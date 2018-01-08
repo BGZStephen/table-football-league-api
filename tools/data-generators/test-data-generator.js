@@ -35,39 +35,27 @@ async function generateTestTeams() {
     const team = new Team({
       name: testTeam.name,
     })
-
-    for (const userEmail of testTeam.userEmails) {
-      const user = await User.findOne({email: userEmail})
-      team.addUser(user._id);
-      user.addTeam(team._id);
-      await user.save();
-    }
-
-    try {
-      await team.save();
-    } catch (error) {
-      // console.log(error);
-    }
+    const users = await User.find({email: {$in: testTeam.userEmails}}).select('_id teams')
+    const teamUpdates = await team.addUsers(users.map((user) => user._id));
+    await teamUpdates.save();
   }
 }
 
 async function generateTestLeagues() {
   const testLeagues = require('./test-league-data');
-  const teams = await Team.find({}).populate('users');
+  const teams = await Team.find({});
 
-  for (let testLeague of testLeagues) {
-    const league = new League(testLeague)
+  for (const testLeague of testLeagues) {
+    const league = new League(testLeague);
     await league.save();
 
     for (const team of teams) {
-      await team.addTeamToLeague(league._id);
-      await team.save();
+      console.log(teams)
+      await league.addTeam(team._id);
+      const teamUpdates = await team.addLeague(league._id);
+      await teamUpdates.save();
     }
 
-    try {
-      await league.save();
-    } catch (error) {
-      console.log(error);
-    }
+    await league.save();
   }
 }

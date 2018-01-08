@@ -21,15 +21,6 @@ const LeagueSchema = Schema({
 })
 
 LeagueSchema.pre('save', async function(next) {
-  if (this.isModified('teams')) {
-    await this.populate('teams').execPopulate();
-
-    for (const team of this.teams) {
-      await team.addLeague(this._id);
-      await team.save();
-    }
-  }
-
   next();
 })
 

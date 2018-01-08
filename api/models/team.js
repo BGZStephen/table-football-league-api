@@ -86,7 +86,7 @@ TeamSchema.methods = {
     }
 
     await this.populate('users').execPopulate();
-    for (const user of users) {
+    for (const user of this.users) {
       await user.addLeague(leagueId);
       updatedDocuments.push(user)
     }
