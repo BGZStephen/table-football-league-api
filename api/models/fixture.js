@@ -32,15 +32,17 @@ FixtureSchema.pre('save', async function(next) {
     await this.populate('teams').execPopulate();
 
     for (const team of this.teams) {
-      const teamUpdates = team.addFixture(this._id);
+      const teamUpdates = await team.addFixture(this._id);
       await teamUpdates.save();
     }
   }
 
-  if (this.leagueId && this.isModified('leagueId')) {
-    await this.populate('leagueId').execPopulate();
-    await this.leagueId.addFixture(this._id);
-    await this.leagueId.save();
+  if (this.isModified('leagueId')) {
+    if (this.leagueId) {
+      await this.populate('leagueId').execPopulate();
+      await this.leagueId.addFixture(this._id);
+      await this.leagueId.save();
+    }
   }
 
   if (this.isModified('type')) {

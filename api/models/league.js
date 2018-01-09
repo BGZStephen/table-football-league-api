@@ -57,14 +57,14 @@ LeagueSchema.methods = {
   },
 
   addFixture(fixtureId) {
-    const fixtureIndex = this.fixtures.indexOf(fixture);
+    const fixtureIndex = this.fixtures.indexOf(fixtureId);
     if (fixtureIndex === -1) {
       this.fixtures.push(fixtureId);
     }
   },
 
   removeFixture(fixtureId) {
-    const fixtureIndex = this.fixtures.indexOf(fixture);
+    const fixtureIndex = this.fixtures.indexOf(fixtureId);
     if (fixtureIndex >= 0) {
       this.fixtures.splice(fixtureIndex, 1);
     }

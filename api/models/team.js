@@ -14,7 +14,7 @@ const TeamSchema = Schema({
     goalsConceded: Number,
   },
   users: [{type: Schema.ObjectId, ref: 'User'}],
-  fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],
+  fixtures: {type: [{type: Schema.ObjectId, ref: 'Fixture'}], default: []},
   leagues: [{type: Schema.ObjectId, ref: 'League'}],
 })
 
@@ -116,12 +116,12 @@ TeamSchema.methods = {
     const updatedDocuments = [];
 
     if (fixtureIndex === -1) {
-      this.leagues.push(fixtureId);
+      this.fixtures.push(fixtureId);
     }
 
     await this.populate('users').execPopulate();
-    for (const user of users) {
-      user.addFixture(fixturteId)
+    for (const user of this.users) {
+      user.addFixture(fixtureId)
       updatedDocuments.push(user);
     }
 
