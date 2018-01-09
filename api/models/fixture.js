@@ -29,23 +29,16 @@ const FixtureSchema = Schema({
 
 FixtureSchema.pre('save', async function(next) {
   if (this.isModified('teams')) {
-    const teams = await Team.find({_id: {$in: this.teams}});
-    let users = []
+    const teams = this.populate('teams').execPopulate();
 
-    for (const team of teams) {
-      users = await User.find({_id: {$in: team.users}});
-      team.addFixture(this._id);
-      await team.save();
-    }
-
-    for (const user of users) {
-      user.addFixture(this._id);
-      await user.save();
+    for (const team of this.teams) {
+      const teamUpdates = team.addFixture(this._id);
+      await teamUpdates.save();
     }
   }
 
   if (this.leagueId && this.isModified('leagueId')) {
-    const league = await League.findById(this.leagueId);
+    const league = await this.populate('leagueId').execPopulate();
     await league.addFixture(this._id);
     await league.save();
   }
