@@ -29,7 +29,7 @@ const FixtureSchema = Schema({
 
 FixtureSchema.pre('save', async function(next) {
   if (this.isModified('teams')) {
-    const teams = this.populate('teams').execPopulate();
+    await this.populate('teams').execPopulate();
 
     for (const team of this.teams) {
       const teamUpdates = team.addFixture(this._id);
@@ -38,9 +38,18 @@ FixtureSchema.pre('save', async function(next) {
   }
 
   if (this.leagueId && this.isModified('leagueId')) {
-    const league = await this.populate('leagueId').execPopulate();
-    await league.addFixture(this._id);
-    await league.save();
+    await this.populate('leagueId').execPopulate();
+    await this.leagueId.addFixture(this._id);
+    await this.leagueId.save();
+  }
+
+  if (this.isModified('type')) {
+    // check for type change and remove fixture from league if changing to friendly
+    if (this.type === 'friendly' && this.leagueId) {
+      await this.populate('leagueId').execPopulate();
+      this.leagueId.removeFixture(this._id);
+      await this.leagueId.save();
+    }
   }
 
   next();
