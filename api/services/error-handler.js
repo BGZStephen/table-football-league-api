@@ -6,9 +6,11 @@ const winston = require('winston');
  * @param {String} message custom error message.
  * @param {Number} statusCode error status code.
  */
-function apiError(res, message, statusCode) {
-  winston.error(`API Error: ${message}`);
-  return res.status(statusCode).json(message)
+function apiError(message, statusCode, next) {
+  res.context.clientError = true;
+  res.context.message = message || 'Something went wrong';
+  res.context.statusCode = statusCode || 500;
+  next();
 }
 
 module.exports = {

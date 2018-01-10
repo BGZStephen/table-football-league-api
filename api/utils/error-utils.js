@@ -7,19 +7,16 @@ function logErrors (err, req, res, next) {
 
 // handle client errors which have custom error responses
 function clientErrorHandler (err, req, res, next) {
-  // if stack is available it is not a custom clientError, pass to generic error handler
-  if(err.stack) {
-    next(err)
+  if (res.context.clientError) {
+    return res.status(res.context.statusCode).send({message: res.context.message})
   }
 
-  if (req.method === 'POST' || req.method === 'GET' || req.method === 'PUT' || req.method === 'DELETE') {
-    res.status(err.statusCode || 500).send({ error: err.message || 'Something went wrong' })
-  }
+  next(err);
 }
 
 // handle all express generated errors with stacks
 function errorHandler (err, req, res, next) {
-  res.status(500).send({error: err.message});
+  res.status(500).send({message: err.message});
 }
 
 module.exports = {

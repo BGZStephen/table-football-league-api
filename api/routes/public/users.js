@@ -26,20 +26,19 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {User, JWT} new User object + json web token.
  */
-const create = AsyncWrap(async function create(req, res) {
+const create = AsyncWrap(async function create(req, res, next) {
   validate(req.body, {
     firstName: {message: 'First name is required', type: 'string'},
     email: {message: 'Email address is required', type: 'string'},
     password: {message: 'Password is required', type: 'string'},
-    confirmPassword: {message: 'Please re-enter your password', type: 'string'},
   })
 
   if (await userAlreadyExists({email: req.body.email})) {
-    return errorHandler.apiError(res, 'Email address already in use', 400);
+    errorHandler.apiError({message: 'Email address already in use', statusCode: 400, next});
   };
 
   if (await userAlreadyExists({username: req.body.username})) {
-    return errorHandler.apiError(res, 'Username already in use', 400);
+    errorHandler.apiError({message: 'Username already in use', statusCode: 400, next});
   };
 
   const user = new User({
@@ -47,7 +46,7 @@ const create = AsyncWrap(async function create(req, res) {
     lastName: req.body.lastName,
     email: req.body.email,
     username: req.body.username,
-    password: createHash(req.body.password),
+    password: req.body.password,
   })
 
   await user.save();
@@ -80,36 +79,34 @@ const create = AsyncWrap(async function create(req, res) {
  *
  * @apiSuccess {User, JWT} User object + json web token.
  */
-async function authenticate(req, res, next) {
-  try {
-    validate(req.body, {
-      email: {message: 'Email address is required', type: 'string'},
-      password: {message: 'Password is required', type: 'string'},
-    })
+const authenticate = AsyncWrap(async function authenticate(req, res, next) {
+  validate(req.body, {
+    email: {message: 'Email address is required', type: 'string'},
+    password: {message: 'Password is required', type: 'string'},
+  })
 
-    const user = await User.findOne({email: req.body.email});
+  const user = await User.findOne({email: req.body.email});
 
-    if (!user) {
-      return errorHandler.apiError(res, 'User not found', 404);
-    }
-
-    // user.validatePassword(req.body.password);
-
-    const token = jwt.sign({
-      exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
-      data: {
-        id: user._id,
-      }
-    }, config.jwtSecret);
-
-    res.json({
-      token: token,
-      user: JSON.stringify({_id: user._id}),
-    });
-  } catch (error) {
-    res.sendStatus(500);
+  if (!user) {
+    errorHandler.apiError({message: 'Invalid email address or password', statusCode: 403, next});
   }
-}
+
+  if (user.validatePassword(req.body.password) === false) {
+    errorHandler.apiError({message: 'Invalid email address or password', statusCode: 403, next});
+  }
+
+  const token = jwt.sign({
+    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
+    data: {
+      id: user._id,
+    }
+  }, config.jwtSecret);
+
+  res.json({
+    token: token,
+    user: JSON.stringify({_id: user._id}),
+  });
+})
 
 /**
  * Chexk existance of a user against an expected result
@@ -122,6 +119,7 @@ async function userAlreadyExists(query) {
   if (user) {
     return true;
   }
+  
   return false;
 }
 
