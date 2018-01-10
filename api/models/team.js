@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseUtils = require('../utils/mongoose');
 const User = mongoose.model('User')
 
 const ObjectId = mongoose.Types.ObjectId;
@@ -25,25 +26,20 @@ TeamSchema.pre('save', async function(next) {
 TeamSchema.methods = {
   async addUser(userId) {
     const userIndex = this.users.indexOf(userId)
-    const updatedDocuments = []
+    const currentDocs = [this]
+    const updatedDocs = []
     if (userIndex === -1) {
       this.users.push(userId);
     }
 
-    const user = await User.findById(ObjectId(userId));
-    user.addTeam(this._id);
-
     updatedDocuments.push(this);
+
+    const user = await User.findById(ObjectId(userId));
+    currentDocs.push(user);
+    user.addTeam(this._id);
     updatedDocuments.push(user);
 
-    return {
-      documents: updatedDocuments,
-      save: async function () {
-        for (const document of this.documents) {
-          await document.save();
-        }
-      }
-    }
+    return MongooseUtils.wrapUpdate({currentDocs, updatedDocs});
   },
 
   async addUsers(userIds) {
