@@ -1,15 +1,15 @@
 const winston = require('winston');
 
 /**
- * upload a single file to cloudinary
- * @param {Object} res express res object to handle returning.
- * @param {String} message custom error message.
- * @param {Number} statusCode error status code.
+ * prepare api error for error middleware
+ * @param {object} params params object.
+ * @param {string} params.message custom error message.
+ * @param {number} params.statusCode error status code.
  */
-function apiError(message, statusCode, next) {
+function apiError(params, next) {
   res.context.clientError = true;
-  res.context.message = message || 'Something went wrong';
-  res.context.statusCode = statusCode || 500;
+  res.context.message = params.message || 'Something went wrong';
+  res.context.statusCode = params.statusCode || 500;
   next();
 }
 

@@ -4,6 +4,7 @@ const winston = require('winston');
 const config = require('../../config');
 const errorHandler = require('../../services/error-handler');
 const images = require('../../services/images');
+const AsyncWrap = require('../../utils/async-wrapper');
 
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
@@ -19,17 +20,11 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {StatusCode} 200.
  */
-async function deleteOne(req, res) {
+const deleteOne = AsyncWrap(async function deleteOne(req, res, next) {
   const user = req.user;
-
-  try {
-    await user.remove();
-    res.status(200).send();
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+  await user.remove();
+  res.status(200).send();
+})
 
 /**
  * @api {get} /users/:id Get one user
@@ -42,39 +37,38 @@ async function deleteOne(req, res) {
  *
  * @apiSuccess {Object} mongoose User object.
  */
-async function getOne(req, res) {
+const getOne = AsyncWrap(async function (req, res) {
   res.json(req.user);
-}
+})
 
-async function getByEmail(req, res) {
-  console.log(req.body)
+const getByEmail = AsyncWrap(async function (req, res, next) {
   const query = req.body;
-
   const user = await User.findOne({email: req.body.email})
 
-  res.json(user);
-}
+  if (!user) {
+    errorHandler.apiError({message: 'User not found', statusCode: 404}, next)
+  }
 
-async function getTeams(req, res) {
-  const user = req.user;
-  const teams = await user.getTeams();
+  res.json(user);
+})
+
+const getTeams = AsyncWrap(async function (req, res) {
+  const teams = await req.user.getTeams();
 
   res.json(teams);
-}
+})
 
-async function getFixtures(req, res) {
-  const user = req.user;
-  const fixtures = await user.getFixtures();
+const getFixtures = AsyncWrap(async function (req, res) {
+  const fixtures = await req.user.getFixtures();
 
   res.json(fixtures);
-}
+})
 
-async function getLeagues(req, res) {
-  const user = req.user;
-  const leagues = await user.getLeagues();
+const getLeagues = AsyncWrap(async function (req, res) {
+  const leagues = await req.user.getLeagues();
 
   res.json(leagues);
-}
+})
 
 /**
  * @api {put} /users/:id Update one user
@@ -93,29 +87,20 @@ async function getLeagues(req, res) {
  *
  * @apiSuccess {Object} updated User object.
  */
-async function updateOne(req, res) {
+const updateOne = AsyncWrap(async function (req, res) {
   const user = req.user;
   const updateFields = 'firstName lastName email password username'.split(' ');
   const updateParams = {};
 
-  try {
-    Object.keys(req.body).forEach(function (key) {
-      if(updateFields.indexOf(key) > -1) {
-        user[key] = req.body[key];
-      }
-    })
-
-    if(updateParams.password) {
-      user.password = createHash(req.body.password);
+  Object.keys(req.body).forEach(function (key) {
+    if(updateFields.indexOf(key) > -1) {
+      user[key] = req.body[key];
     }
+  })
 
-    await user.save();
-    res.json(user);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+  await user.save();
+  res.json(user);
+})
 
 /**
  * @api {post} /users/:id/profile-image Set a users profile image
@@ -129,21 +114,16 @@ async function updateOne(req, res) {
  *
  * @apiSuccess {Object} updated User object.
  */
-async function setProfileImage(req, res) {
-  try {
-    const user = req.user;
-    const cloudinaryImage = await images.uploadOne(req.file.path);
-    if (!profileImageUrl) {
-      return errorHandler.apiError(res, 'Something went wrong uploading your image', 500);
-    }
-    user.profileImageUrl = cloudinaryImage.url;
-    await user.save();
-    res.json(user);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
+const setProfileImage = AsyncWrap(async function (req, res) {
+  const user = req.user;
+  const cloudinaryImage = await images.uploadOne(req.file.path);
+  if (!profileImageUrl) {
+    return errorHandler.apiError({message: 'Something went wrong uploading your image', statusCode: 500}, next);
   }
-}
+  user.profileImageUrl = cloudinaryImage.url;
+  await user.save();
+  res.json(user);
+})
 
 /**
  * @api {all} /users/:id decode & validate a user JWT
@@ -159,13 +139,13 @@ async function setProfileImage(req, res) {
  *
  * @apiSuccess {next} continue to next middleware.
  */
-async function validateUser(req, res, next) {
+const validateUser = AsyncWrap(async function validateUser(req, res, next) {
   const decoded = await jwt.verify(req.headers.token, config.jwtSecret);
   if(!ObjectId(decoded.data.id).equals(ObjectId(req.params.id))) {
-    return errorHandler.apiError(res, 'Invalid token', 401);
+    return errorHandler.apiError({message: 'Invalid token', statusCode: 401}, next);
   }
   next();
-}
+})
 
 /**
  * Return a hash of a string
