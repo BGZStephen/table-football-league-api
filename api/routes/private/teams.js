@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const winston = require('winston');
 const config = require('../../config');
 const errorHandler = require('../../services/error-handler');
 const validate = require('../../services/validate');
+const AsyncWrap = require('../../utils/async-wrapper');
 
 const User = mongoose.model('User');
 const Team = mongoose.model('Team');
@@ -21,28 +21,23 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {object} new Team object.
  */
-async function create(req, res) {
-  try {
-    validate(req.body, {
-      name: {message: 'Team name is required', type: 'string'},
-      players: {message: 'At least one player is required', type: 'array'}
-    })
+const create = AsyncWrap(async function (req, res) {
+  validate(req.body, {
+    name: {message: 'Team name is required', type: 'string'},
+    players: {message: 'At least one player is required', type: 'array'}
+  })
 
-    await checkExistingTeam(null, {name: req.body.name});
-    const users = await checkUsersExist(req.body.players);
+  await checkExistingTeam(null, {name: req.body.name});
+  const users = await checkUsersExist(req.body.players);
 
-    const team = new Team({
-      name: req.body.name,
-      players: req.body.players,
-    })
+  const team = new Team({
+    name: req.body.name,
+    players: req.body.players,
+  })
 
-    await team.save();
-    await updateUsersTeams(users, team._id);
-    res.json(team);
-  } catch (error) {
-    res.sendStatus(400);
-  }
-}
+  await team.save();
+  res.json(team);
+})
 
 /**
  * @api {delete} /teams/:id delete a team
@@ -56,17 +51,10 @@ async function create(req, res) {
  *
  * @apiSuccess {StatusCode} new Team object.
  */
-async function deleteOne(req, res) {
-  const team = req.team;
-
-  try {
-    await team.remove();
-    res.status(200).send();
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(400);
-  }
-}
+const deleteOne = AsyncWrap(async function (req, res) {
+  await req.team.team.remove();
+  res.status(200).send();
+})
 
 /**
  * @api {get} /teams/:id get a team
@@ -79,9 +67,9 @@ async function deleteOne(req, res) {
  *
  * @apiSuccess {object} Team object.
  */
-async function getOne(req, res) {
+const getOne = AsyncWrap(async function (req, res) {
   res.json(req.team);
-}
+})
 
 /**
  * @api {put} /teams/:id update a team
@@ -105,38 +93,20 @@ async function getOne(req, res) {
  *
  * @apiSuccess {object} updated Team object.
  */
-async function updateOne(req, res) {
+const updateOne = AsyncWrap(async function (req, res) {
   const team = req.team;
   const updateFields = 'name'.split(' ');
   const updateParams = {};
 
-  try {
-
-    if (req.body.players) {
-      team.updatePlayers(req.body.players);
+  Object.keys(req.body).forEach(function (key) {
+    if(updateFields.indexOf(key) > -1) {
+      team[key] = req.body[key];
     }
+  });
 
-    if (req.body.fixtures) {
-      team.updateFixtures(req.body.fixtures);
-    }
-
-    if (req.body.leagues) {
-      team.updateLeagues(req.body.leagues);
-    }
-
-    Object.keys(req.body).forEach(function (key) {
-      if(updateFields.indexOf(key) > -1) {
-        team[key] = req.body[key];
-      }
-    });
-
-    await team.save();
-    res.json(team);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(400);
-  }
-}
+  await team.save();
+  res.json(team);
+})
 
 /**
  * Chexk existance of a team against an expected result
@@ -170,19 +140,6 @@ async function checkUsersExist(users, errorMessage) {
   }
 
   return validUsers;
-}
-
-/**
- * update
- * @param {Array} users array of users to update
- * @param {ObjectId} teamId team ID to add to users teams
- */
-async function updateUsersTeams(users, teamId) {
-  for (const user of users) {
-    await user.updateTeams({
-      add: [teamId],
-    });
-  }
 }
 
 module.exports = {

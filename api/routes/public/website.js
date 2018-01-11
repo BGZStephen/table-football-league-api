@@ -1,5 +1,5 @@
 const mailer = require('../../services/mailer');
-const winston = require('winston');
+const AsyncWrap = require('../../utils/async-wrapper');
 
 /**
  * @api {post} /website/contact-form Create a User
@@ -14,15 +14,10 @@ const winston = require('winston');
  *
  * @apiSuccess {Object} success: true
  */
-async function contactFormSubmission(req, res) {
-  try {
-    await mailer.contactFormEmail(req.body);
-    return res.status(200).json({success: true});
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+const contactFormSubmission = AsyncWrap(async function (req, res) {
+  await mailer.contactFormEmail(req.body);
+  res.status(200).json({success: true});
+})
 
 module.exports = {
   contactFormSubmission,

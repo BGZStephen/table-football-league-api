@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const winston = require('winston');
 const config = require('../../config');
 const errorHandler = require('../../services/error-handler');
 const images = require('../../services/images');
@@ -146,14 +145,6 @@ const validateUser = AsyncWrap(async function validateUser(req, res, next) {
   }
   next();
 })
-
-/**
- * Return a hash of a string
- * @param {String} string
- */
-function createHash(string) {
-  return bcrypt.hashSync(string, 8);
-}
 
 module.exports = {
   deleteOne,
