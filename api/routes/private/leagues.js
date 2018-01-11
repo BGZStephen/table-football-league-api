@@ -20,7 +20,7 @@ const ObjectId = mongoose.Types.ObjectId;
  */
 const create = AsyncWrap(async function (req, res) {
   if (!req.body.name) {
-    return errorHandler.apiError(res, 'League name is required', 500);
+    errorHandler.apiError({message: 'League name is required', statusCode: 500});
   }
 
   await checkExistingLeague(null, {name: req.body.name});
@@ -147,9 +147,9 @@ async function checkExistingLeague(expected, query) {
   const result = await League.findOne(query);
 
   if (expected && result !== expected) {
-    return errorHandler.apiError(res, 'Team not found', 404);
+    errorHandler.apiError({message: 'Team not found', statusCode: 404});
   } else {
-    return errorHandler.apiError(res, 'Team already exists', 500);
+    return errorHandler.apiError({message: 'Team already exists', statusCode: 500});
   }
 }
 

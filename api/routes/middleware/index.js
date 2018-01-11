@@ -25,11 +25,11 @@ const fetchResource = AsyncWrap(async function (req, res, next) {
 
   const id = req.params.id;
   if (!id) {
-    return errorHandler.apiError(res, 'ID is required', 400);
+    return errorHandler.apiError({message: 'ID is required', statusCode: 400});
   }
 
   if (!/[A-Fa-f0-9]{24}/g.test(id)) {
-    return errorHandler.apiError(res, 'Invalid ID', 400);
+    return errorHandler.apiError({message: 'Invalid ID', statusCode: 400});
   }
 
   // get route resource
@@ -42,7 +42,7 @@ const fetchResource = AsyncWrap(async function (req, res, next) {
   const resource = await resources[query].call(null, id);
 
   if(!resource) {
-    return errorHandler.apiError(res, 'Resource not found', 404);
+    return errorHandler.apiError({message: 'Resource not found', statusCode: 404});
   }
 
   req[query] = resource;
@@ -61,7 +61,7 @@ function authorizeWebsiteRoute(req, res, next) {
   try {
     const authorization = req.headers.authorization;
     if (!authorization || (authorization !== config.authorization.website)) {
-      throw ({message: 'Unauthorized access', statusCode: 401});
+      return errorHandler.apiError({message: 'Unauthorized access', statusCode: 401});
     }
 
     next();
@@ -82,7 +82,7 @@ function authorizeDashboardRoute(req, res, next) {
   try {
     const authorization = req.headers.authorization;
     if (!authorization || (authorization !== config.authorization.dashboard)) {
-      throw ({message: 'Unauthorized access', statusCode: 401});
+      errorHandler.apiError({message: 'Unauthorized access', statusCode: 401});
     }
 
     next();
@@ -103,7 +103,7 @@ function authorizeAdminRoute(req, res, next) {
   try {
     const authorization = req.headers.authorization;
     if (!authorization || (authorization !== config.authorization.admin)) {
-      return errorHandler.apiError(res, 'Unauthorized access', 401);
+      return errorHandler.apiError({message: 'Unauthorized access', statusCode: 401});
     }
 
     next();

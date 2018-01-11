@@ -117,9 +117,9 @@ async function checkExistingTeam(expected, query) {
   const result = await Team.findOne(query);
 
   if (expected && result !== expected) {
-    return errorHandler.apiError(res, 'Team not found', 404);
+    errorHandler.apiError({message: 'Team not found', statusCode: 404});
   } else {
-    return errorHandler.apiError(res, 'Team already exists', 500);
+    errorHandler.apiError({message: 'Team already exists', statusCode: 500});
   }
 }
 
@@ -133,7 +133,7 @@ async function checkUsersExist(users, errorMessage) {
   for (const user of users) {
     const validUser = await User.findOne(ObjectId(user))
     if (!validUser) {
-      return errorHandler.apiError(res, `${errorMessage} Player not found.`, 400);
+      errorHandler.apiError({message: `${errorMessage} Player not found.`, statusCode: 400});
     } else {
       validUsers.push(validUser)
     }
