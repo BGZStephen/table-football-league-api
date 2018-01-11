@@ -16,7 +16,7 @@ const ObjectId = mongoose.Types.ObjectId;
  * @param {object} res express response object
  * @param {callback} next middleware progression callback
  */
-async function fetchResource(req, res, next) {
+const fetchResource = AsyncWrap(async function (req, res, next) {
   const resources = {
     league: async function(id) {return await League.findById(ObjectId(id))},
     user: async function(id) {return await User.findById(ObjectId(id))},
@@ -47,7 +47,7 @@ async function fetchResource(req, res, next) {
 
   req[query] = resource;
   next();
-}
+})
 
 /**
  * Validate website authorization token presence in headers for website api calls

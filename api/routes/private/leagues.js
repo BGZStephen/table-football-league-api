@@ -18,27 +18,22 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {object} new League object.
  */
-async function create(req, res) {
-  try {
-    if (!req.body.name) {
-      return errorHandler.apiError(res, 'League name is required', 500);
-    }
-
-    await checkExistingLeague(null, {name: req.body.name});
-
-    const league = new League({
-      createdOn: new Date(),
-      name: req.body.name,
-      administrators: [req.body.userId],
-    });
-
-    await league.save();
-    res.json(league);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
+const create = AsyncWrap(async function (req, res) {
+  if (!req.body.name) {
+    return errorHandler.apiError(res, 'League name is required', 500);
   }
-}
+
+  await checkExistingLeague(null, {name: req.body.name});
+
+  const league = new League({
+    createdOn: new Date(),
+    name: req.body.name,
+    administrators: [req.body.userId],
+  });
+
+  await league.save();
+  res.json(league);
+})
 
 /**
  * @api {get} /leagues/:id get a league
@@ -51,9 +46,9 @@ async function create(req, res) {
  *
  * @apiSuccess {object} League object.
  */
-async function getOne(req, res) {
+const getOne = AsyncWrap(async function (req, res) {
   res.json(req.league);
-}
+})
 
 /**
  * @api {get} /leagues get all leagues
@@ -65,10 +60,10 @@ async function getOne(req, res) {
  *
  * @apiSuccess {object} League object.
  */
-async function getAll(req, res) {
+const getAll = AsyncWrap(async function (req, res) {
   const leagues = await League.find({});
   res.json(leagues);
-}
+})
 
 /**
  * @api {delete} /leagues/:id delete a league
@@ -82,7 +77,7 @@ async function getAll(req, res) {
  *
  * @apiSuccess {StatusCode} 200.
  */
-async function deleteOne(req, res) {
+const deleteOne = AsyncWrap(async function (req, res) {
   const league = req.league;
   try {
     await league.remove();
@@ -91,7 +86,7 @@ async function deleteOne(req, res) {
     winston.error(error);
     res.sendStatus(500);
   }
-}
+})
 
 /**
  * @api {put} /leagues/:id update a league
@@ -115,38 +110,33 @@ async function deleteOne(req, res) {
  *
  * @apiSuccess {object} updated League object.
  */
-async function updateOne(req, res) {
+const updateOne = AsyncWrap(async function (req, res) {
   const league = req.league;
   const updateFields = 'name'.split(' ');
   const updateParams = {};
 
-  try {
-    Object.keys(req.body).forEach(function (key) {
-      if(updateFields.indexOf(key)) {
-        updateParams[key] = req.body[key];
-      }
+  Object.keys(req.body).forEach(function (key) {
+    if(updateFields.indexOf(key)) {
+      updateParams[key] = req.body[key];
+    }
 
-      if (req.body.administrators) {
-        league.updateAdministrators(req.body.administrators);
-      }
+    if (req.body.administrators) {
+      league.updateAdministrators(req.body.administrators);
+    }
 
-      if (req.body.teams) {
-        league.updateTeams(req.body.teams);
-      }
+    if (req.body.teams) {
+      league.updateTeams(req.body.teams);
+    }
 
-      if (req.body.fixtures) {
-        league.updateFixtures(req.body.fixtures);
-      }
-    })
+    if (req.body.fixtures) {
+      league.updateFixtures(req.body.fixtures);
+    }
+  })
 
-    await League.update({_id: ObjectId(req.params.id)}, updateParams);
-    const league = await League.findById(ObjectId(req.params.id));
-    res.json(league);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+  await League.update({_id: ObjectId(req.params.id)}, updateParams);
+  const league = await League.findById(ObjectId(req.params.id));
+  res.json(league);
+})
 
 /**
  * Chexk existance of a league against an expected result

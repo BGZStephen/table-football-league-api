@@ -20,28 +20,23 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {object} new Fixture object.
  */
-async function create(req, res) {
-  try {
-    validate(req.body, {
-      date: {message: 'A date is required for the fixture', type: 'date'},
-      teams: {message: 'Teams are required', type: 'array'},
-      type: {message: 'Fixture type is required', type: 'string'},
-    })
+const create = AsyncWrap(async function (req, res) {
+  validate(req.body, {
+    date: {message: 'A date is required for the fixture', type: 'date'},
+    teams: {message: 'Teams are required', type: 'array'},
+    type: {message: 'Fixture type is required', type: 'string'},
+  })
 
-    const fixture = new Fixture({
-      createdOn: Date.now(),
-      date: req.body.date,
-      teams: req.body.teams,
-      type: req.body.type,
-    })
+  const fixture = new Fixture({
+    createdOn: Date.now(),
+    date: req.body.date,
+    teams: req.body.teams,
+    type: req.body.type,
+  })
 
-    await fixture.save();
-    res.json(fixture);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+  await fixture.save();
+  res.json(fixture);
+})
 
 /**
  * @api {get} /fixtures/:id get one Fixture
@@ -54,9 +49,9 @@ async function create(req, res) {
  *
  * @apiSuccess {object} Fixture object.
  */
-async function getOne() {
+const getOne = AsyncWrap(async function () {
   res.json(req.fixture);
-}
+})
 
 /**
  * @api {delete} /fixtures/:id delete one Fixture
@@ -69,16 +64,10 @@ async function getOne() {
  *
  * @apiSuccess {StatusCode} 200.
  */
-async function deleteOne() {
-  try {
-    const fixture = req.fixture;
-    await fixture.remove();
-    res.status(200).send();
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+const deleteOne = AsyncWrap(async function () {
+  await req.fixture.remove();
+  res.status(200).send();
+})
 
 /**
  * @api {put} /fixtures/:id update one Fixture
@@ -94,25 +83,20 @@ async function deleteOne() {
  *
  * @apiSuccess {object} Updated Fixture object.
  */
-async function updateOne(req, res) {
+const updateOne = AsyncWrap(async function (req, res) {
   const updateFields = 'teams date type'.split(' ');
   const updateParams = {};
 
-  try {
-    Object.keys(req.body).forEach(function (key) {
-      if(updateFields.indexOf(key)) {
-        updateParams[key] = req.body[key];
-      }
-    })
+  Object.keys(req.body).forEach(function (key) {
+    if(updateFields.indexOf(key)) {
+      updateParams[key] = req.body[key];
+    }
+  })
 
-    await Fixture.update({_id: ObjectId(req.params.id)}, updateParams);
-    const fixture = await Fixture.findById(ObjectId(req.params.id));
-    res.json(fixture);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+  await Fixture.update({_id: ObjectId(req.params.id)}, updateParams);
+  const fixture = await Fixture.findById(ObjectId(req.params.id));
+  res.json(fixture);
+})
 
 /**
  * @api {put} /fixtures/:id/submit-score submit a fixture score
@@ -131,7 +115,7 @@ async function updateOne(req, res) {
  *
  * @apiSuccess {object} Updated Fixture object.
  */
-async function submitScore(req, res) {
+const submitScore = AsyncWrap(async function (req, res) {
   validate(req.body, {
     homeTeam: {message: 'A home team is required', type: 'string'},
     awayTeam: {message: 'An away team is required', type: 'string'},
@@ -150,14 +134,10 @@ async function submitScore(req, res) {
       goalsConceded: req.body.awayTeam.goalsScored,
     }
   }
-  try {
-    await fixture.submitScore(params)
-    res.json(fixture)
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(400);
-  }
-}
+
+  await fixture.submitScore(params)
+  res.json(fixture)
+})
 
 module.exports = {
   create,
