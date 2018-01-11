@@ -34,11 +34,11 @@ const create = AsyncWrap(async function create(req, res, next) {
   })
 
   if (await userAlreadyExists({email: req.body.email})) {
-    errorHandler.apiError({message: 'Email address already in use', statusCode: 400}, next);
+    errorHandler.apiError({message: 'Email address already in use', statusCode: 400});
   };
 
   if (await userAlreadyExists({username: req.body.username})) {
-    errorHandler.apiError({message: 'Username already in use', statusCode: 400}, next);
+    errorHandler.apiError({message: 'Username already in use', statusCode: 400});
   };
 
   const user = new User({
@@ -88,11 +88,11 @@ const authenticate = AsyncWrap(async function authenticate(req, res, next) {
   const user = await User.findOne({email: req.body.email});
 
   if (!user) {
-    errorHandler.apiError({message: 'Invalid email address or password', statusCode: 403}, next);
+    errorHandler.apiError({message: 'Invalid email address or password', statusCode: 403});
   }
 
   if (user.validatePassword(req.body.password) === false) {
-    errorHandler.apiError({message: 'Invalid email address or password', statusCode: 403}, next);
+    errorHandler.apiError({message: 'Invalid email address or password', statusCode: 403});
   }
 
   const token = jwt.sign({

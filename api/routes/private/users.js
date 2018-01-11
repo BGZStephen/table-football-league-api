@@ -20,7 +20,7 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {StatusCode} 200.
  */
-const deleteOne = AsyncWrap(async function deleteOne(req, res, next) {
+const deleteOne = AsyncWrap(async function (req, res, next) {
   const user = req.user;
   await user.remove();
   res.status(200).send();
@@ -46,7 +46,7 @@ const getByEmail = AsyncWrap(async function (req, res, next) {
   const user = await User.findOne({email: req.body.email})
 
   if (!user) {
-    errorHandler.apiError({message: 'User not found', statusCode: 404}, next)
+    errorHandler.apiError({message: 'User not found', statusCode: 404})
   }
 
   res.json(user);
@@ -118,7 +118,7 @@ const setProfileImage = AsyncWrap(async function (req, res) {
   const user = req.user;
   const cloudinaryImage = await images.uploadOne(req.file.path);
   if (!profileImageUrl) {
-    return errorHandler.apiError({message: 'Something went wrong uploading your image', statusCode: 500}, next);
+    return errorHandler.apiError({message: 'Something went wrong uploading your image', statusCode: 500});
   }
   user.profileImageUrl = cloudinaryImage.url;
   await user.save();
@@ -142,7 +142,7 @@ const setProfileImage = AsyncWrap(async function (req, res) {
 const validateUser = AsyncWrap(async function validateUser(req, res, next) {
   const decoded = await jwt.verify(req.headers.token, config.jwtSecret);
   if(!ObjectId(decoded.data.id).equals(ObjectId(req.params.id))) {
-    return errorHandler.apiError({message: 'Invalid token', statusCode: 401}, next);
+    return errorHandler.apiError({message: 'Invalid token', statusCode: 401});
   }
   next();
 })
