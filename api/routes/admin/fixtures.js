@@ -16,15 +16,10 @@ const Fixture = mongoose.model('Fixture');
  *
  * @apiSuccess {object} Fixture objects.
  */
-async function getAll() {
-  try {
-    const fixtures = await Fixture.find({});
-    res.json(fixtures);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+const getAll = AsyncWrap(async function () {
+  const fixtures = await Fixture.find({});
+  res.json(fixtures);
+})
 
 module.exports = {
   getAll,

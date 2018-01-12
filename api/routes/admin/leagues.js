@@ -15,15 +15,10 @@ const League = mongoose.model('League');
  *
  * @apiSuccess {object} League objects array.
  */
-async function getAll(req, res) {
-  try {
-    const leagues = await League.find({});
-    res.json(leagues);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+const getAll = AsyncWrap(async function (req, res) {
+  const leagues = await League.find({});
+  res.json(leagues);
+})
 
 module.exports = {
   getAll,

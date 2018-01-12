@@ -17,15 +17,10 @@ const Team = mongoose.model('Team');
  *
  * @apiSuccess {object} Team objects.
  */
-async function getAll(req, res, next) {
-  try {
-    const teams = await Team.find({})
-    res.json(teams);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(400);
-  }
-}
+const getAll = AsyncWrap(async function (req, res, next) {
+  const teams = await Team.find({})
+  res.json(teams);
+})
 
 module.exports = {
   getAll,
