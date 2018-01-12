@@ -1,11 +1,11 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const winston = require('winston');
 const config = require('../../config');
 const mailer = require('../../services/mailer');
 const errorHandler = require('../../services/error-handler');
 const validate = require('../../services/validate');
+const AsyncWrap = require('api/utils/async-wrapper');
 
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
@@ -22,42 +22,37 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {User, JWT} User object + json web token.
  */
-async function authenticateAdminUser(req, res, next) {
-  try {
-    validate(req.body, {
-      email: {message: 'Email address is required', type: 'string'},
-      password: {message: 'Password is required', type: 'string'},
-    })
+const authenticateAdminUser = AsyncWrap(async function (req, res) {
+  validate(req.body, {
+    email: {message: 'Email address is required', type: 'string'},
+    password: {message: 'Password is required', type: 'string'},
+  })
 
-    const user = await User.findOne({email: req.body.email});
-    console.log(user)
+  const user = await User.findOne({email: req.body.email});
 
-    if (!user) {
-      return errorHandler.apiError(res, 'User not found', 404);
-    }
-
-    compareHash(user.password, req.body.password);
-
-    if (!user.admin) {
-      return errorHandler.apiError(res, 'Unauthorized access', 401);
-    }
-
-    const token = jwt.sign({
-      exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
-      data: {
-        id: user._id,
-        admin: true,
-      }
-    }, config.jwtSecret);
-
-    res.json({
-      token: token,
-      user: JSON.stringify({_id: user._id}),
-    });
-  } catch (error) {
-    res.sendStatus(500);
+  if (!user) {
+    return errorHandler.apiError({message: 'User not found', statusCode: 404});
   }
-}
+
+  compareHash(user.password, req.body.password);
+
+  if (!user.admin) {
+    return errorHandler.apiError({message: 'Unauthorized access', statusCode: 401});
+  }
+
+  const token = jwt.sign({
+    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
+    data: {
+      id: user._id,
+      admin: true,
+    }
+  }, config.jwtSecret);
+
+  res.json({
+    token: token,
+    user: JSON.stringify({_id: user._id}),
+  });
+})
 
 /**
  * @api {delete} /users/:id Delete a User
@@ -70,17 +65,10 @@ async function authenticateAdminUser(req, res, next) {
  *
  * @apiSuccess {StatusCode} 200.
  */
-async function deleteOne(req, res) {
-  const user = req.user;
-
-  try {
-    await user.remove();
-    res.status(200).send();
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+const deleteOne = AsyncWrap(async function (req, res) {
+  await req.user.remove();
+  res.status(200).send();
+})
 
 /**
  * @api {get} /admin/users Get all users
@@ -92,15 +80,10 @@ async function deleteOne(req, res) {
  *
  * @apiSuccess {Object} mongoose Users object.
  */
-async function getAll(req, res, next) {
-  try {
-    const users = await User.find({});
-    res.json(users);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
-}
+const getAll = AsyncWrap(async function (req, res) {
+  const users = await User.find({});
+  res.json(users);
+})
 
 /**
  * @api {get} /users/:id Get one user
@@ -113,9 +96,9 @@ async function getAll(req, res, next) {
  *
  * @apiSuccess {Object} mongoose User object.
  */
-async function getOne(req, res) {
+const getOne = AsyncWrap(async function (req, res) {
   res.json(req.user);
-}
+})
 
 /**
  * @api {put} /users/:id Update one user
@@ -134,29 +117,24 @@ async function getOne(req, res) {
  *
  * @apiSuccess {Object} updated User object.
  */
-async function updateOne(req, res) {
+const updateOne = AsyncWrap(async function (req, res) {
   const user = req.user;
   const updateFields = 'firstName lastName email password username'.split(' ');
   const updateParams = {};
 
-  try {
-    Object.keys(req.body).forEach(function (key) {
-      if(updateFields.indexOf(key) > -1) {
-        user[key] = req.body[key];
-      }
-    })
-
-    if(updateParams.password) {
-      user.password = createHash(req.body.password);
+  Object.keys(req.body).forEach(function (key) {
+    if(updateFields.indexOf(key) > -1) {
+      user[key] = req.body[key];
     }
+  })
 
-    await user.save();
-    res.json(user);
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
+  if(updateParams.password) {
+    user.password = createHash(req.body.password);
   }
-}
+
+  await user.save();
+  res.json(user);
+})
 
 /**
  * Compare a hash with a string to check validity
@@ -165,7 +143,7 @@ async function updateOne(req, res) {
  */
 function compareHash(hash, comparison) {
   if (!bcrypt.compareSync(comparison, hash)) {
-    return errorHandler.apiError(res, 'Incorrect password', 403);
+    return errorHandler.apiError({message: 'Incorrect password', statusCode: 403});
   }
 }
 

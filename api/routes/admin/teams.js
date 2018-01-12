@@ -3,6 +3,7 @@ const winston = require('winston');
 const config = require('../../config');
 const errorHandler = require('../../services/error-handler');
 const validate = require('../../services/validate');
+const AsyncWrap = require('api/utils/async-wrapper');
 
 const Team = mongoose.model('Team');
 
