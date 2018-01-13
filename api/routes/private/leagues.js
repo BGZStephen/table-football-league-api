@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const errorHandler = require('../../services/error-handler');
-const AsyncWrap = require('api/utils/async-wrapper');
+const AsyncWrap = require('../../utils/async-wrapper');
 
 const League = mongoose.model('League');
 const ObjectId = mongoose.Types.ObjectId;
@@ -20,10 +20,12 @@ const ObjectId = mongoose.Types.ObjectId;
  */
 const create = AsyncWrap(async function (req, res) {
   if (!req.body.name) {
-    errorHandler.apiError({message: 'League name is required', statusCode: 500});
+    errorHandler.apiError({message: 'League name is required', statusCode: 400});
   }
 
-  await checkExistingLeague(null, {name: req.body.name});
+  if (await leagueAlreadyExists({name: req.body.name})) {
+    errorHandler.apiError({message: 'A league with that name already exists', statusCode: 400})
+  }
 
   const league = new League({
     createdOn: new Date(),
@@ -78,14 +80,8 @@ const getAll = AsyncWrap(async function (req, res) {
  * @apiSuccess {StatusCode} 200.
  */
 const deleteOne = AsyncWrap(async function (req, res) {
-  const league = req.league;
-  try {
-    await league.remove();
-    res.status(200).send();
-  } catch (error) {
-    winston.error(error);
-    res.sendStatus(500);
-  }
+  await req.league.remove();
+  res.status(200).send();
 })
 
 /**
@@ -133,8 +129,6 @@ const updateOne = AsyncWrap(async function (req, res) {
     }
   })
 
-  await League.update({_id: ObjectId(req.params.id)}, updateParams);
-  const league = await League.findById(ObjectId(req.params.id));
   res.json(league);
 })
 
@@ -143,14 +137,14 @@ const updateOne = AsyncWrap(async function (req, res) {
  * @param {Boolean} expected expected outcome
  * @param {Object} query an object representing a mongoose query to use for existance checking
  */
-async function checkExistingLeague(expected, query) {
-  const result = await League.findOne(query);
 
-  if (expected && result !== expected) {
-    errorHandler.apiError({message: 'Team not found', statusCode: 404});
-  } else {
-    return errorHandler.apiError({message: 'Team already exists', statusCode: 500});
-  }
+/**
+ * Chexk existance of a user against an expected result
+ * @param {Boolean} expected expected outcome
+ * @param {Object} query an object representing a mongoose query to use for existance checking
+*/
+async function leagueAlreadyExists(query) {
+  return await League.findOne(query) ? true : false;
 }
 
 module.exports = {

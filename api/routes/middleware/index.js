@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const winston = require('winston');
 const config = require('../../config')
 const errorHandler = require('../../services/error-handler');
-const AsyncWrap = require('api/utils/async-wrapper');
+const AsyncWrap = require('../../utils/async-wrapper');
 
 const User = mongoose.model('User');
 const League = mongoose.model('League');

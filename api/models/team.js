@@ -39,7 +39,7 @@ TeamSchema.methods = {
     user.addTeam(this._id);
     updatedDocuments.push(user);
 
-    return MongooseUtils.wrapUpdate({currentDocs, updatedDocs});
+    return mongooseUtils.wrapUpdate({currentDocs, updatedDocs});
   },
 
   async addUsers(userIds) {

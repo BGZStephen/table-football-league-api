@@ -24,18 +24,20 @@ const ObjectId = mongoose.Types.ObjectId;
 const create = AsyncWrap(async function (req, res) {
   validate(req.body, {
     name: {message: 'Team name is required', type: 'string'},
-    players: {message: 'At least one player is required', type: 'array'}
+    users: {message: 'At least one player is required', type: 'array'}
   })
 
-  await checkExistingTeam(null, {name: req.body.name});
-  const users = await checkUsersExist(req.body.players);
+  if (await teamAlreadyExists({name: req.body.name})) {
+    errorHandler.apiError({message: 'A team with that name already exists', statusCode: 400});
+  }
+
+  const users = await checkUsersExist(req.body.users);
 
   const team = new Team({
-    name: req.body.name,
-    players: req.body.players,
+    name: req.body.name
   })
 
-  await team.save();
+  await team.addUsers(users).save();
   res.json(team);
 })
 
@@ -108,19 +110,8 @@ const updateOne = AsyncWrap(async function (req, res) {
   res.json(team);
 })
 
-/**
- * Chexk existance of a team against an expected result
- * @param {Boolean} expected expected outcome
- * @param {Object} query an object representing a mongoose query to use for existance checking
- */
-async function checkExistingTeam(expected, query) {
-  const result = await Team.findOne(query);
-
-  if (expected && result !== expected) {
-    errorHandler.apiError({message: 'Team not found', statusCode: 404});
-  } else {
-    errorHandler.apiError({message: 'Team already exists', statusCode: 500});
-  }
+async function teamAlreadyExists(query) {
+  return await Team.findOne(query) ? true : false;
 }
 
 /**
@@ -131,11 +122,11 @@ async function checkExistingTeam(expected, query) {
 async function checkUsersExist(users, errorMessage) {
   const validUsers = []
   for (const user of users) {
-    const validUser = await User.findOne(ObjectId(user))
+    const validUser = await User.findOne(ObjectId(user).select('_id'))
     if (!validUser) {
       errorHandler.apiError({message: `${errorMessage} Player not found.`, statusCode: 400});
     } else {
-      validUsers.push(validUser)
+      validUsers.push(validUser);
     }
   }
 

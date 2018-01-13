@@ -1,4 +1,4 @@
-updateWrap(params) {
+function updateWrap(params) {
   if (!params.updatedDocs) {
     throw new Error('update wrapper requires a new version of the documents for update');
   }

@@ -114,13 +114,7 @@ const authenticate = AsyncWrap(async function authenticate(req, res, next) {
  * @param {Object} query an object representing a mongoose query to use for existance checking
  */
 async function userAlreadyExists(query) {
-  const user = await User.findOne(query);
-
-  if (user) {
-    return true;
-  }
-
-  return false;
+  return await User.findOne(query) ? true : false;
 }
 
 module.exports = {

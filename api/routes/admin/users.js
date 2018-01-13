@@ -5,7 +5,7 @@ const config = require('../../config');
 const mailer = require('../../services/mailer');
 const errorHandler = require('../../services/error-handler');
 const validate = require('../../services/validate');
-const AsyncWrap = require('api/utils/async-wrapper');
+const AsyncWrap = require('../../utils/async-wrapper');
 
 const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
