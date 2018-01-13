@@ -113,21 +113,30 @@ const updateOne = AsyncWrap(async function (req, res) {
 
   Object.keys(req.body).forEach(function (key) {
     if(updateFields.indexOf(key)) {
-      updateParams[key] = req.body[key];
-    }
-
-    if (req.body.administrators) {
-      league.updateAdministrators(req.body.administrators);
-    }
-
-    if (req.body.teams) {
-      league.updateTeams(req.body.teams);
-    }
-
-    if (req.body.fixtures) {
-      league.updateFixtures(req.body.fixtures);
+      league[key] = req.body[key];
     }
   })
+
+  if (req.body.administrators) {
+    for (const userId of league.administrators) {
+      if (req.body.administrators.indexOf(userId) === -1) {
+        leage.removeAdministrator(userId);
+      } else {
+        leage.addAdministrator(userId);
+      }
+    }
+  }
+
+  if (req.body.teams) {
+    for (const teamId of req.body.teams) {
+      const team = await Team.findById(teamId)
+      await team.addLeague(league._id).save();
+    }
+  }
+
+  if (!req.body.teams) {
+    await league.save();
+  }
 
   res.json(league);
 })

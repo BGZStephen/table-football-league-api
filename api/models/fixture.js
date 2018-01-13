@@ -57,7 +57,7 @@ FixtureSchema.pre('save', async function(next) {
   next();
 })
 
-FixtureSchema.post('remove', function(fixture) {
+FixtureSchema.post('remove', async function(fixture) {
   for (const teamId of fixture.teams) {
     const team = await Team.findById(teamId);
     await team.removeFixture();
