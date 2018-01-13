@@ -33,6 +33,7 @@ const create = AsyncWrap(async function (req, res) {
     date: req.body.date,
     teams: req.body.teams,
     type: req.body.type,
+    leagueId: req.body.leagueId,
   })
 
   await fixture.save();
@@ -85,17 +86,25 @@ const deleteOne = AsyncWrap(async function () {
  * @apiSuccess {object} Updated Fixture object.
  */
 const updateOne = AsyncWrap(async function (req, res) {
+  const fixture = req.fixture;
   const updateFields = 'teams date type'.split(' ');
   const updateParams = {};
 
+  if (req.body.teams) {
+    for (const teamId of fixture.teams) {
+      if (req.body.teams.indexOf(teamId) === -1) {
+        await fixture.removeTeam(teamId);
+      }
+    }
+  }
+
   Object.keys(req.body).forEach(function (key) {
     if(updateFields.indexOf(key)) {
-      updateParams[key] = req.body[key];
+      fixture[key] = req.body[key];
     }
   })
 
-  await Fixture.update({_id: ObjectId(req.params.id)}, updateParams);
-  const fixture = await Fixture.findById(ObjectId(req.params.id));
+  await fixture.save();
   res.json(fixture);
 })
 

@@ -57,6 +57,20 @@ FixtureSchema.pre('save', async function(next) {
   next();
 })
 
+FixtureSchema.post('remove', function(fixture) {
+  for (const teamId of fixture.teams) {
+    const team = await Team.findById(teamId);
+    await team.removeFixture();
+    await team.save();
+  }
+
+  if (fixture.leagueId) {
+    const league = League.findById(fixture.leagueId);
+    await league.removeFixture();
+    await league.save();
+  }
+})
+
 FixtureSchema.methods = {
   /**
    * submit a score for this fixture and set it to played
@@ -104,6 +118,14 @@ FixtureSchema.methods = {
       goalsScored: params.awayTeam.score,
       goalsConceded: params.homeTeam.score,
     });
+  },
+
+  async removeTeam(teamId) {
+    this.teams.splice(this.teams.indexOf(teamId), 1);
+
+    const team = await Team.findById(teamId);
+    await team.removeFixture(this._id);
+    await team.save();
   }
 }
 
