@@ -56,22 +56,6 @@ const getOne = AsyncWrap(async function () {
 })
 
 /**
- * @api {delete} /fixtures/:id delete one Fixture
- * @apiName DelteOne
- * @apiGroup Fixture
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.fixture} Fixture object brought by middleware.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {StatusCode} 200.
- */
-const deleteOne = AsyncWrap(async function () {
-  await req.fixture.remove();
-  res.status(200).send();
-})
-
-/**
  * @api {put} /fixtures/:id update one Fixture
  * @apiName UpdateOne
  * @apiGroup Fixture

@@ -68,23 +68,6 @@ const getAll = AsyncWrap(async function (req, res) {
 })
 
 /**
- * @api {delete} /leagues/:id delete a league
- * @apiName DeleteOne
- * @apiGroup League
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.params} request url parameters
- * @apiParam {req.params.id} league ID.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {StatusCode} 200.
- */
-const deleteOne = AsyncWrap(async function (req, res) {
-  await req.league.remove();
-  res.status(200).send();
-})
-
-/**
  * @api {put} /leagues/:id update a league
  * @apiName UpdateOne
  * @apiGroup League
@@ -157,7 +140,6 @@ async function leagueAlreadyExists(query) {
 }
 
 module.exports = {
-  deleteOne,
   updateOne,
   create,
   getOne,

@@ -1,7 +1,5 @@
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const winston = require('winston');
 const config = require('../../config');
 const mailer = require('../../services/mailer');
 const errorHandler = require('../../services/error-handler');
@@ -22,7 +20,6 @@ const ObjectId = mongoose.Types.ObjectId;
  * @apiParam {req.body.lastName} user last name
  * @apiParam {req.body.email} user email
  * @apiParam {req.body.password} user password
- * @apiParam {req.body.confirmPassword} password to check with
  *
  * @apiSuccess {User, JWT} new User object + json web token.
  */
@@ -109,8 +106,7 @@ const authenticate = AsyncWrap(async function authenticate(req, res, next) {
 })
 
 /**
- * Chexk existance of a user against an expected result
- * @param {Boolean} expected expected outcome
+ * Check existance of a user
  * @param {Object} query an object representing a mongoose query to use for existance checking
  */
 async function userAlreadyExists(query) {

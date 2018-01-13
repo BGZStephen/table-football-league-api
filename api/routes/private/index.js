@@ -14,30 +14,23 @@ router.post('/users/getByEmail', Users.getByEmail);
 router.all('/users/:id*', Users.validateUser, Middleware.fetchResource);
 router.get('/users/:id', Users.getOne);
 router.put('/users/:id', Users.updateOne);
-router.delete('/users/:id', Users.deleteOne);
-router.post('/users/:id/teams', Users.getTeams);
-router.post('/users/:id/leagues', Users.getLeagues);
-router.post('/users/:id/fixtures', Users.getFixtures);
 router.post('users/:id/profile-image', upload.single('profileImage'), Users.setProfileImage);
 
 router.get('/leagues', Leagues.getAll);
 router.post('/leagues', Leagues.create);
 router.all('/leagues/:id*', Middleware.fetchResource);
 router.get('/leagues/:id', Leagues.getOne);
-router.delete('/leagues/:id', Leagues.deleteOne);
 router.put('/leagues/:id', Leagues.updateOne);
 
 router.post('/teams', Teams.create);
 router.all('/teams/:id*', Middleware.fetchResource);
 router.get('/teams/:id', Teams.getOne);
-router.delete('/teams/:id', Teams.deleteOne);
 router.put('/teams/:id', Teams.updateOne);
 
 router.post('/fixtures', Fixtures.create);
 router.all('/fixtures/:id*', Middleware.fetchResource);
 router.get('/fixtures/:id', Fixtures.getOne);
 router.put('/fixtures/:id', Fixtures.updateOne);
-router.delete('/fixtures/:id', Fixtures.deleteOne);
 router.post('/fixtures/:id/submit-score', Fixtures.submitScore);
 
 module.exports = router;

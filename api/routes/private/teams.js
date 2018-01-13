@@ -41,22 +41,7 @@ const create = AsyncWrap(async function (req, res) {
   res.json(team);
 })
 
-/**
- * @api {delete} /teams/:id delete a team
- * @apiName DeleteOne
- * @apiGroup Team
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.params} request url parameters
- * @apiParam {req.params.id} team ID.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {StatusCode} new Team object.
- */
-const deleteOne = AsyncWrap(async function (req, res) {
-  await req.team.team.remove();
-  res.status(200).send();
-})
+
 
 /**
  * @api {get} /teams/:id get a team
@@ -98,7 +83,6 @@ const getOne = AsyncWrap(async function (req, res) {
 const updateOne = AsyncWrap(async function (req, res) {
   const team = req.team;
   const updateFields = 'name'.split(' ');
-  const updateParams = {};
 
   Object.keys(req.body).forEach(function (key) {
     if(updateFields.indexOf(key) > -1) {
@@ -137,5 +121,4 @@ module.exports = {
   create,
   getOne,
   updateOne,
-  deleteOne,
 }

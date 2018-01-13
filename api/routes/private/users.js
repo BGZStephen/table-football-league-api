@@ -9,23 +9,6 @@ const User = mongoose.model('User');
 const ObjectId = mongoose.Types.ObjectId;
 
 /**
- * @api {delete} /users/:id Delete a User
- * @apiName DeleteUser
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.user} User object
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {StatusCode} 200.
- */
-const deleteOne = AsyncWrap(async function (req, res, next) {
-  const user = req.user;
-  await user.remove();
-  res.status(200).send();
-})
-
-/**
  * @api {get} /users/:id Get one user
  * @apiName GetUser
  * @apiGroup User
@@ -51,24 +34,6 @@ const getByEmail = AsyncWrap(async function (req, res, next) {
   res.json(user);
 })
 
-const getTeams = AsyncWrap(async function (req, res) {
-  const teams = await req.user.getTeams();
-
-  res.json(teams);
-})
-
-const getFixtures = AsyncWrap(async function (req, res) {
-  const fixtures = await req.user.getFixtures();
-
-  res.json(fixtures);
-})
-
-const getLeagues = AsyncWrap(async function (req, res) {
-  const leagues = await req.user.getLeagues();
-
-  res.json(leagues);
-})
-
 /**
  * @api {put} /users/:id Update one user
  * @apiName GetAllUsers
@@ -89,7 +54,6 @@ const getLeagues = AsyncWrap(async function (req, res) {
 const updateOne = AsyncWrap(async function (req, res) {
   const user = req.user;
   const updateFields = 'firstName lastName email password username'.split(' ');
-  const updateParams = {};
 
   Object.keys(req.body).forEach(function (key) {
     if(updateFields.indexOf(key) > -1) {
@@ -116,9 +80,11 @@ const updateOne = AsyncWrap(async function (req, res) {
 const setProfileImage = AsyncWrap(async function (req, res) {
   const user = req.user;
   const cloudinaryImage = await images.uploadOne(req.file.path);
-  if (!profileImageUrl) {
+
+  if (!cloudinaryImage) {
     return errorHandler.apiError({message: 'Something went wrong uploading your image', statusCode: 500});
   }
+
   user.profileImageUrl = cloudinaryImage.url;
   await user.save();
   res.json(user);
@@ -147,12 +113,8 @@ const validateUser = AsyncWrap(async function validateUser(req, res, next) {
 })
 
 module.exports = {
-  deleteOne,
   getByEmail,
   getOne,
-  getLeagues,
-  getFixtures,
-  getTeams,
   setProfileImage,
   updateOne,
   validateUser,
