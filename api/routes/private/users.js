@@ -20,6 +20,24 @@ const ObjectId = mongoose.Types.ObjectId;
  * @apiSuccess {Object} mongoose User object.
  */
 const getOne = AsyncWrap(async function (req, res) {
+  let pupolators = null;
+
+  if (req.query.teams) {
+    populators = populators + 'teams ';
+  }
+
+  if (req.query.leagues) {
+    populators = populators + 'leagues ';
+  }
+
+  if (req.query.fixtures) {
+    populators = populators + 'fixtures ';
+  }
+
+  if (populators) {
+    await req.user.populate(populators.trim()).execPopulate();
+  }
+
   res.json(req.user);
 })
 

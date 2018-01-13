@@ -49,6 +49,24 @@ const create = AsyncWrap(async function (req, res) {
  * @apiSuccess {object} League object.
  */
 const getOne = AsyncWrap(async function (req, res) {
+  let pupolators = null;
+
+  if (req.query.administrators) {
+    populators = populators + 'administrators ';
+  }
+
+  if (req.query.teams) {
+    populators = populators + 'teams ';
+  }
+
+  if (req.query.fixtures) {
+    populators = populators + 'fixtures ';
+  }
+
+  if (populators) {
+    await req.league.populate(populators.trim()).execPopulate();
+  }
+
   res.json(req.league);
 })
 
