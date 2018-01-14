@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const errorHandler = require('../../services/error-handler');
 const AsyncWrap = require('../../utils/async-wrapper');
 
 const League = mongoose.model('League');
@@ -20,11 +19,11 @@ const ObjectId = mongoose.Types.ObjectId;
  */
 const create = AsyncWrap(async function (req, res) {
   if (!req.body.name) {
-    errorHandler.apiError({message: 'League name is required', statusCode: 400});
+    return res.error({message: 'League name is required', statusCode: 400});
   }
 
   if (await leagueAlreadyExists({name: req.body.name})) {
-    errorHandler.apiError({message: 'A league with that name already exists', statusCode: 400})
+    return res.error({message: 'A league with that name already exists', statusCode: 400})
   }
 
   const league = new League({

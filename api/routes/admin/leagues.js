@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const winston = require('winston');
-const errorHandler = require('../../services/error-handler');
 const AsyncWrap = require('../../utils/async-wrapper');
 
 const League = mongoose.model('League');

@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const config = require('../../config');
 const mailer = require('../../services/mailer');
-const errorHandler = require('../../services/error-handler');
 const validate = require('../../services/validate');
 const AsyncWrap = require('../../utils/async-wrapper');
 

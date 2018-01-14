@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const winston = require('winston');
-const errorHandler = require('../../services/error-handler');
 const validate = require('../../services/validate')
 const AsyncWrap = require('../../utils/async-wrapper');
 
@@ -150,7 +149,6 @@ const submitScore = AsyncWrap(async function (req, res) {
 module.exports = {
   create,
   getOne,
-  deleteOne,
   updateOne,
   submitScore,
 }

@@ -8,7 +8,7 @@ const cors = require('cors');
 const winston = require('winston');
 const errorUtils = require('./utils/error-utils');
 
-// make models globally available
+// bootstrap models
 require('./models');
 
 // db connection
@@ -33,13 +33,22 @@ app.use(express.static(path.join(__dirname, '../public')));
 // body partser initialize
 app.use(bodyParser.json());
 
+app.use(function(req, res, next) {
+  res.error = function(params) {
+    return res.status(params.statusCode).json({
+      message: params.message
+    })
+  };
+
+  next();
+});
+
 app.use('/admin', require('./routes/admin'));
 app.use('/private', require('./routes/private'));
 app.use(require('./routes/public'));
 
 // error handlers
 app.use(errorUtils.logErrors);
-app.use(errorUtils.clientErrorHandler);
 app.use(errorUtils.errorHandler);
 
 const port = process.env.PORT || 3000;

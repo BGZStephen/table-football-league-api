@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const config = require('../../config');
 const mailer = require('../../services/mailer');
-const errorHandler = require('../../services/error-handler');
 const validate = require('../../services/validate');
 const AsyncWrap = require('../../utils/async-wrapper');
 
@@ -31,13 +30,15 @@ const authenticateAdminUser = AsyncWrap(async function (req, res) {
   const user = await User.findOne({email: req.body.email});
 
   if (!user) {
-    return errorHandler.apiError({message: 'User not found', statusCode: 404});
+    return res.error({message: 'User not found', statusCode: 404});
   }
 
-  compareHash(user.password, req.body.password);
+  if (!compareHash(user.password, req.body.password)) {
+    return res.error({message: 'Unauthorized access', statusCode: 401})
+  };
 
   if (!user.admin) {
-    return errorHandler.apiError({message: 'Unauthorized access', statusCode: 401});
+    return res.error({message: 'Unauthorized access', statusCode: 401});
   }
 
   const token = jwt.sign({
@@ -142,9 +143,7 @@ const updateOne = AsyncWrap(async function (req, res) {
  * @param {String} comparison string to validate hash with
  */
 function compareHash(hash, comparison) {
-  if (!bcrypt.compareSync(comparison, hash)) {
-    return errorHandler.apiError({message: 'Incorrect password', statusCode: 403});
-  }
+  return bcrypt.compareSync(comparison, hash) ? true : false
 }
 
 module.exports = {

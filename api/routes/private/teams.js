@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const config = require('../../config');
-const errorHandler = require('../../services/error-handler');
 const validate = require('../../services/validate');
 const AsyncWrap = require('../../utils/async-wrapper');
 
@@ -28,7 +27,7 @@ const create = AsyncWrap(async function (req, res) {
   })
 
   if (await teamAlreadyExists({name: req.body.name})) {
-    errorHandler.apiError({message: 'A team with that name already exists', statusCode: 400});
+    return res.error({message: 'A team with that name already exists', statusCode: 400});
   }
 
   const users = await checkUsersExist(req.body.users);
@@ -126,7 +125,7 @@ async function checkUsersExist(users, errorMessage) {
   for (const user of users) {
     const validUser = await User.findOne(ObjectId(user).select('_id'))
     if (!validUser) {
-      errorHandler.apiError({message: `${errorMessage} Player not found.`, statusCode: 400});
+      return res.error({message: `${errorMessage} Player not found.`, statusCode: 400});
     } else {
       validUsers.push(validUser);
     }

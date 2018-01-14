@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
-const errorHandler = require('../../services/error-handler');
 const images = require('../../services/images');
 const AsyncWrap = require('../../utils/async-wrapper');
 
@@ -46,7 +45,7 @@ const getByEmail = AsyncWrap(async function (req, res, next) {
   const user = await User.findOne({email: req.body.email})
 
   if (!user) {
-    errorHandler.apiError({message: 'User not found', statusCode: 404})
+    return res.error({message: 'User not found', statusCode: 404})
   }
 
   res.json(user);
@@ -100,7 +99,7 @@ const setProfileImage = AsyncWrap(async function (req, res) {
   const cloudinaryImage = await images.uploadOne(req.file.path);
 
   if (!cloudinaryImage) {
-    return errorHandler.apiError({message: 'Something went wrong uploading your image', statusCode: 500});
+    return res.error({message: 'Something went wrong uploading your image', statusCode: 500});
   }
 
   user.profileImageUrl = cloudinaryImage.url;
@@ -125,7 +124,7 @@ const setProfileImage = AsyncWrap(async function (req, res) {
 const validateUser = AsyncWrap(async function validateUser(req, res, next) {
   const decoded = await jwt.verify(req.headers.token, config.jwtSecret);
   if(!ObjectId(decoded.data.id).equals(ObjectId(req.params.id))) {
-    return errorHandler.apiError({message: 'Invalid token', statusCode: 401});
+    return res.error({message: 'Invalid token', statusCode: 401});
   }
   next();
 })
