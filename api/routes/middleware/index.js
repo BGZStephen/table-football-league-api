@@ -81,7 +81,7 @@ function authorizeWebsiteRoute(req, res, next) {
 function authorizeDashboardRoute(req, res, next) {
   try {
     const authorization = req.headers.authorization;
-    if (!authorization || (authorization !== config.authorization.dashboard)) {
+    if (!authorization || authorization !== config.authorization.dashboard) {
       return res.error({message: 'Unauthorized access', statusCode: 401});
     }
 

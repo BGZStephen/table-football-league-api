@@ -35,6 +35,7 @@ app.use(bodyParser.json());
 
 app.use(function(req, res, next) {
   res.error = function(params) {
+    console.log(params)
     return res.status(params.statusCode).json({
       message: params.message
     })
@@ -43,9 +44,9 @@ app.use(function(req, res, next) {
   next();
 });
 
+app.use('/public', require('./routes/public'));
 app.use('/admin', require('./routes/admin'));
 app.use('/private', require('./routes/private'));
-app.use(require('./routes/public'));
 
 // error handlers
 app.use(errorUtils.logErrors);

@@ -84,11 +84,11 @@ const authenticate = AsyncWrap(async function authenticate(req, res, next) {
   const user = await User.findOne({email: req.body.email});
 
   if (!user) {
-    errorHandler.apiError({message: 'Invalid email address or password', statusCode: 403});
+    return res.error({message: 'Invalid email address or password', statusCode: 403});
   }
 
   if (user.validatePassword(req.body.password) === false) {
-    errorHandler.apiError({message: 'Invalid email address or password', statusCode: 403});
+    return res.error({message: 'Invalid email address or password', statusCode: 403});
   }
 
   const token = jwt.sign({
