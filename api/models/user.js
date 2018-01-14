@@ -18,7 +18,7 @@ const UserSchema = Schema({
     wins: Number,
     losses: Number,
   },
-  poisition: {
+  position: {
     striker: {type: Boolean, default: false},
     defender: {type: Boolean, default: false},
   },

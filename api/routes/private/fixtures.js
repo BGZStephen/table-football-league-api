@@ -51,7 +51,7 @@ const create = AsyncWrap(async function (req, res) {
  * @apiSuccess {object} Fixture object.
  */
 const getOne = AsyncWrap(async function () {
-  let pupolators = null;
+  let populators = null;
 
   if (req.query.teams) {
     populators = populators + 'teams ';
