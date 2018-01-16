@@ -70,7 +70,7 @@ const getByEmail = AsyncWrap(async function (req, res, next) {
  */
 const updateOne = AsyncWrap(async function (req, res) {
   const user = req.user;
-  const updateFields = 'firstName lastName email password username'.split(' ');
+  const updateFields = 'firstName lastName email password username position'.split(' ');
 
   Object.keys(req.body).forEach(function (key) {
     if(updateFields.indexOf(key) > -1) {
