@@ -40,6 +40,46 @@ const create = AsyncWrap(async function (req, res) {
 })
 
 /**
+ * @api {get} /fixtures get fixtures based on a query
+ * @apiName Get
+ * @apiGroup Fixture
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.fixture} Fixture object brought by middleware.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {object} Fixture object.
+ */
+const get = AsyncWrap(async function () {
+  let query = {};
+  let populators = null;
+
+  if (req.query.teamId) {
+    query.teams = req.query.teamId;
+  }
+
+  if (req.query.leagueId) {
+    query.leagueId = req.query.leagueId;
+  }
+
+  if (req.query.teams) {
+    populators = populators + 'teams ';
+  }
+
+  if (req.query.league) {
+    populators = populators + 'leagueId ';
+  }
+
+  const fixtures = await Fixture.find(query);
+
+  if (populators) {
+    await fixture.populate(populators.trim()).execPopulate();
+  }
+
+  res.json(fixtures);
+})
+
+/**
  * @api {get} /fixtures/:id get one Fixture
  * @apiName GetOne
  * @apiGroup Fixture
@@ -62,7 +102,7 @@ const getOne = AsyncWrap(async function () {
   }
 
   if (populators) {
-    await req.team.populate(populators.trim()).execPopulate();
+    await req.fixture.populate(populators.trim()).execPopulate();
   }
 
   res.json(req.fixture);
@@ -148,6 +188,7 @@ const submitScore = AsyncWrap(async function (req, res) {
 
 module.exports = {
   create,
+  get,
   getOne,
   updateOne,
   submitScore,

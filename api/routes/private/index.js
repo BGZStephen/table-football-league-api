@@ -14,6 +14,7 @@ router.post('/users/getByEmail', Users.getByEmail);
 router.all('/users/:id*', Users.validateUser, Middleware.fetchResource);
 router.get('/users/:id', Users.getOne);
 router.put('/users/:id', Users.updateOne);
+router.post('/users/:id/fixtures', Users.getFixtures);
 router.post('users/:id/profile-image', upload.single('profileImage'), Users.setProfileImage);
 
 router.get('/leagues', Leagues.getAll);
@@ -28,6 +29,7 @@ router.get('/teams/:id', Teams.getOne);
 router.put('/teams/:id', Teams.updateOne);
 
 router.post('/fixtures', Fixtures.create);
+router.get('/fixtures', Fixtures.get);
 router.all('/fixtures/:id*', Middleware.fetchResource);
 router.get('/fixtures/:id', Fixtures.getOne);
 router.put('/fixtures/:id', Fixtures.updateOne);

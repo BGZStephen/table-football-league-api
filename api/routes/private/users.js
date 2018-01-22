@@ -5,6 +5,7 @@ const images = require('../../services/images');
 const AsyncWrap = require('../../utils/async-wrapper');
 
 const User = mongoose.model('User');
+const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
 
 /**
@@ -38,6 +39,37 @@ const getOne = AsyncWrap(async function (req, res) {
   }
 
   res.json(req.user);
+})
+
+/**
+ * @api {post} /users/:id/fixtures Get a users fixtures
+ * @apiName GetUserFixtures
+ * @apiGroup User
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.user} User object.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {Object} mongoose User object.
+ */
+const getFixtures = AsyncWrap(async function (req, res) {
+  let populators = '';
+
+  if (req.body.teams) {
+    populators += 'teams ';
+  }
+
+  if (req.body.leagueId) {
+    populators += 'leagueId ';
+  }
+
+  const fixtures = await Fixture.find({
+    teams: {
+      $in: req.user.teams
+    }
+  }).populate(populators)
+
+  res.json(fixtures);
 })
 
 const getByEmail = AsyncWrap(async function (req, res, next) {
@@ -132,6 +164,7 @@ const validateUser = AsyncWrap(async function validateUser(req, res, next) {
 module.exports = {
   getByEmail,
   getOne,
+  getFixtures,
   setProfileImage,
   updateOne,
   validateUser,
