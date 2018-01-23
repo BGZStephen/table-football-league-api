@@ -15,6 +15,7 @@ router.all('/users/:id*', Users.validateUser, Middleware.fetchResource);
 router.get('/users/:id', Users.getOne);
 router.put('/users/:id', Users.updateOne);
 router.post('/users/:id/fixtures', Users.getFixtures);
+router.post('/users/:id/leagues', Users.getLeagues);
 router.post('users/:id/profile-image', upload.single('profileImage'), Users.setProfileImage);
 
 router.get('/leagues', Leagues.getAll);
