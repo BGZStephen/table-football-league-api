@@ -76,6 +76,21 @@ const getOne = AsyncWrap(async function (req, res) {
   res.json(req.team);
 })
 
+const search = AsyncWrap(async function (req, res) {
+  if (!req.query.name) {
+    return res.error({message: 'Please provide a name to search with', statusCode: 400});
+  }
+
+  const searchRegexp = new RegExp(req.query.name, 'i');
+
+  const teams = await Team.find({
+    name: searchRegexp,
+  })
+  console.log(teams)
+
+  res.json(teams);
+})
+
 /**
  * @api {put} /teams/:id update a team
  * @apiName UpdateOne
@@ -139,4 +154,5 @@ module.exports = {
   create,
   getOne,
   updateOne,
+  search,
 }

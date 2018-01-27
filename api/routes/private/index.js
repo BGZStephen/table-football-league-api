@@ -25,6 +25,7 @@ router.get('/leagues/:id', Leagues.getOne);
 router.put('/leagues/:id', Leagues.updateOne);
 
 router.post('/teams', Teams.create);
+router.get('/teams/search', Teams.search);
 router.all('/teams/:id*', Middleware.fetchResource);
 router.get('/teams/:id', Teams.getOne);
 router.put('/teams/:id', Teams.updateOne);
