@@ -45,7 +45,7 @@ const search = AsyncWrap(async function (req, res) {
     return res.error({message: 'Please enter an email address or name to search', statusCode: 400});
   }
 
-  const searchRegexp = new RegExp(req.query.name, 'i');
+  const searchRegexp = new RegExp(req.query.q, 'i');
 
   const users = await User.find({
     $or: {

@@ -84,6 +84,20 @@ const getAll = AsyncWrap(async function (req, res) {
   res.json(leagues);
 })
 
+const search = AsyncWrap(async function (req, res) {
+  if (!req.query.name) {
+    return res.error({message: 'Please enter an league name to search', statusCode: 400});
+  }
+
+  const searchRegexp = new RegExp(req.query.name, 'i');
+
+  const leagues = await League.find({
+    name: searchRegexp,
+  })
+
+  res.json(leagues);
+})
+
 /**
  * @api {put} /leagues/:id update a league
  * @apiName UpdateOne
@@ -157,8 +171,9 @@ async function leagueAlreadyExists(query) {
 }
 
 module.exports = {
-  updateOne,
   create,
-  getOne,
   getAll,
+  getOne,
+  search,
+  updateOne,
 }

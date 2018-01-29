@@ -21,6 +21,7 @@ router.post('users/:id/profile-image', upload.single('profileImage'), Users.setP
 
 router.get('/leagues', Leagues.getAll);
 router.post('/leagues', Leagues.create);
+router.get('/leagues/search', Leagues.search);
 router.all('/leagues/:id*', Middleware.fetchResource);
 router.get('/leagues/:id', Leagues.getOne);
 router.put('/leagues/:id', Leagues.updateOne);
