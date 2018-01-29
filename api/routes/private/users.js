@@ -40,6 +40,23 @@ const getOne = AsyncWrap(async function (req, res) {
   res.json(req.user);
 })
 
+const search = AsyncWrap(async function (req, res) {
+  if (!req.query.q) {
+    return res.error({message: 'Please enter an email address or name to search', statusCode: 400});
+  }
+
+  const searchRegexp = new RegExp(req.query.name, 'i');
+
+  const users = await User.find({
+    $or: {
+      name: searchRegexp,
+      email: searchRegexp,
+    }
+  })
+
+  res.json(users);
+})
+
 /**
  * @api {post} /users/:id/fixtures Get a users fixtures
  * @apiName GetUserFixtures
@@ -193,9 +210,10 @@ const validateUser = AsyncWrap(async function validateUser(req, res, next) {
 
 module.exports = {
   getByEmail,
-  getOne,
-  getLeagues,
   getFixtures,
+  getLeagues,
+  getOne,
+  search,
   setProfileImage,
   updateOne,
   validateUser,

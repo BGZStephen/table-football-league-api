@@ -35,6 +35,10 @@ UserSchema.pre('save', function(next) {
   next();
 })
 
+UserSchema.virtual('name').get(function () {
+  return this.firstName + ' ' + this.lastName;
+});
+
 UserSchema.methods = {
   addWin() {
     this.statistics.wins += 1;

@@ -86,7 +86,6 @@ const search = AsyncWrap(async function (req, res) {
   const teams = await Team.find({
     name: searchRegexp,
   })
-  console.log(teams)
 
   res.json(teams);
 })
