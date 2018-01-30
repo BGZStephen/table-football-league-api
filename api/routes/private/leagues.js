@@ -30,9 +30,17 @@ const create = AsyncWrap(async function (req, res) {
     createdOn: new Date(),
     name: req.body.name,
     administrators: [req.body.userId],
+    teams: req.body.teams,
   });
 
   await league.save();
+
+  for (const leagueTeam of league.teams) {
+    const team = await mongoose.model('Team').findById(leagueTeam._id)
+    const updatedTeam = await team.addLeague(league._id)
+    await updatedTeam.save();
+  }
+
   res.json(league);
 })
 

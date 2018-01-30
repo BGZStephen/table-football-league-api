@@ -41,8 +41,6 @@ const create = AsyncWrap(async function (req, res) {
   res.json(team);
 })
 
-
-
 /**
  * @api {get} /teams/:id get a team
  * @apiName GetOne
@@ -72,7 +70,6 @@ const getOne = AsyncWrap(async function (req, res) {
   if (populators) {
     await req.team.populate(populators).execPopulate();
   }
-  console.log(populators)
 
   res.json(req.team);
 })
