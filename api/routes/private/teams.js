@@ -36,7 +36,8 @@ const create = AsyncWrap(async function (req, res) {
     name: req.body.name
   })
 
-  await team.addUsers(users).save();
+  const updatedTeam = await team.addUsers(users);
+  await updatedTeam.save()
   res.json(team);
 })
 
@@ -138,7 +139,7 @@ async function teamAlreadyExists(query) {
 async function checkUsersExist(users, errorMessage) {
   const validUsers = []
   for (const user of users) {
-    const validUser = await User.findOne(ObjectId(user).select('_id'))
+    const validUser = await User.findOne(ObjectId(user._id))
     if (!validUser) {
       return res.error({message: `${errorMessage} Player not found.`, statusCode: 400});
     } else {

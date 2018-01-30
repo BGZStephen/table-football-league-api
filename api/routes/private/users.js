@@ -48,10 +48,10 @@ const search = AsyncWrap(async function (req, res) {
   const searchRegexp = new RegExp(req.query.q, 'i');
 
   const users = await User.find({
-    $or: {
-      name: searchRegexp,
-      email: searchRegexp,
-    }
+    $or: [
+      {name: searchRegexp},
+      {email: searchRegexp}
+    ]
   })
 
   res.json(users);
