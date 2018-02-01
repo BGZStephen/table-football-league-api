@@ -21,6 +21,18 @@ const LeagueSchema = Schema({
 })
 
 LeagueSchema.pre('save', async function(next) {
+  if(this.isModified('teams')) {
+    let leaguePlayers = [];
+    for (const team of league.teams) {
+      for (const user of team.users) {
+        if (leaguePlayers.indexOf(user) > -1) {
+          leaguePlayers.push(user)
+        } else {
+          throw new Error('A league cannot contain teams wih the same players');
+        }
+      }
+    }
+  }
   next();
 })
 

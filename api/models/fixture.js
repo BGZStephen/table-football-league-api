@@ -29,6 +29,17 @@ const FixtureSchema = Schema({
 
 FixtureSchema.pre('save', async function(next) {
   if (this.isModified('teams')) {
+    let leaguePlayers = [];
+    for (const team of fixture.teams) {
+      for (const user of team.users) {
+        if (fixturePlayers.indexOf(user) > -1) {
+          fixturePlayers.push(user)
+        } else {
+          throw new Error('A Fixtur cannot contain teams wih the same player(s)');
+        }
+      }
+    }
+
     await this.populate('teams').execPopulate();
 
     for (const team of this.teams) {
