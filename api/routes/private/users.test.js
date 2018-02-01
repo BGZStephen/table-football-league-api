@@ -9,13 +9,13 @@ beforeEach(function (done) {
 });
 
 describe('Test the users GET route', () => {
-    test('It should respond with 200', (done) => {
-      request('http://localhost:3000')
-      .get('/users/')
-      .set('Authorization', `${authorization}`)
-      .then((response) => {
-        expect(response.statusCode).toBe(200);
-        done();
-      });
+  test('It should respond with 200', (done) => {
+    request('http://localhost:3000')
+    .get('/users/')
+    .set('Authorization', `${authorization}`)
+    .then((response) => {
+      expect(response.statusCode).toBe(200);
+      done();
     });
+  });
 });

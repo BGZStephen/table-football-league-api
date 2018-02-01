@@ -4,6 +4,7 @@ const Fixtures = require('./fixtures');
 const Middleware = require('../middleware');
 const Leagues = require('./leagues');
 const Users = require('./users');
+const Messages = require('./messages');
 const Teams = require('./teams');
 
 const upload = Multer({ dest: 'uploads/' })
@@ -38,5 +39,7 @@ router.all('/fixtures/:id*', Middleware.fetchResource);
 router.get('/fixtures/:id', Fixtures.getOne);
 router.put('/fixtures/:id', Fixtures.updateOne);
 router.post('/fixtures/:id/submit-score', Fixtures.submitScore);
+
+router.post('messages/text-message', Messages.textMessage)
 
 module.exports = router;
