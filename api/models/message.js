@@ -12,15 +12,40 @@ const MessageSchema = Schema({
   recipients: [{type: Schema.ObjectId, ref: 'User'}],
   template: {type: String},
   templateData: {type: Object},
-  private: {type: Boolean},
+  private: {type: Boolean, default: false},
   originatingMessage: {type: Schema.ObjectId, ref: 'Message'},
-  read: {type: Boolean},
+  read: {type: Boolean, default: false},
+  userId: {type: Schema.ObjectId, ref: 'User'}
 })
 
 MessageSchema.pre('save', async function(next) {
   next();
 })
 
-MessageSchema.methods = {}
+MessageSchema.methods = {
+  async sendMessages() {
+    for (const recipient of this.recipients) {
+      if (recipient !== this.userId) {
+        const message = new Message({
+          type: this.type,
+          sender: this.sender,
+          recipients: this.recipients,
+          template: this.template,
+          templateData: this.templateData,
+          private: this.private,
+          originatingMessage: this._id,
+          userId: recipient
+        })
+
+        await message.save();
+      }
+    }
+  }
+
+  markAsRead() {
+    this.read = true;
+    await this.save();
+  }
+}
 
 module.exports = mongoose.model('Message', MessageSchema);
