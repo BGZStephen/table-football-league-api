@@ -38,7 +38,7 @@ const textMessage = AsyncWrap(async function (req, res) {
  * @apiGroup Message
  *
  * @apiParam {req} Express request object.
- * @apiParam {req.params} Query parameters to build a search from.
+ * @apiParam {req.query} Query parameters to build a search from.
  * @apiParam {res} Express response object object.
  *
  * @apiSuccess {array[object]} Message objects.
@@ -47,9 +47,9 @@ const get = AsyncWrap(async function (req, res) {
   const searchableFields = 'userId sender type'.split(' ')
   const query = {}
 
-  for (const param of Object.key(req.params)) {
-    if (param.indexOf(searchableFields) > 0) {
-      query[param] = req.params[param];
+  for (const queryParam of Object.key(req.query)) {
+    if (queryParam.indexOf(searchableFields) > 0) {
+      query[queryParam] = req.query[queryParam];
     }
   }
 
@@ -58,7 +58,24 @@ const get = AsyncWrap(async function (req, res) {
   res.json(messages);
 })
 
+/**
+ * @api {get} /messages Get messages based on query
+ * @apiName GetMessages
+ * @apiGroup Message
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.params} Query parameters to build a search from.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {array[object]} Message objects.
+ */
+const getOne = AsyncWrap(async function (req, res) {
+  const message = req.message;
+  res.json(message);
+})
+
 module.exports = {
   get,
+  getOne,
   textMessage,
 }

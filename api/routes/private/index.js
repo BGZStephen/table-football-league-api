@@ -40,7 +40,9 @@ router.get('/fixtures/:id', Fixtures.getOne);
 router.put('/fixtures/:id', Fixtures.updateOne);
 router.post('/fixtures/:id/submit-score', Fixtures.submitScore);
 
-router.post('messages/text-message', Messages.textMessage)
-router.get('messages', Messages.get)
+router.post('messages/text-message', Messages.textMessage);
+router.get('messages', Messages.get);
+router.all('/messages/:id*', Middleware.fetchResource);
+router.get('/messages/:id', Messages.getOne);
 
 module.exports = router;

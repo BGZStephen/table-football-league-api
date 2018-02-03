@@ -6,6 +6,7 @@ const AsyncWrap = require('../../utils/async-wrapper');
 const User = mongoose.model('User');
 const League = mongoose.model('League');
 const Team = mongoose.model('Team');
+const Message = mongoose.model('Message');
 const ObjectId = mongoose.Types.ObjectId;
 
 /**
@@ -21,6 +22,7 @@ const fetchResource = AsyncWrap(async function (req, res, next) {
     league: async function(id) {return await League.findById(ObjectId(id))},
     user: async function(id) {return await User.findById(ObjectId(id))},
     team: async function(id) {return await Team.findById(ObjectId(id))},
+    message: async function(id) {return await Message.findById(ObjectId(id))},
   }
 
   const id = req.params.id;
