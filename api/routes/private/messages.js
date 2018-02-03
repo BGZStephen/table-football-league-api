@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const AsyncWrap = require('../../utils/async-wrapper');
+const validate = require('../../services/validate')
 
 const Message = mongoose.model('Message');
 const ObjectId = mongoose.Types.ObjectId;
@@ -31,6 +32,33 @@ const textMessage = AsyncWrap(async function (req, res) {
   res.sendStatus(200);
 })
 
+/**
+ * @api {get} /messages Get messages based on query
+ * @apiName GetMessages
+ * @apiGroup Message
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.params} Query parameters to build a search from.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {array[object]} Message objects.
+ */
+const get = AsyncWrap(async function (req, res) {
+  const searchableFields = 'userId sender type'.split(' ')
+  const query = {}
+
+  for (const param of Object.key(req.params)) {
+    if (param.indexOf(searchableFields) > 0) {
+      query[param] = req.params[param];
+    }
+  }
+
+  const messages = await Message.find(query);
+
+  res.json(messages);
+})
+
 module.exports = {
+  get,
   textMessage,
 }

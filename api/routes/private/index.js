@@ -41,5 +41,6 @@ router.put('/fixtures/:id', Fixtures.updateOne);
 router.post('/fixtures/:id/submit-score', Fixtures.submitScore);
 
 router.post('messages/text-message', Messages.textMessage)
+router.get('messages', Messages.get)
 
 module.exports = router;

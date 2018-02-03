@@ -40,9 +40,9 @@ MessageSchema.methods = {
         await message.save();
       }
     }
-  }
+  },
 
-  markAsRead() {
+  async markAsRead() {
     this.read = true;
     await this.save();
   }

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const winston = require('winston');
 const validate = require('../../services/validate')
 const AsyncWrap = require('../../utils/async-wrapper');
 
