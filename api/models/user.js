@@ -6,10 +6,8 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const UserSchema = Schema({
   admin: {type: Boolean, default: false},
-  firstName: {type: String, required: true},
-  lastName: String,
+  name: {type: String, required: true},
   email: {type: String, required: true, unique: true},
-  username: String,
   password: String,
   createdOn: {type: Date, default: () => new Date()},
   lastSignIn: Date,
@@ -34,10 +32,6 @@ UserSchema.pre('save', function(next) {
 
   next();
 })
-
-UserSchema.virtual('name').get(function () {
-  return this.firstName + ' ' + this.lastName;
-});
 
 UserSchema.methods = {
   addWin() {

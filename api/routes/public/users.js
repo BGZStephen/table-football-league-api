@@ -24,22 +24,17 @@ const ObjectId = mongoose.Types.ObjectId;
  */
 const create = AsyncWrap(async function create(req, res, next) {
   validate(req.body, {
-    firstName: {message: 'First name is required', type: 'string'},
+    name: {message: 'First name is required', type: 'string'},
     email: {message: 'Email address is required', type: 'string'},
     password: {message: 'Password is required', type: 'string'},
   })
 
   if (await userAlreadyExists({email: req.body.email})) {
-    errorHandler.apiError({message: 'Email address already in use', statusCode: 400});
-  };
-
-  if (await userAlreadyExists({username: req.body.username})) {
-    errorHandler.apiError({message: 'Username already in use', statusCode: 400});
+    res.error({message: 'Email address already in use', statusCode: 400});
   };
 
   const user = new User({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
+    name: req.body.name,
     email: req.body.email,
     username: req.body.username,
     password: req.body.password,

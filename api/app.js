@@ -35,7 +35,6 @@ app.use(bodyParser.json());
 
 app.use(function(req, res, next) {
   res.error = function(params) {
-    console.log(params)
     return res.status(params.statusCode).json({
       message: params.message
     })
