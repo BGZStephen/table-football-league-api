@@ -82,20 +82,6 @@ LeagueSchema.methods = {
     }
   },
 
-  addAdministrator(userId) {
-    const userIndex = this.administrators.indexOf(userId)
-    if (userIndex === -1) {
-      this.administrators.push(userId)
-    }
-  },
-
-  removeAdministrator(userId) {
-    const userIndex = this.administrators.indexOf(userId)
-    if (userIndex >= 0) {
-      this.administrators.splice(userIndex, 1)
-    }
-  },
-
   addTeam(teamId) {
     const team = this.teams.filter((team) => team._id === teamId)
     if (team.length === 0) {

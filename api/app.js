@@ -46,7 +46,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use('/public', require('./routes/public'));
+app.use('/', require('./routes/public'));
 // app.use('/private', require('./routes/private'));
 
 // error handlers
