@@ -5,21 +5,24 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const winston = require('winston');
 const errorUtils = require('./utils/error-utils');
+const debug = require('debug')('app');
 
 // bootstrap models
 require('./models');
 
 // db connection
-mongoose.connect(config.database);
-
-mongoose.connection.on('connected', () => {
-  winston.info('Database connection successful');
+mongoose.connect(config.database, {
+  useCreateIndex: true,
+  useNewUrlParser: true
 });
 
-mongoose.connection.on('error', (error) => {
-  winston.error(`Error: ${error}`);
+mongoose.connection.on('connected', () => {
+  debug('db connected')
+});
+
+mongoose.connection.on('error', (err) => {
+  debug(`db error: ${err}`)
 })
 
 const app = express()
@@ -44,15 +47,11 @@ app.use(function(req, res, next) {
 });
 
 app.use('/public', require('./routes/public'));
-app.use('/admin', require('./routes/admin'));
-app.use('/private', require('./routes/private'));
+// app.use('/private', require('./routes/private'));
 
 // error handlers
 app.use(errorUtils.logErrors);
 app.use(errorUtils.errorHandler);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  app.emit("appStarted");
-	winston.info(`Server started successfully`);
-});
+app.listen(port);

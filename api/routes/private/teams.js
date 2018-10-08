@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const config = require('../../config');
-const validate = require('../../services/validate');
 const AsyncWrap = require('../../utils/async-wrapper');
 
 const User = mongoose.model('User');
@@ -21,10 +19,10 @@ const ObjectId = mongoose.Types.ObjectId;
  * @apiSuccess {object} new Team object.
  */
 const create = AsyncWrap(async function (req, res) {
-  validate(req.body, {
-    name: {message: 'Team name is required', type: 'string'},
-    users: {message: 'At least one player is required', type: 'array'}
-  })
+  // validate(req.body, {
+  //   name: {message: 'Team name is required', type: 'string'},
+  //   users: {message: 'At least one player is required', type: 'array'}
+  // })
 
   if (await teamAlreadyExists({name: req.body.name})) {
     return res.error({message: 'A team with that name already exists', statusCode: 400});

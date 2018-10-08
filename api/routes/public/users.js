@@ -2,11 +2,8 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const config = require('../../config');
 const mailer = require('../../services/mailer');
-const validate = require('../../services/validate');
-const AsyncWrap = require('../../utils/async-wrapper');
 
 const User = mongoose.model('User');
-const ObjectId = mongoose.Types.ObjectId;
 
 /**
  * @api {post} /users Create a User
@@ -22,16 +19,18 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {User, JWT} new User object + json web token.
  */
-const create = AsyncWrap(async function create(req, res, next) {
-  validate(req.body, {
-    name: {message: 'First name is required', type: 'string'},
-    email: {message: 'Email address is required', type: 'string'},
-    password: {message: 'Password is required', type: 'string'},
-  })
+async function create(req, res, next) {
+  // validate(req.body, {
+  //   name: {message: 'First name is required', type: 'string'},
+  //   email: {message: 'Email address is required', type: 'string'},
+  //   password: {message: 'Password is required', type: 'string'},
+  // })
 
-  if (await userAlreadyExists({email: req.body.email})) {
+  const existingUser = await User.find({email: req.body.email})
+
+  if (existingUser) {
     res.error({message: 'Email address already in use', statusCode: 400});
-  };
+  }
 
   const user = new User({
     name: req.body.name,
@@ -56,7 +55,7 @@ const create = AsyncWrap(async function create(req, res, next) {
       _id: user._id,
     }
   });
-})
+}
 
 /**
  * @api {post} /users/authenticate authenticate a user
@@ -70,11 +69,11 @@ const create = AsyncWrap(async function create(req, res, next) {
  *
  * @apiSuccess {User, JWT} User object + json web token.
  */
-const authenticate = AsyncWrap(async function authenticate(req, res, next) {
-  validate(req.body, {
-    email: {message: 'Email address is required', type: 'string'},
-    password: {message: 'Password is required', type: 'string'},
-  })
+async function authenticate(req, res, next) {
+  // validate(req.body, {
+  //   email: {message: 'Email address is required', type: 'string'},
+  //   password: {message: 'Password is required', type: 'string'},
+  // })
 
   const user = await User.findOne({email: req.body.email});
 
@@ -97,14 +96,6 @@ const authenticate = AsyncWrap(async function authenticate(req, res, next) {
     token: token,
     user: JSON.stringify({_id: user._id}),
   });
-})
-
-/**
- * Check existance of a user
- * @param {Object} query an object representing a mongoose query to use for existance checking
- */
-async function userAlreadyExists(query) {
-  return await User.findOne(query) ? true : false;
 }
 
 module.exports = {

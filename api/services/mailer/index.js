@@ -1,6 +1,5 @@
 const fs = require('fs');
 const Promise = require('bluebird');
-const validate = require('../validate');
 const config = require('../../config');
 const ejs = require('ejs');
 const path = require('path');
@@ -21,12 +20,12 @@ const ejsRenderFile = Promise.promisify(ejs.renderFile);
  */
 async function sendEmail(params) {
 
-	validate(params, {
-		from: 'From is a required parameter',
-		to: 'To is a required parameter',
-		subject: 'Subject is a required parameter',
-		template: 'HTML template name is required',
-	})
+	// validate(params, {
+	// 	from: 'From is a required parameter',
+	// 	to: 'To is a required parameter',
+	// 	subject: 'Subject is a required parameter',
+	// 	template: 'HTML template name is required',
+	// })
 
   const emailParams = {
     'Messages':[{
@@ -88,7 +87,7 @@ async function contactFormEmail(contactFormParams) {
 		template: 'contact-form.ejs',
 		data: message,
 	}
-	return await sendEmail(params);
+	return await sendEmail(emailParams);
 }
 
 module.exports = {

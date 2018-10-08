@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const validate = require('../../services/validate')
 const AsyncWrap = require('../../utils/async-wrapper');
 
 const Fixture = mongoose.model('Fixture');
@@ -20,11 +19,11 @@ const ObjectId = mongoose.Types.ObjectId;
  * @apiSuccess {object} new Fixture object.
  */
 const create = AsyncWrap(async function (req, res) {
-  validate(req.body, {
-    date: {message: 'A date is required for the fixture', type: 'date'},
-    teams: {message: 'Teams are required', type: 'array'},
-    type: {message: 'Fixture type is required', type: 'string'},
-  })
+  // validate(req.body, {
+  //   date: {message: 'A date is required for the fixture', type: 'date'},
+  //   teams: {message: 'Teams are required', type: 'array'},
+  //   type: {message: 'Fixture type is required', type: 'string'},
+  // })
 
   const fixture = new Fixture({
     createdOn: Date.now(),
@@ -162,10 +161,10 @@ const updateOne = AsyncWrap(async function (req, res) {
  * @apiSuccess {object} Updated Fixture object.
  */
 const submitScore = AsyncWrap(async function (req, res) {
-  validate(req.body, {
-    homeTeam: {message: 'A home team is required', type: 'string'},
-    awayTeam: {message: 'An away team is required', type: 'string'},
-  })
+  // validate(req.body, {
+  //   homeTeam: {message: 'A home team is required', type: 'string'},
+  //   awayTeam: {message: 'An away team is required', type: 'string'},
+  // })
 
   const fixture = req.fixture;
   const params = {

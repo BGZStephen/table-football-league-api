@@ -1,6 +1,6 @@
 function logErrors (err, req, res, next) {
   if (global.env === 'development') {
-    console.error(err)
+    
   }
   next(err)
 }
