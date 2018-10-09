@@ -42,10 +42,8 @@ UserSchema.methods = {
     this.statistics.loss += 1;
   },
 
-  validatePassword(password) {
-    if (!bcrypt.compareSync(password, this.password)) {
-      throw new Error({message: 'Incorrect password', statusCode: 403});
-    }
+  isPasswordValid(password) {
+    return bcrypt.compareSync(password, this.password)
   }
 }
 
