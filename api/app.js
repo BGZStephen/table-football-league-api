@@ -47,7 +47,7 @@ app.use(function(req, res, next) {
 });
 
 app.use('/', require('./routes/public'));
-// app.use('/private', require('./routes/private'));
+app.use('/private', require('./routes/private'));
 
 // error handlers
 app.use(errorUtils.logErrors);
