@@ -122,13 +122,15 @@ async function updateOne(req, res) {
 }
 
 async function search(req, res) {
-  if (!req.query.name) {
-    return res.error({message: 'Please enter a name to search', statusCode: 400});
+  const query = {}
+
+  if (req.query.name) {
+    query.name = name;
   }
 
-  const users = await User.find({name: req.query.name})
+  const players = await Player.find(query)
 
-  res.json(users);
+  res.json(players);
 }
 
 module.exports = {
