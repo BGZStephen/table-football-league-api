@@ -17,7 +17,6 @@ const Team = mongoose.model('Team');
  * @apiSuccess {object} new Team object.
  */
 async function create(req, res) {
-  console.log('working')
   const validatorErrors = validate(req.body, {
     name: {
       presence: {message() {return validate.format('Team name is required')}}
@@ -40,7 +39,7 @@ async function create(req, res) {
 
   const team = new Team({
     name: req.body.name,
-    playerIds: req.body.players,
+    players: req.body.players,
   })
 
   await team.save()
@@ -82,15 +81,26 @@ async function getOne(req, res) {
 }
 
 async function search(req, res) {
-  if (!req.query.name) {
-    return res.error({message: 'Please provide a name to search with', statusCode: 400});
+  const query = {}
+  let populators = '';
+
+  if (req.query.name) {
+    query.name = req.query.name
   }
 
-  const searchRegexp = new RegExp(req.query.name, 'i');
+  if (req.query.players) {
+    populators = populators + 'players ';
+  }
 
-  const teams = await Team.find({
-    name: searchRegexp,
-  })
+  if (req.query.leagues) {
+    populators = populators + 'teams ';
+  }
+
+  if (req.query.fixtures) {
+    populators = populators + 'fixtures ';
+  }
+
+  const teams = await Team.find(query).populate(populators)
 
   res.json(teams);
 }
