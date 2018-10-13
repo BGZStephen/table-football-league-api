@@ -3,7 +3,7 @@ const rest = require('api/utils/rest')
 // const Fixtures = require('./fixtures');
 // const Leagues = require('./leagues');
 // const Users = require('./users');
-// const Teams = require('./teams');
+const Teams = require('./teams');
 const Players = require('./players');
 
 const router = express.Router();
@@ -42,11 +42,11 @@ router.all('/', rest.asyncwrap(validateUser))
 // router.post('/users/:id/leagues', Users.getLeagues);
 // router.post('users/:id/profile-image', upload.single('profileImage'), Users.setProfileImage);
 
-router.post('/players', Players.create);
-router.get('/players/search', Players.search);
+router.post('/players', rest.asyncwrap(Players.create));
+router.get('/players/search', rest.asyncwrap(Players.search));
 router.all('/players/:id*', Players.load);
 router.get('/players/:id', Players.getOne);
-router.put('/players/:id', Players.updateOne);
+router.put('/players/:id', rest.asyncwrap(Players.updateOne));
 
 // router.get('/leagues', Leagues.getAll);
 // router.post('/leagues', Leagues.create);
@@ -55,11 +55,11 @@ router.put('/players/:id', Players.updateOne);
 // router.get('/leagues/:id', Leagues.getOne);
 // router.put('/leagues/:id', Leagues.updateOne);
 
-// router.post('/teams', Teams.create);
-// router.get('/teams/search', Teams.search);
-// // router.all('/teams/:id*', Middleware.fetchResource);
-// router.get('/teams/:id', Teams.getOne);
-// router.put('/teams/:id', Teams.updateOne);
+router.post('/teams', rest.asyncwrap(Teams.create));
+router.get('/teams/search', rest.asyncwrap(Teams.search));
+// router.all('/teams/:id*', Middleware.fetchResource);
+router.get('/teams/:id', Teams.getOne);
+router.put('/teams/:id', rest.asyncwrap(Teams.updateOne));
 
 // router.post('/fixtures', Fixtures.create);
 // router.get('/fixtures', Fixtures.get);

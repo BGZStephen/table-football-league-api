@@ -14,9 +14,9 @@ const TeamSchema = Schema({
     goalsScored: Number,
     goalsConceded: Number,
   },
-  users: [{type: Schema.ObjectId, ref: 'User'}],
-  fixtures: {type: [{type: Schema.ObjectId, ref: 'Fixture'}], default: []},
-  leagues: [{type: Schema.ObjectId, ref: 'League'}],
+  playerIds: [{type: Schema.ObjectId, ref: 'Player'}],
+  fixtureIds: [{type: Schema.ObjectId, ref: 'Fixture'}],
+  leagueIds: [{type: Schema.ObjectId, ref: 'League'}],
 })
 
 TeamSchema.methods = {

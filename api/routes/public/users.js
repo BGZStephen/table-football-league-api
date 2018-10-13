@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const config = require('api/config');
-const mailer = require('api/services/mailer');
 const validate = require('validate.js');
 
 const User = mongoose.model('User');

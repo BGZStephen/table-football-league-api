@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
-const AsyncWrap = require('../../utils/async-wrapper');
-
-const User = mongoose.model('User');
+const validate = require('validate.js');
+const Player = mongoose.model('Player');
 const Team = mongoose.model('Team');
-const ObjectId = mongoose.Types.ObjectId;
 
 /**
  * @api {post} /teams create a new Team
@@ -18,26 +16,37 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {object} new Team object.
  */
-const create = AsyncWrap(async function (req, res) {
-  // validate(req.body, {
-  //   name: {message: 'Team name is required', type: 'string'},
-  //   users: {message: 'At least one player is required', type: 'array'}
-  // })
+async function create(req, res) {
+  console.log('working')
+  const validatorErrors = validate(req.body, {
+    name: {
+      presence: {message() {return validate.format('Team name is required')}}
+    },
+  }, {format: "flat"})
 
-  if (await teamAlreadyExists({name: req.body.name})) {
-    return res.error({message: 'A team with that name already exists', statusCode: 400});
+  if (validatorErrors) {
+    return res.error({message: validatorErrors, statusCode: 400});
   }
 
-  const users = await checkUsersExist(req.body.users);
+  if (req.body.players.length < 2) {
+    return res.error({message: 'Teams require at least 2 players', statusCode: 400});
+  }
+
+  for (const player of req.body.players) {
+    if (!await Player.findById(player)) {
+      return res.error({message: 'Player not found', statusCode: 403});
+    }
+  }
 
   const team = new Team({
-    name: req.body.name
+    name: req.body.name,
+    playerIds: req.body.players,
   })
 
-  const updatedTeam = await team.addUsers(users);
-  await updatedTeam.save()
+  await team.save()
+
   res.json(team);
-})
+}
 
 /**
  * @api {get} /teams/:id get a team
@@ -50,7 +59,7 @@ const create = AsyncWrap(async function (req, res) {
  *
  * @apiSuccess {object} Team object.
  */
-const getOne = AsyncWrap(async function (req, res) {
+async function getOne(req, res) {
   let populators = '';
 
   if (req.query.users) {
@@ -70,9 +79,9 @@ const getOne = AsyncWrap(async function (req, res) {
   }
 
   res.json(req.team);
-})
+}
 
-const search = AsyncWrap(async function (req, res) {
+async function search(req, res) {
   if (!req.query.name) {
     return res.error({message: 'Please provide a name to search with', statusCode: 400});
   }
@@ -84,7 +93,7 @@ const search = AsyncWrap(async function (req, res) {
   })
 
   res.json(teams);
-})
+}
 
 /**
  * @api {put} /teams/:id update a team
@@ -108,7 +117,7 @@ const search = AsyncWrap(async function (req, res) {
  *
  * @apiSuccess {object} updated Team object.
  */
-const updateOne = AsyncWrap(async function (req, res) {
+async function updateOne(req, res) {
   const team = req.team;
   const updateFields = 'name'.split(' ');
 
@@ -120,29 +129,6 @@ const updateOne = AsyncWrap(async function (req, res) {
 
   await team.save();
   res.json(team);
-})
-
-async function teamAlreadyExists(query) {
-  return await Team.findOne(query) ? true : false;
-}
-
-/**
- * check that an array of userId's corresponds to valid users. If users exist, return them.
- * @param {Array} users array of users
- * @param {String} errorMessage error message to show if check fails
- */
-async function checkUsersExist(users, errorMessage) {
-  const validUsers = []
-  for (const user of users) {
-    const validUser = await User.findOne(ObjectId(user._id))
-    if (!validUser) {
-      return res.error({message: `${errorMessage} Player not found.`, statusCode: 400});
-    } else {
-      validUsers.push(validUser);
-    }
-  }
-
-  return validUsers;
 }
 
 module.exports = {
