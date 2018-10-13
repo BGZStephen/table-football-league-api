@@ -164,14 +164,26 @@ async function search(req, res) {
  * @apiSuccess {object} updated Team object.
  */
 async function updateOne(req, res) {
-  const team = req.team;
-  const updateFields = 'name'.split(' ');
+  const team = req.context.team;
 
-  Object.keys(req.body).forEach(function (key) {
-    if(updateFields.indexOf(key) > -1) {
-      team[key] = req.body[key];
+  if (req.body.players.length < 2) {
+    return res.error({message: 'Teams require at least 2 players', statusCode: 400});
+  }
+
+  if (req.body.name) {
+    team.name = req.body.name
+  }
+
+  if (req.body.players) {
+    for (const player of req.body.players) {
+      if (!await Player.findById(player)) {
+        return res.error({message: 'Player not found', statusCode: 403});
+      }
     }
-  });
+
+    team.players = req.body.players;
+  }
+
 
   await team.save();
   res.json(team);
