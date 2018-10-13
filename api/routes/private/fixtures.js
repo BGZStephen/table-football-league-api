@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const AsyncWrap = require('../../utils/async-wrapper');
+const validate = require('validate.js');
 
 const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
@@ -18,24 +18,30 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {object} new Fixture object.
  */
-const create = AsyncWrap(async function (req, res) {
-  // validate(req.body, {
-  //   date: {message: 'A date is required for the fixture', type: 'date'},
-  //   teams: {message: 'Teams are required', type: 'array'},
-  //   type: {message: 'Fixture type is required', type: 'string'},
-  // })
+async function create(req, res) {
+  const validatorErrors = validate(req.body, {
+    date: {
+      presence: {message() {return validate.format('Date is required')}}
+    },
+  }, {format: "flat"})
+
+  if (validatorErrors) {
+    return res.error({message: validatorErrors, statusCode: 400});
+  }
+
+  if (req.body.teams.length !== 2) {
+    return res.error({message: '2 Teams are required for a fixture', statusCode: 400});
+  }
 
   const fixture = new Fixture({
     createdOn: Date.now(),
     date: req.body.date,
     teams: req.body.teams,
-    type: req.body.type,
-    leagueId: req.body.leagueId,
   })
 
   await fixture.save();
   res.json(fixture);
-})
+}
 
 /**
  * @api {get} /fixtures get fixtures based on a query
@@ -48,7 +54,7 @@ const create = AsyncWrap(async function (req, res) {
  *
  * @apiSuccess {object} Fixture object.
  */
-const get = AsyncWrap(async function () {
+async function get() {
   let query = {};
   let populators = null;
 
@@ -75,7 +81,7 @@ const get = AsyncWrap(async function () {
   }
 
   res.json(fixtures);
-})
+}
 
 /**
  * @api {get} /fixtures/:id get one Fixture
@@ -88,7 +94,7 @@ const get = AsyncWrap(async function () {
  *
  * @apiSuccess {object} Fixture object.
  */
-const getOne = AsyncWrap(async function () {
+async function getOne() {
   let populators = null;
 
   if (req.query.teams) {
@@ -104,7 +110,7 @@ const getOne = AsyncWrap(async function () {
   }
 
   res.json(req.fixture);
-})
+}
 
 /**
  * @api {put} /fixtures/:id update one Fixture
@@ -120,7 +126,7 @@ const getOne = AsyncWrap(async function () {
  *
  * @apiSuccess {object} Updated Fixture object.
  */
-const updateOne = AsyncWrap(async function (req, res) {
+async function updateOne(req, res) {
   const fixture = req.fixture;
   const updateFields = 'teams date type'.split(' ');
   const updateParams = {};
@@ -141,53 +147,11 @@ const updateOne = AsyncWrap(async function (req, res) {
 
   await fixture.save();
   res.json(fixture);
-})
-
-/**
- * @api {put} /fixtures/:id/submit-score submit a fixture score
- * @apiName SubmitScore
- * @apiGroup Fixture
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.body} Fixture score params
- * @apiParam {req.body.homeTeam} home team score parameters
- * @apiParam {req.body.homeTeam.goalsScored} home team goals scored
- * @apiParam {req.body.homeTeam.goalsConceded} home team goals conceded
- * @apiParam {req.body.awayTeam} away team score parameters
- * @apiParam {req.body.awayTeam.goalsScored} away team goals scored
- * @apiParam {req.body.awayTeam.goalsConceded} away team goals conceded
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {object} Updated Fixture object.
- */
-const submitScore = AsyncWrap(async function (req, res) {
-  // validate(req.body, {
-  //   homeTeam: {message: 'A home team is required', type: 'string'},
-  //   awayTeam: {message: 'An away team is required', type: 'string'},
-  // })
-
-  const fixture = req.fixture;
-  const params = {
-    homeTeam: {
-      _id: req.body.homeTeam._id,
-      goalsScored: req.body.homeTeam.goalsScored,
-      goalsConceded: req.body.homeTeam.goalsScored,
-    },
-    awayTeam: {
-      _id: req.body.awayTeam._id,
-      goalsScored: req.body.awayTeam.goalsScored,
-      goalsConceded: req.body.awayTeam.goalsScored,
-    }
-  }
-
-  await fixture.submitScore(params)
-  res.json(fixture)
-})
+}
 
 module.exports = {
   create,
   get,
   getOne,
   updateOne,
-  submitScore,
 }

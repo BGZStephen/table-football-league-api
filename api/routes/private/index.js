@@ -1,10 +1,10 @@
 const express = require('express');
 const rest = require('api/utils/rest')
-// const Fixtures = require('./fixtures');
+const fixtures = require('./fixtures');
 // const Leagues = require('./leagues');
 // const Users = require('./users');
-const Teams = require('./teams');
-const Players = require('./players');
+const teams = require('./teams');
+const players = require('./players');
 
 const router = express.Router();
 
@@ -42,11 +42,11 @@ router.all('/', rest.asyncwrap(validateUser))
 // router.post('/users/:id/leagues', Users.getLeagues);
 // router.post('users/:id/profile-image', upload.single('profileImage'), Users.setProfileImage);
 
-router.post('/players', rest.asyncwrap(Players.create));
-router.get('/players/search', rest.asyncwrap(Players.search));
-router.all('/players/:id*', Players.load);
-router.get('/players/:id', Players.getOne);
-router.put('/players/:id', rest.asyncwrap(Players.updateOne));
+router.post('/players', rest.asyncwrap(players.create));
+router.get('/players/search', rest.asyncwrap(players.search));
+router.all('/players/:id*', players.load);
+router.get('/players/:id', players.getOne);
+router.put('/players/:id', rest.asyncwrap(players.updateOne));
 
 // router.get('/leagues', Leagues.getAll);
 // router.post('/leagues', Leagues.create);
@@ -55,13 +55,13 @@ router.put('/players/:id', rest.asyncwrap(Players.updateOne));
 // router.get('/leagues/:id', Leagues.getOne);
 // router.put('/leagues/:id', Leagues.updateOne);
 
-router.post('/teams', rest.asyncwrap(Teams.create));
-router.get('/teams/search', rest.asyncwrap(Teams.search));
-router.all('/teams/:id*', rest.asyncwrap(Teams.load));
-router.get('/teams/:id', Teams.getOne);
-router.put('/teams/:id', rest.asyncwrap(Teams.updateOne));
+router.post('/teams', rest.asyncwrap(teams.create));
+router.get('/teams/search', rest.asyncwrap(teams.search));
+router.all('/teams/:id*', rest.asyncwrap(teams.load));
+router.get('/teams/:id', teams.getOne);
+router.put('/teams/:id', rest.asyncwrap(teams.updateOne));
 
-// router.post('/fixtures', Fixtures.create);
+router.post('/fixtures', rest.asyncwrap(fixtures.create));
 // router.get('/fixtures', Fixtures.get);
 // // router.all('/fixtures/:id*', Middleware.fetchResource);
 // router.get('/fixtures/:id', Fixtures.getOne);
