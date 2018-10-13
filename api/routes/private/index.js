@@ -44,6 +44,7 @@ router.all('/', rest.asyncwrap(validateUser))
 
 router.post('/players', Players.create);
 router.get('/players/search', Players.search);
+router.all('/players/:id*', Players.load);
 router.get('/players/:id', Players.getOne);
 router.put('/players/:id', Players.updateOne);
 
