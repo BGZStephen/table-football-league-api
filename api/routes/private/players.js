@@ -114,22 +114,22 @@ async function getOne(req, res) {
  * @apiSuccess {Object} updated User object.
  */
 async function updateOne(req, res) {
-  const player = req.player;
+  const player = req.context.player;
 
   if (req.body.name) {
-    req.player.name = name;
+    player.name = req.body.name;
   }
 
-  if (req.body.striker) {
-    req.player.striker = true;
+  if (req.body.position.striker) {
+    player.position.striker = true;
   } else {
-    req.player.striker = false;
+    player.position.striker = false;
   }
 
-  if (req.body.defender) {
-    req.player.defender = true;
+  if (req.body.position.defender) {
+    player.position.defender = true;
   } else {
-    req.player.defender = false;
+    player.position.defender = false;
   }
 
   await player.save();
