@@ -3,6 +3,41 @@ const validate = require('validate.js');
 const Player = mongoose.model('Player');
 const Team = mongoose.model('Team');
 
+const ObjectId = mongoose.Types.ObjectId;
+
+/**
+ * @api {get} /players/:id Get one player
+ * @apiName GetUser
+ * @apiGroup User
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.user} User object.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {Object} mongoose User object.
+ */
+async function load(req, res, next) {
+  const teamId = req.body.id || req.params.id;
+
+  if (!teamId) {
+    return res.error({statusCode: 400, message: 'TeamID is required'})
+  }
+
+  const team = await Team.findById(ObjectId(teamId))
+
+  if (!team) {
+    return res.error({statusCode: 404, message: 'Team not found'})
+  }
+
+  if (!req.context) {
+    req.context = {};
+  }
+
+  req.context.team = team;
+
+  next();
+}
+
 /**
  * @api {post} /teams create a new Team
  * @apiName CreateTeam
@@ -59,10 +94,11 @@ async function create(req, res) {
  * @apiSuccess {object} Team object.
  */
 async function getOne(req, res) {
+  const team = req.context.team;
   let populators = '';
 
-  if (req.query.users) {
-    populators = populators + 'users ';
+  if (req.query.players) {
+    populators = populators + 'players ';
   }
 
   if (req.query.leagues) {
@@ -74,10 +110,10 @@ async function getOne(req, res) {
   }
 
   if (populators) {
-    await req.team.populate(populators).execPopulate();
+    await team.populate(populators).execPopulate();
   }
 
-  res.json(req.team);
+  res.json(team);
 }
 
 async function search(req, res) {
@@ -142,6 +178,7 @@ async function updateOne(req, res) {
 }
 
 module.exports = {
+  load,
   create,
   getOne,
   updateOne,

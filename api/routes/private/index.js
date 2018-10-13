@@ -57,7 +57,7 @@ router.put('/players/:id', rest.asyncwrap(Players.updateOne));
 
 router.post('/teams', rest.asyncwrap(Teams.create));
 router.get('/teams/search', rest.asyncwrap(Teams.search));
-// router.all('/teams/:id*', Middleware.fetchResource);
+router.all('/teams/:id*', rest.asyncwrap(Teams.load));
 router.get('/teams/:id', Teams.getOne);
 router.put('/teams/:id', rest.asyncwrap(Teams.updateOne));
 
