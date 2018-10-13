@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 
 const FixtureSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
-  fixtureDate: Date,
+  date: Date,
   teams: [{type: Schema.ObjectId, ref: 'Team'}],
   score: {
     homeTeam: {

@@ -29,8 +29,25 @@ async function create(req, res) {
     return res.error({message: validatorErrors, statusCode: 400});
   }
 
-  if (req.body.teams.length !== 2) {
-    return res.error({message: '2 Teams are required for a fixture', statusCode: 400});
+  if (req.body.teams) { 
+    if (req.body.teams.length !== 2) {
+      return res.error({message: '2 Teams are required for a fixture', statusCode: 400});
+    }
+    
+    const teamOne = await mongoose.model('Team').findById(ObjectId(req.body.teams[0]))
+    const teamTwo = await mongoose.model('Team').findById(ObjectId(req.body.teams[1]))
+
+    if (teamOne || teamTwo) {
+      return res.error({message: 'Team not found', statusCode: 400});
+    }
+
+    for (const teamOnePlayer of teamOne) {
+      for (const teamTwoPlayer of teamTwo) {
+        if (teamOnePlayer._id === teamTwoPlayer._id) {
+          return res.error({message: 'Fixtures cannot contain teams with the same players', statusCode: 400});
+        }
+      }
+    }
   }
 
   const fixture = new Fixture({
@@ -111,23 +128,38 @@ async function getOne() {
  * @apiSuccess {object} Updated Fixture object.
  */
 async function updateOne(req, res) {
-  const fixture = req.fixture;
-  const updateFields = 'teams date type'.split(' ');
-  const updateParams = {};
+  const fixture = req.context.fixture;
 
-  if (req.body.teams) {
-    for (const teamId of fixture.teams) {
-      if (req.body.teams.indexOf(teamId) === -1) {
-        await fixture.removeTeam(teamId);
-      }
+  if (req.fixture.date) {
+    if (moment(req.fixture.date).isBefore(moment().startOf('day'))) {
+      return res.error({message: 'Fixture dates must be in the future', statusCode: 400});
     }
+
+    fixture.date = req.fixture.date;
   }
 
-  Object.keys(req.body).forEach(function (key) {
-    if(updateFields.indexOf(key)) {
-      fixture[key] = req.body[key];
+  if (req.body.teams) {
+    if (req.body.teams.length !== 2) {
+      return res.error({message: '2 Teams are required for a fixture', statusCode: 400});
     }
-  })
+
+    const teamOne = await mongoose.model('Team').findById(ObjectId(req.body.teams[0]))
+    const teamTwo = await mongoose.model('Team').findById(ObjectId(req.body.teams[1]))
+
+    if (teamOne || teamTwo) {
+      return res.error({message: 'Team not found', statusCode: 400});
+    }
+
+    for (const teamOnePlayer of teamOne) {
+      for (const teamTwoPlayer of teamTwo) {
+        if (teamOnePlayer._id === teamTwoPlayer._id) {
+          return res.error({message: 'Fixtures cannot contain teams with the same players', statusCode: 400});
+        }
+      }
+    }
+
+    fixture.teams = req.body.teams;
+  }
 
   await fixture.save();
   res.json(fixture);
