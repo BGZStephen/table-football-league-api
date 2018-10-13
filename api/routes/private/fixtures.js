@@ -54,31 +54,15 @@ async function create(req, res) {
  *
  * @apiSuccess {object} Fixture object.
  */
-async function get() {
+async function get(req, res) {
   let query = {};
-  let populators = null;
-
-  if (req.query.teamId) {
-    query.teams = req.query.teamId;
-  }
-
-  if (req.query.leagueId) {
-    query.leagueId = req.query.leagueId;
-  }
+  let populators = '';
 
   if (req.query.teams) {
-    populators = populators + 'teams ';
+    populators += 'teams';
   }
 
-  if (req.query.league) {
-    populators = populators + 'leagueId ';
-  }
-
-  const fixtures = await Fixture.find(query);
-
-  if (populators) {
-    await fixture.populate(populators.trim()).execPopulate();
-  }
+  const fixtures = await Fixture.find(query).populate(populators);
 
   res.json(fixtures);
 }

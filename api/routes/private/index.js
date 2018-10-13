@@ -62,7 +62,7 @@ router.get('/teams/:id', teams.getOne);
 router.put('/teams/:id', rest.asyncwrap(teams.updateOne));
 
 router.post('/fixtures', rest.asyncwrap(fixtures.create));
-// router.get('/fixtures', Fixtures.get);
+router.get('/fixtures/search', rest.asyncwrap(fixtures.get));
 // // router.all('/fixtures/:id*', Middleware.fetchResource);
 // router.get('/fixtures/:id', Fixtures.getOne);
 // router.put('/fixtures/:id', Fixtures.updateOne);
