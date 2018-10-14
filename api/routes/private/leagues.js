@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const AsyncWrap = require('../../utils/async-wrapper');
 
 const League = mongoose.model('League');
 const ObjectId = mongoose.Types.ObjectId;
@@ -17,32 +16,35 @@ const ObjectId = mongoose.Types.ObjectId;
  *
  * @apiSuccess {object} new League object.
  */
-const create = AsyncWrap(async function (req, res) {
+async function create(req, res) {
   if (!req.body.name) {
     return res.error({message: 'League name is required', statusCode: 400});
   }
 
-  if (await leagueAlreadyExists({name: req.body.name})) {
+  const existingLeague = await League.findOne({name: req.body.name})
+
+  if (existingLeague) {
     return res.error({message: 'A league with that name already exists', statusCode: 400})
+  }
+
+  if (req.body.teams.length < 3) {
+    return res.error({message: 'A league requires a minimum of 3 teams', statusCode: 400})
+  }
+
+  if (!req.body.gamesPerSeason) {
+    return res.error({message: 'Games Per Season is required', statusCode: 400})
   }
 
   const league = new League({
     createdOn: new Date(),
     name: req.body.name,
-    administrators: [req.body.userId],
+    gamesPerSeason: req.body.gamesPerSeason,
     teams: req.body.teams,
   });
 
   await league.save();
-
-  for (const leagueTeam of league.teams) {
-    const team = await mongoose.model('Team').findById(leagueTeam._id)
-    const updatedTeam = await team.addLeague(league._id)
-    await updatedTeam.save();
-  }
-
   res.json(league);
-})
+}
 
 /**
  * @api {get} /leagues/:id get a league
@@ -55,7 +57,7 @@ const create = AsyncWrap(async function (req, res) {
  *
  * @apiSuccess {object} League object.
  */
-const getOne = AsyncWrap(async function (req, res) {
+async function getOne(req, res) {
   let populators = '';
 
   if (req.query.administrators) {
@@ -75,24 +77,9 @@ const getOne = AsyncWrap(async function (req, res) {
   }
 
   res.json(req.league);
-})
+}
 
-/**
- * @api {get} /leagues get all leagues
- * @apiName GetAll
- * @apiGroup League
- *
- * @apiParam {req} Express request object.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {object} League object.
- */
-const getAll = AsyncWrap(async function (req, res) {
-  const leagues = await League.find({});
-  res.json(leagues);
-})
-
-const search = AsyncWrap(async function (req, res) {
+async function search(req, res) {
   if (!req.query.name) {
     return res.error({message: 'Please enter an league name to search', statusCode: 400});
   }
@@ -104,7 +91,7 @@ const search = AsyncWrap(async function (req, res) {
   })
 
   res.json(leagues);
-})
+}
 
 /**
  * @api {put} /leagues/:id update a league
@@ -128,7 +115,7 @@ const search = AsyncWrap(async function (req, res) {
  *
  * @apiSuccess {object} updated League object.
  */
-const updateOne = AsyncWrap(async function (req, res) {
+async function updateOne(req, res) {
   const league = req.league;
   const updateFields = 'name'.split(' ');
   const updateParams = {};
@@ -161,26 +148,10 @@ const updateOne = AsyncWrap(async function (req, res) {
   }
 
   res.json(league);
-})
-
-/**
- * Chexk existance of a league against an expected result
- * @param {Boolean} expected expected outcome
- * @param {Object} query an object representing a mongoose query to use for existance checking
- */
-
-/**
- * Chexk existance of a user against an expected result
- * @param {Boolean} expected expected outcome
- * @param {Object} query an object representing a mongoose query to use for existance checking
-*/
-async function leagueAlreadyExists(query) {
-  return await League.findOne(query) ? true : false;
 }
 
 module.exports = {
   create,
-  getAll,
   getOne,
   search,
   updateOne,

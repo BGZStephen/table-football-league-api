@@ -2,38 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
-const Team = mongoose.model('Team');
-
 const LeagueSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
   name: {type: String, unique: true},
-  administrators: [{type: Schema.ObjectId, ref: 'User'}],
-  teams: [{
-    _id: {
-      type: Schema.ObjectId, ref: 'Team',
-    },
-    wins: Number,
-    losees: Number,
-    goalsScored: Number,
-    goalsConceded: Number,
-  }],
-  fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],
-})
-
-LeagueSchema.pre('save', async function(next) {
-  if(this.isModified('teams')) {
-    let leaguePlayers = [];
-    for (const team of league.teams) {
-      for (const user of team.users) {
-        if (leaguePlayers.indexOf(user) > -1) {
-          leaguePlayers.push(user)
-        } else {
-          throw new Error('A league cannot contain teams wih the same players');
-        }
-      }
-    }
-  }
-  next();
+  gamesPerSeason: {type: Number, required: true},
+  teams: [{type: Schema.ObjectId, ref: 'Team'}],
 })
 
 LeagueSchema.methods = {

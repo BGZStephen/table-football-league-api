@@ -1,7 +1,7 @@
 const express = require('express');
 const rest = require('api/utils/rest')
 const fixtures = require('./fixtures');
-// const Leagues = require('./leagues');
+const leagues = require('./leagues');
 // const Users = require('./users');
 const teams = require('./teams');
 const players = require('./players');
@@ -48,8 +48,8 @@ router.all('/players/:id*', players.load);
 router.get('/players/:id', players.getOne);
 router.put('/players/:id', rest.asyncwrap(players.updateOne));
 
-// router.get('/leagues', Leagues.getAll);
-// router.post('/leagues', Leagues.create);
+// router.get('/leagues', rest.asyncwrap(leagues.getAll));
+router.post('/leagues', rest.asyncwrap(leagues.create));
 // router.get('/leagues/search', Leagues.search);
 // // router.all('/leagues/:id*', Middleware.fetchResource);
 // router.get('/leagues/:id', Leagues.getOne);
