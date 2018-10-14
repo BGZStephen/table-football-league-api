@@ -1,5 +1,7 @@
 const express = require('express');
 const rest = require('api/utils/rest')
+const jwt = require('jsonwebtoken');
+const config = require('api/config');
 const fixtures = require('./fixtures');
 const leagues = require('./leagues');
 // const Users = require('./users');
@@ -23,16 +25,20 @@ const router = express.Router();
  * @apiSuccess {next} continue to next middleware.
  */
 async function validateUser(req, res, next) {
-  const decoded = await jwt.verify(req.headers['x-access-token'], config.jwtSecret);
+  try {
+    const decoded = await jwt.verify(req.headers['x-access-token'], config.jwtSecret);
+  } catch (err) {
+    return res.error({message: 'Unauthorized', statusCode: 403});
+  }
 
-  if(!ObjectId(decoded.data.id).equals(ObjectId(req.params.id))) {
+  if(!decoded.data.id) {
     return res.error({message: 'Invalid token', statusCode: 401});
   }
 
   next();
 }
 
-router.all('/', rest.asyncwrap(validateUser))
+router.all('/*', rest.asyncwrap(validateUser))
 // router.post('/users/getByEmail', Users.getByEmail);
 // router.get('/users/search', Users.search);
 // // router.all('/users/:id*', Users.validateUser, Middleware.fetchResource);
