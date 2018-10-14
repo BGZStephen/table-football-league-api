@@ -50,7 +50,7 @@ router.put('/players/:id', rest.asyncwrap(players.updateOne));
 
 // router.get('/leagues', rest.asyncwrap(leagues.getAll));
 router.post('/leagues', rest.asyncwrap(leagues.create));
-// router.get('/leagues/search', Leagues.search);
+router.get('/leagues/search', rest.asyncwrap(leagues.search));
 // // router.all('/leagues/:id*', Middleware.fetchResource);
 // router.get('/leagues/:id', Leagues.getOne);
 // router.put('/leagues/:id', Leagues.updateOne);

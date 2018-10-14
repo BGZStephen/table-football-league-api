@@ -23,8 +23,8 @@ const FixtureSchema = Schema({
     type: Boolean,
     default: false,
   },
-  type: String,
-  leagueId: {type: Schema.ObjectId, ref: 'League'},
+  type: {type: String, default: 'friendly'},
+  league: {type: Schema.ObjectId, ref: 'League'},
 })
 
 FixtureSchema.pre('save', async function(next) {

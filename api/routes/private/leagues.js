@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-
 const League = mongoose.model('League');
-const ObjectId = mongoose.Types.ObjectId;
 
 /**
  * @api {post} /league create a new League
@@ -43,6 +41,8 @@ async function create(req, res) {
   });
 
   await league.save();
+  await league.generateFixtures();
+
   res.json(league);
 }
 
@@ -80,16 +80,13 @@ async function getOne(req, res) {
 }
 
 async function search(req, res) {
-  if (!req.query.name) {
-    return res.error({message: 'Please enter an league name to search', statusCode: 400});
+  const query = {}
+
+  if (req.query.name) {
+    query.name = req.query.name;
   }
 
-  const searchRegexp = new RegExp(req.query.name, 'i');
-
-  const leagues = await League.find({
-    name: searchRegexp,
-  })
-
+  const leagues = await League.find(query)
   res.json(leagues);
 }
 

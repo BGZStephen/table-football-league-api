@@ -113,7 +113,13 @@ async function get(req, res) {
     populators += 'teams';
   }
 
-  const fixtures = await Fixture.find(query).populate(populators);
+  if (req.query.limit || !Number.isNaN(parseInt(req.query.limit))) {
+    req.query.limit = parseInt(req.query.limit);
+  } else {
+    req.query.limit = null;
+  }
+
+  const fixtures = await Fixture.find(query).limit(req.query.limit).populate(populators);
 
   res.json(fixtures);
 }
@@ -169,8 +175,6 @@ async function getOne(req, res) {
  */
 async function updateOne(req, res) {
   const fixture = req.context.fixture;
-
-  console.log(req.body)
 
   if (req.body.date) {
     if (moment(req.body.date).isBefore(moment().startOf('day'))) {

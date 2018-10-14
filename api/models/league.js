@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
 const Schema = mongoose.Schema;
-const ObjectId = mongoose.Types.ObjectId;
 
 const LeagueSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
@@ -10,65 +10,28 @@ const LeagueSchema = Schema({
 })
 
 LeagueSchema.methods = {
-  /**
-   * updated a teams statistics in the league
-   * @param {Object} params
-   * @param {ObjectId} params._id team ID
-   * @param {Boolean} params.win boolean depicting a win
-   * @param {Boolean} params.loss boolean depicting a loss
-   * @param {Number} params.goalsScored goals scored by team
-   * @param {Number} params.goalsConceded goals conceded by team
-   */
-  async updateTeamStatistics(params) {
-    const team = this.teams.filter((team) => team._id === params._id)[0];
+  async generateFixtures() {
+    const Fixture = mongoose.model('Fixture');
+    let i = 0;
 
-    if (params.win) {
-      team.wins += 1;
-    }
+    do {
+      for (const homeTeam of this.teams) {
+        for (const awayTeam of this.teams) {
+          if (homeTeam !== awayTeam) {
+            const fixture = new Fixture({
+              date: moment().startOf('day'),
+              teams: [homeTeam, awayTeam],
+              type: 'league',
+              league: this._id
+            })
 
-    if (params.loss) {
-      team.losses += 1;
-    }
-
-    if (params.goalsScored) {
-      team.goalsScored += params.goalsScored;
-    }
-
-    if (params.goalsConceded) {
-      team.goalsConceded += params.goalsConceded;
-    }
-
-    await this.save();
-  },
-
-  addFixture(fixtureId) {
-    const fixtureIndex = this.fixtures.indexOf(fixtureId);
-    if (fixtureIndex === -1) {
-      this.fixtures.push(fixtureId);
-    }
-  },
-
-  removeFixture(fixtureId) {
-    const fixtureIndex = this.fixtures.indexOf(fixtureId);
-    if (fixtureIndex >= 0) {
-      this.fixtures.splice(fixtureIndex, 1);
-    }
-  },
-
-  addTeam(teamId) {
-    const team = this.teams.filter((team) => team._id === teamId)
-    if (team.length === 0) {
-      this.teams.push({_id: teamId});
-    }
-  },
-
-  removeTeam(teamId) {
-    for (let i = 0; i < this.teams.length; i++) {
-      if (this.teams[i]._id === teamId) {
-        this.teams.splice(i, 1);
+            await fixture.save();
+          }
+        }
       }
-    }
-  },
+      i += 2;
+    } while (i < this.gamesPerSeason)
+  }
 }
 
 module.exports = mongoose.model('League', LeagueSchema);
