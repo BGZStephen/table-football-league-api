@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 
 const Schema = mongoose.Schema;
 
@@ -18,15 +17,5 @@ const PlayerSchema = Schema({
   fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],
   leagues: [{type: Schema.ObjectId, ref: 'League'}],
 })
-
-PlayerSchema.methods = {
-  addWin() {
-    this.statistics.wins += 1;
-  },
-
-  addLoss() {
-    this.statistics.loss += 1;
-  },
-}
 
 module.exports = mongoose.model('Player', PlayerSchema);

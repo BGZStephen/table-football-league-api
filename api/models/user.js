@@ -34,14 +34,6 @@ UserSchema.pre('save', function(next) {
 })
 
 UserSchema.methods = {
-  addWin() {
-    this.statistics.wins += 1;
-  },
-
-  addLoss() {
-    this.statistics.loss += 1;
-  },
-
   isPasswordValid(password) {
     return bcrypt.compareSync(password, this.password)
   }
