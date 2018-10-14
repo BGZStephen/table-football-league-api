@@ -27,12 +27,12 @@ const router = express.Router();
 async function validateUser(req, res, next) {
   try {
     const decoded = await jwt.verify(req.headers['x-access-token'], config.jwtSecret);
+
+    if(!decoded.data.id) {
+      return res.error({message: 'Invalid token', statusCode: 401});
+    }
   } catch (err) {
     return res.error({message: 'Unauthorized', statusCode: 403});
-  }
-
-  if(!decoded.data.id) {
-    return res.error({message: 'Invalid token', statusCode: 401});
   }
 
   next();
