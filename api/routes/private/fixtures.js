@@ -1,8 +1,42 @@
+const moment = require('moment');
 const mongoose = require('mongoose');
 const validate = require('validate.js');
 
 const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
+
+/**
+ * @api {get} /players/:id Get one player
+ * @apiName GetUser
+ * @apiGroup User
+ *
+ * @apiParam {req} Express request object.
+ * @apiParam {req.user} User object.
+ * @apiParam {res} Express response object object.
+ *
+ * @apiSuccess {Object} mongoose User object.
+ */
+async function load(req, res, next) {
+  const fixtureId = req.body.id || req.params.id;
+
+  if (!fixtureId) {
+    return res.error({statusCode: 400, message: 'FixtureID is required'})
+  }
+
+  const fixture = await Fixture.findById(ObjectId(fixtureId))
+
+  if (!fixture) {
+    return res.error({statusCode: 404, message: 'Fixture not found'})
+  }
+
+  if (!req.context) {
+    req.context = {};
+  }
+
+  req.context.fixture = fixture;
+
+  next();
+}
 
 /**
  * @api {post} /fixtures create a new Fixture
@@ -95,22 +129,28 @@ async function get(req, res) {
  *
  * @apiSuccess {object} Fixture object.
  */
-async function getOne() {
-  let populators = null;
+async function getOne(req, res) {
+  let populators = '';
 
   if (req.query.teams) {
-    populators = populators + 'teams ';
+    populators += 'teams';
   }
 
-  if (req.query.league) {
-    populators = populators + 'leagueId ';
+  if (req.query.players) {
+    populators = {
+      path: 'teams',
+      populate: {
+        path: 'players',
+        model: 'Player'
+      }
+    };
   }
 
   if (populators) {
-    await req.fixture.populate(populators.trim()).execPopulate();
+    await req.context.fixture.populate(populators).execPopulate();
   }
 
-  res.json(req.fixture);
+  res.json(req.context.fixture);
 }
 
 /**
@@ -130,12 +170,14 @@ async function getOne() {
 async function updateOne(req, res) {
   const fixture = req.context.fixture;
 
-  if (req.fixture.date) {
-    if (moment(req.fixture.date).isBefore(moment().startOf('day'))) {
+  console.log(req.body)
+
+  if (req.body.date) {
+    if (moment(req.body.date).isBefore(moment().startOf('day'))) {
       return res.error({message: 'Fixture dates must be in the future', statusCode: 400});
     }
 
-    fixture.date = req.fixture.date;
+    fixture.date = req.body.date;
   }
 
   if (req.body.teams) {
@@ -143,15 +185,15 @@ async function updateOne(req, res) {
       return res.error({message: '2 Teams are required for a fixture', statusCode: 400});
     }
 
-    const teamOne = await mongoose.model('Team').findById(ObjectId(req.body.teams[0]))
-    const teamTwo = await mongoose.model('Team').findById(ObjectId(req.body.teams[1]))
+    const teamOne = await mongoose.model('Team').findById(ObjectId(req.body.teams[0]._id))
+    const teamTwo = await mongoose.model('Team').findById(ObjectId(req.body.teams[1]._id))
 
-    if (teamOne || teamTwo) {
+    if (!teamOne || !teamTwo) {
       return res.error({message: 'Team not found', statusCode: 400});
     }
 
-    for (const teamOnePlayer of teamOne) {
-      for (const teamTwoPlayer of teamTwo) {
+    for (const teamOnePlayer of teamOne.players) {
+      for (const teamTwoPlayer of teamTwo.players) {
         if (teamOnePlayer._id === teamTwoPlayer._id) {
           return res.error({message: 'Fixtures cannot contain teams with the same players', statusCode: 400});
         }
@@ -166,6 +208,7 @@ async function updateOne(req, res) {
 }
 
 module.exports = {
+  load,
   create,
   get,
   getOne,
