@@ -112,14 +112,26 @@ async function get(req, res) {
   if (req.query.teams) {
     populators += 'teams';
   }
-
+  
   if (req.query.limit || !Number.isNaN(parseInt(req.query.limit))) {
     req.query.limit = parseInt(req.query.limit);
   } else {
     req.query.limit = null;
   }
-
-  const fixtures = await Fixture.find(query).limit(req.query.limit).populate(populators);
+  
+  let fixtures = await Fixture.find(query).limit(req.query.limit).populate(populators);
+  
+  if (req.query.player) {
+    fixtures = fixtures.filter(fixture => {
+      for (const team of fixture.teams) {
+        for (const player of team.players) {
+          if (ObjectId(req.query.player).equals(player)) {
+            return true;
+          }
+        }
+      }
+    });
+  }
 
   res.json(fixtures);
 }
