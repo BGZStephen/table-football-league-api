@@ -17,7 +17,7 @@
     "validate.js": "^0.12.0"
   },
   "scripts": {
-    "dev": "nodemon ./api/app.js",
+    "dev": "docker-compose up -d && nodemon ./api/app.js",
     "link-api": "[ -L node_modules/api ] && unlink node_modules/api; ln -s ../api node_modules/api",
     "test": "jest"
   }

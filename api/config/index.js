@@ -1,7 +1,7 @@
 
 const configs = {
   development: {
-    database: 'mongodb://testuser:testpassword1@ds137540.mlab.com:37540/bgzstephen-table-football-league',
+    database: 'mongodb://localhost/wriggleapp',
     jwtSecret: 'testing',
   },
 }
