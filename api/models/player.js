@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const PlayerSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
+  createdBy: {type: Schema.ObjectId, rer: 'User'},
   name: {type: String, required: true},
   statistics: {
     wins: Number,
@@ -13,9 +14,6 @@ const PlayerSchema = Schema({
     striker: {type: Boolean, default: false},
     defender: {type: Boolean, default: false},
   },
-  teams: [{type: Schema.ObjectId, ref: 'Team'}],
-  fixtures: [{type: Schema.ObjectId, ref: 'Fixture'}],
-  leagues: [{type: Schema.ObjectId, ref: 'League'}],
 })
 
 module.exports = mongoose.model('Player', PlayerSchema);

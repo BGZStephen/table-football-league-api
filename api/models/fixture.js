@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const FixtureSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
+  createdBy: {type: Schema.ObjectId, rer: 'User'},
   date: Date,
   teams: [{type: Schema.ObjectId, ref: 'Team'}],
   score: {

@@ -1,52 +1,18 @@
 const express = require('express');
 const rest = require('api/utils/rest')
-const jwt = require('jsonwebtoken');
-const config = require('api/config');
+const authentication = require('./authentication');
 const fixtures = require('./fixtures');
 const leagues = require('./leagues');
 // const Users = require('./users');
 const teams = require('./teams');
 const players = require('./players');
-
 const router = express.Router();
 
-/**
- * @api {all} /users/:id decode & validate a user JWT
- * @apiName ValidateUser
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.user} User object.
- * @apiParam {req.headers} Submitted http headers
- * @apiParam {req.headers.token} json web token to decode
- * @apiParam {res} Express response object object.
- * @apiParam {next} Express middleware progression callback.
- *
- * @apiSuccess {next} continue to next middleware.
- */
-async function validateUser(req, res, next) {
-  try {
-    const decoded = await jwt.verify(req.headers['x-access-token'], config.jwtSecret);
 
-    if(!decoded.data.id) {
-      return res.error({message: 'Invalid token', statusCode: 401});
-    }
-  } catch (err) {
-    return res.error({message: 'Unauthorized', statusCode: 403});
-  }
-
-  next();
-}
-
-router.all('/*', rest.asyncwrap(validateUser))
-// router.post('/users/getByEmail', Users.getByEmail);
+router.all('/*', rest.asyncwrap(authentication.validateUser), rest.asyncwrap(authentication.loadUser))
 // router.get('/users/search', Users.search);
-// // router.all('/users/:id*', Users.validateUser, Middleware.fetchResource);
 // router.get('/users/:id', Users.getOne);
 // router.put('/users/:id', Users.updateOne);
-// router.post('/users/:id/fixtures', Users.getFixtures);
-// router.post('/users/:id/leagues', Users.getLeagues);
-// router.post('users/:id/profile-image', upload.single('profileImage'), Users.setProfileImage);
 
 router.post('/players', rest.asyncwrap(players.create));
 router.get('/players/search', rest.asyncwrap(players.search));
@@ -54,10 +20,8 @@ router.all('/players/:id*', players.load);
 router.get('/players/:id', players.getOne);
 router.put('/players/:id', rest.asyncwrap(players.updateOne));
 
-// router.get('/leagues', rest.asyncwrap(leagues.getAll));
 router.post('/leagues', rest.asyncwrap(leagues.create));
 router.get('/leagues/search', rest.asyncwrap(leagues.search));
-// // router.all('/leagues/:id*', Middleware.fetchResource);
 // router.get('/leagues/:id', Leagues.getOne);
 // router.put('/leagues/:id', Leagues.updateOne);
 
@@ -72,6 +36,5 @@ router.get('/fixtures/search', rest.asyncwrap(fixtures.get));
 router.all('/fixtures/:id*', rest.asyncwrap(fixtures.load));
 router.get('/fixtures/:id', fixtures.getOne);
 router.put('/fixtures/:id', rest.asyncwrap(fixtures.updateOne));
-// router.post('/fixtures/:id/submit-score', Fixtures.submitScore);
 
 module.exports = router;

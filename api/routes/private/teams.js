@@ -29,10 +29,6 @@ async function load(req, res, next) {
     return res.error({statusCode: 404, message: 'Team not found'})
   }
 
-  if (!req.context) {
-    req.context = {};
-  }
-
   req.context.team = team;
 
   next();

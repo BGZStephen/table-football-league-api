@@ -28,10 +28,6 @@ async function load(req, res, next) {
     return res.error({statusCode: 404, message: 'Player not found'})
   }
 
-  if (!req.context) {
-    req.context = {};
-  }
-
   req.context.player = player;
 
   next();
@@ -69,6 +65,7 @@ async function create(req, res) {
   }
 
   const player = new Player({
+    createdBy: req.context.user._id,
     name: req.body.name,
     position: {
       striker: req.body.striker,

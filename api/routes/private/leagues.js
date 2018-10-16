@@ -34,7 +34,7 @@ async function create(req, res) {
   }
 
   const league = new League({
-    createdOn: new Date(),
+    createdBy: req.context.user._id,
     name: req.body.name,
     gamesPerSeason: req.body.gamesPerSeason,
     teams: req.body.teams,

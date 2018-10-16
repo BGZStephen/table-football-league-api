@@ -85,7 +85,7 @@ async function create(req, res) {
   }
 
   const fixture = new Fixture({
-    createdOn: Date.now(),
+    createdBy: req.context.user._id,
     date: req.body.date,
     teams: req.body.teams,
   })

@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const LeagueSchema = Schema({
   createdOn: {type: Date, default: () => new Date()},
+  createdBy: {type: Schema.ObjectId, rer: 'User'},
   name: {type: String, unique: true},
   gamesPerSeason: {type: Number, required: true},
   teams: [{type: Schema.ObjectId, ref: 'Team'}],
