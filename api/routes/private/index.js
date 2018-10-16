@@ -3,16 +3,16 @@ const rest = require('api/utils/rest')
 const authentication = require('./authentication');
 const fixtures = require('./fixtures');
 const leagues = require('./leagues');
-// const Users = require('./users');
+const users = require('./users');
 const teams = require('./teams');
 const players = require('./players');
 const router = express.Router();
 
 
 router.all('/*', rest.asyncwrap(authentication.validateUser), rest.asyncwrap(authentication.loadUser))
-// router.get('/users/search', Users.search);
-// router.get('/users/:id', Users.getOne);
-// router.put('/users/:id', Users.updateOne);
+router.get('/users/search', rest.asyncwrap(users.search));
+router.get('/users/:id', rest.asyncwrap(users.getOne));
+router.put('/users/:id', rest.asyncwrap(users.updateOne));
 
 router.post('/players', rest.asyncwrap(players.create));
 router.get('/players/search', rest.asyncwrap(players.search));
