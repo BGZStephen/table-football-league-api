@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const validate = require('validate.js');
+const rest = require('api/utils/rest');
+const { Router } = require('express')
 
+const router = Router();
 const Player = mongoose.model('Player');
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -145,10 +148,10 @@ async function search(req, res) {
   res.json(players);
 }
 
-module.exports = {
-  load,
-  create,
-  getOne,
-  search,
-  updateOne,
-}
+router.post('/', rest.asyncwrap(create));
+router.get('/search', rest.asyncwrap(search));
+router.all('/:id*', rest.asyncwrap(load));
+router.get('/:id', getOne);
+router.put('/:id', rest.asyncwrap(updateOne));
+
+module.exports = router;

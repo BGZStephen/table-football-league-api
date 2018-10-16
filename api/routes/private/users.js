@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const { Router } = require('express');
+const rest = require('api/utils/rest');
+
+const router = Router();
 
 /**
  * @api {get} /users/:id Get one user
@@ -82,8 +86,8 @@ async function updateOne(req, res) {
   res.json(user);
 }
 
-module.exports = {
-  getOne,
-  search,
-  updateOne,
-}
+router.get('/search', rest.asyncwrap(search));
+router.get('/:id', rest.asyncwrap(getOne));
+router.put('/:id', rest.asyncwrap(updateOne));
+
+module.exports = router;

@@ -1,7 +1,10 @@
 const moment = require('moment');
 const mongoose = require('mongoose');
 const validate = require('validate.js');
+const { Router } = require('express');
+const rest = require('api/utils/rest');
 
+const router = Router();
 const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -223,10 +226,10 @@ async function updateOne(req, res) {
   res.json(fixture);
 }
 
-module.exports = {
-  load,
-  create,
-  get,
-  getOne,
-  updateOne,
-}
+router.post('/', rest.asyncwrap(create));
+router.get('/search', rest.asyncwrap(get));
+router.all('/:id*', rest.asyncwrap(load));
+router.get('/:id', getOne);
+router.put('/:id', rest.asyncwrap(updateOne));
+
+module.exports = router;

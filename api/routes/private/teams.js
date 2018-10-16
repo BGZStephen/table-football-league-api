@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 const validate = require('validate.js');
+const { Router } = require('express');
+const rest = require('api/utils/rest');
+
+const router = Router();
 const Player = mongoose.model('Player');
 const Team = mongoose.model('Team');
-
 const ObjectId = mongoose.Types.ObjectId;
 
 /**
@@ -185,10 +188,10 @@ async function updateOne(req, res) {
   res.json(team);
 }
 
-module.exports = {
-  load,
-  create,
-  getOne,
-  updateOne,
-  search,
-}
+router.post('/', rest.asyncwrap(create));
+router.get('/search', rest.asyncwrap(search));
+router.all('/:id*', rest.asyncwrap(load));
+router.get('/:id', getOne);
+router.put('/:id', rest.asyncwrap(updateOne));
+
+module.exports = router;

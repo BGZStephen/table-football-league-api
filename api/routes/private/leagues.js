@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const League = mongoose.model('League');
+const { Router } = require('express');
+const rest = require('api/utils/rest');
+
+const router = Router();
 
 /**
  * @api {post} /league create a new League
@@ -147,9 +151,9 @@ async function updateOne(req, res) {
   res.json(league);
 }
 
-module.exports = {
-  create,
-  getOne,
-  search,
-  updateOne,
-}
+router.post('/', rest.asyncwrap(create));
+router.get('/search', rest.asyncwrap(search));
+// router.get('/leagues/:id', Leagues.getOne);
+// router.put('/leagues/:id', Leagues.updateOne);
+
+module.exports = router;
