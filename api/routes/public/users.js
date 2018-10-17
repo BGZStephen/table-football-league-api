@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('api/utils/jwt');
 const mongoose = require('mongoose');
 const config = require('api/config');
 const validate = require('validate.js');
@@ -55,12 +55,7 @@ async function create(req, res) {
 
   await user.save();
 
-  const token = jwt.sign({
-    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
-    data: {
-      id: user._id,
-    }
-  }, config.jwtSecret);
+  const token = await jwt.generateUserToken(user);
 
   res.json({
     token: token,
@@ -106,12 +101,7 @@ async function authenticate(req, res) {
     return res.error({message: 'Invalid email address or password', statusCode: 403});
   }
 
-  const token = jwt.sign({
-    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
-    data: {
-      id: user._id,
-    }
-  }, config.jwtSecret);
+  const token = await jwt.generateUserToken(user);
 
   res.json({
     token: token,
