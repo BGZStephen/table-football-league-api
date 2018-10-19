@@ -16,16 +16,31 @@ function send(options) {
     'Subject': options.subject,
     "Html-part": htmlTemplate,
     'Recipients': options.recipients.map(recipient => {return {Email: recipient}}),
-    'Attachments': options.attachments.map(attachment => {
+    'Attachments': options.attachments ? options.attachments.map(attachment => {
       return {
         "Content-Type": attachment.type,
         "Filename": attachment.name,
         "Content": attachment.content
       }
-    })
+    }) : null
   }
 
   return sendMail.request(mailData)
 }
 
-module.exports = {};
+function passwordResetEmail(data) {
+  const emailOptions = {
+    fromEmail: config.mail.defaultFrom,
+    fromName: config.mail.defaultName,
+    subject: 'Password reset - My Table Football',
+    template: 'password-reset',
+    recipients: data.recipients,
+    data,
+  }
+
+ return send(emailOptions);
+}
+
+module.exports = {
+  passwordResetEmail
+};

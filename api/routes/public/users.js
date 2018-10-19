@@ -2,6 +2,7 @@ const jwt = require('api/utils/jwt');
 const mongoose = require('mongoose');
 const config = require('api/config');
 const validate = require('validate.js');
+const mailer = require('api/services/mail');
 
 const User = mongoose.model('User');
 
@@ -142,7 +143,12 @@ async function createPasswordReset(req, res) {
   const passwordResetToken = await createPasswordReset(user._id);
   const passwordResetUrl = generatePasswordResetUrl(passwordResetToken);
 
-  // send mail here
+  await mailer.passwordResetEmail({
+    recipients: [email],
+    data: {
+      passwordResetUrl
+    }
+  })
 
   return res.statusCode(200).send();
 }
