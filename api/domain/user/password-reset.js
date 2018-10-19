@@ -5,7 +5,7 @@ const config = require('api/config');
 
 const PasswordReset = mongoose.model('PasswordReset');
 
-async function createPasswordReset(userId) {
+async function createPasswordReset(user) {
   let token = null;
 
   try {
@@ -18,7 +18,7 @@ async function createPasswordReset(userId) {
     userId: user._id,
     email: user.email,
     token,
-    expiry: moment().endOf('day').getTime(),
+    expiry: moment().endOf('day').valueOf(),
   })
 
   await passwordReset.save();

@@ -138,9 +138,9 @@ async function createPasswordReset(req, res) {
     return res.error({message: 'No account with this email exists', statusCode: 404});
   }
 
-  const { createPasswordReset, generatePasswordResetUrl} = require('api/domain/user/password-reset');
+  const {createPasswordReset, generatePasswordResetUrl} = require('api/domain/user/password-reset');
 
-  const passwordResetToken = await createPasswordReset(user._id);
+  const passwordResetToken = await createPasswordReset(user);
   const passwordResetUrl = generatePasswordResetUrl(passwordResetToken);
 
   await mailer.passwordResetEmail({
@@ -150,11 +150,12 @@ async function createPasswordReset(req, res) {
     }
   })
 
-  return res.statusCode(200).send();
+  return res.sendStatus(200);
 }
 
 module.exports = {
   create,
   authenticate,
-  checkPasswordResetToken
+  checkPasswordResetToken,
+  createPasswordReset
 }
