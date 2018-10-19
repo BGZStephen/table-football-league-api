@@ -109,7 +109,46 @@ async function authenticate(req, res) {
   });
 }
 
+async function checkPasswordResetToken(req, res, next) {
+  const token = req.query.token;
+  if (!token || !token.match(/^([A-z]|[a-z]|[0-9]){20}$/)) {
+    return res.error({message: 'Invalid password reset token', statusCode: 400});
+  }
+
+  const token = await mongoose.model('PasswordReset').findOne({token})
+
+  if (!token) {
+    return res.error({message: 'Invalid password reset token', statusCode: 400});
+  }
+
+  return res.statusCode(200).send();
+}
+
+async function createPasswordReset(req, res) {
+  const email = req.body.email;
+
+  if (!email) {
+    return res.error({message: 'Email address is required', statusCode: 400});
+  }
+
+  const user = await User.findOne({email})
+
+  if (!user) {
+    return res.error({message: 'No account with this email exists', statusCode: 404});
+  }
+
+  const { createPasswordReset, generatePasswordResetUrl} = require('api/domain/user/password-reset');
+
+  const passwordResetToken = await createPasswordReset(user._id);
+  const passwordResetUrl = generatePasswordResetUrl(passwordResetToken);
+
+  // send mail here
+
+  return res.statusCode(200).send();
+}
+
 module.exports = {
   create,
   authenticate,
+  checkPasswordResetToken
 }

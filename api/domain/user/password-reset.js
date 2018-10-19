@@ -9,7 +9,7 @@ async function createPasswordReset(userId) {
   let token = null;
 
   try {
-    token = await crypto.randomBytes(20)
+    token = crypto.randomBytes(64).toString('hex')
   } catch (e) {
     throw new Error('Error generating token');
   }
