@@ -119,7 +119,7 @@ async function checkPasswordResetToken(req, res) {
 
   const passwordResetToken = await mongoose.model('PasswordReset').findOne({token});
 
-  if (!passwordResetToken) {
+  if (!passwordResetToken || passwordResetToken.expiry > Date.now()) {
     return res.error({message: 'Invalid password reset token', statusCode: 400});
   }
 
@@ -173,7 +173,7 @@ async function updateUserFromPasswordReset(req, res) {
 
   const passwordReset = await mongoose.model('PasswordReset').findOne({token: req.body.token})
   
-  if (!passwordReset || passwordReset.email !== user.email) {
+  if (!passwordReset || passwordReset.email !== user.email || passwordResetToken.expiry > Date.now()) {
     return res.error({message: 'Unauthorized update', statusCode: 403});
   }
 
