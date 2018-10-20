@@ -67,16 +67,28 @@ async function updateOne(req, res) {
     player.name = req.body.name;
   }
 
-  if (req.body.position.striker) {
-    player.position.striker = true;
-  } else {
-    player.position.striker = false;
+  if (req.body.position.striker !== null && req.body.position.striker !== undefined) {
+    player.position.striker = req.body.position.striker;
   }
 
-  if (req.body.position.defender) {
-    player.position.defender = true;
-  } else {
-    player.position.defender = false;
+  if (req.body.position.defender !== null && req.body.position.defender !== undefined) {
+    player.position.defender = req.body.position.defender;
+  }
+
+  if (req.body.userId) {
+    const user = await mongoose.model('User').findById(ObjectId(req.body.userId));
+    if (!user) {
+      return res.error({statusCode: 404, message: 'User not found'})
+    }
+
+    const existingLinkedPlayer = await mongoose.model('Player').findOne({userId: ObjectId(req.body.userId)})
+
+    if (existingLinkedPlayer) {
+      existingLinkedPlayer.userId = undefined;
+      await existingLinkedPlayer.save();
+    }
+
+    player.userId = req.body.userId;
   }
 
   await player.save();

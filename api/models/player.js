@@ -14,6 +14,7 @@ const PlayerSchema = Schema({
     striker: {type: Boolean, default: false},
     defender: {type: Boolean, default: false},
   },
+  userId: {type: Schema.ObjectId, rer: 'User'},
 })
 
 module.exports = mongoose.model('Player', PlayerSchema);

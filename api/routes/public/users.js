@@ -1,25 +1,10 @@
 const jwt = require('api/utils/jwt');
 const mongoose = require('mongoose');
-const config = require('api/config');
 const validate = require('validate.js');
 const mailer = require('api/services/mail');
 
 const User = mongoose.model('User');
 
-/**
- * @api {post} /users Create a User
- * @apiName CreateUser
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.body}
- * @apiParam {req.body.firstName} user first name
- * @apiParam {req.body.lastName} user last name
- * @apiParam {req.body.email} user email
- * @apiParam {req.body.password} user password
- *
- * @apiSuccess {User, JWT} new User object + json web token.
- */
 async function create(req, res) {
   const validatorErrors = validate(req.body, {
     email: {
@@ -66,18 +51,6 @@ async function create(req, res) {
   });
 }
 
-/**
- * @api {post} /users/authenticate authenticate a user
- * @apiName AuthenticateUser
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.body}
- * @apiParam {req.body.email} user email
- * @apiParam {req.body.password} entered password to compare against stored password
- *
- * @apiSuccess {User, JWT} User object + json web token.
- */
 async function authenticate(req, res) {
   const validatorErrors = validate(req.body, {
     email: {
