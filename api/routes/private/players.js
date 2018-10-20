@@ -7,17 +7,6 @@ const router = Router();
 const Player = mongoose.model('Player');
 const ObjectId = mongoose.Types.ObjectId;
 
-/**
- * @api {get} /players/:id Get one player
- * @apiName GetUser
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.user} User object.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {Object} mongoose User object.
- */
 async function load(req, res, next) {
   const playerId = req.body.id || req.params.id;
 
@@ -36,20 +25,6 @@ async function load(req, res, next) {
   next();
 }
 
-/**
- * @api {post} /users Create a User
- * @apiName CreateUser
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.body}
- * @apiParam {req.body.firstName} user first name
- * @apiParam {req.body.lastName} user last name
- * @apiParam {req.body.email} user email
- * @apiParam {req.body.password} user password
- *
- * @apiSuccess {User, JWT} new User object + json web token.
- */
 async function create(req, res) {
   const validatorErrors = validate(req.body, {
     name: {
@@ -81,38 +56,10 @@ async function create(req, res) {
   res.json(player);
 }
 
-/**
- * @api {get} /players/:id Get one player
- * @apiName GetUser
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.user} User object.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {Object} mongoose User object.
- */
 async function getOne(req, res) {
   res.json(req.context.player);
 }
 
-/**
- * @api {put} /users/:id Update one user
- * @apiName GetAllUsers
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.user} User object.
- * @apiParam {req.body} Update parameters object.
- * @apiParam {req.body.firstName} first name to update.
- * @apiParam {req.body.lastName} last name to update.
- * @apiParam {req.body.email} email to update.
- * @apiParam {req.body.password} password to update.
- * @apiParam {req.body.username} username to update.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {Object} updated User object.
- */
 async function updateOne(req, res) {
   const player = req.context.player;
 

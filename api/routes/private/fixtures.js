@@ -8,17 +8,6 @@ const router = Router();
 const Fixture = mongoose.model('Fixture');
 const ObjectId = mongoose.Types.ObjectId;
 
-/**
- * @api {get} /players/:id Get one player
- * @apiName GetUser
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.user} User object.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {Object} mongoose User object.
- */
 async function load(req, res, next) {
   const fixtureId = req.body.id || req.params.id;
 
@@ -41,20 +30,6 @@ async function load(req, res, next) {
   next();
 }
 
-/**
- * @api {post} /fixtures create a new Fixture
- * @apiName CreateFixture
- * @apiGroup Fixture
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.body} league parameters object object.
- * @apiParam {req.body.date} date for the fixture.
- * @apiParam {req.body.teams} both teams for the fixture.
- * @apiParam {req.body.type} friendly / league fixture type.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {object} new Fixture object.
- */
 async function create(req, res) {
   const validatorErrors = validate(req.body, {
     date: {
@@ -97,17 +72,6 @@ async function create(req, res) {
   res.json(fixture);
 }
 
-/**
- * @api {get} /fixtures get fixtures based on a query
- * @apiName Get
- * @apiGroup Fixture
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.fixture} Fixture object brought by middleware.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {object} Fixture object.
- */
 async function get(req, res) {
   let query = {};
   let populators = '';
@@ -139,17 +103,6 @@ async function get(req, res) {
   res.json(fixtures);
 }
 
-/**
- * @api {get} /fixtures/:id get one Fixture
- * @apiName GetOne
- * @apiGroup Fixture
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.fixture} Fixture object brought by middleware.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {object} Fixture object.
- */
 async function getOne(req, res) {
   let populators = '';
 
@@ -174,20 +127,6 @@ async function getOne(req, res) {
   res.json(req.context.fixture);
 }
 
-/**
- * @api {put} /fixtures/:id update one Fixture
- * @apiName UpdateOne
- * @apiGroup Fixture
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.body} Fixture update params
- * @apiParam {req.body.teams} Updated teams for the fixture
- * @apiParam {req.body.date} Updated date for the fixture
- * @apiParam {req.body.type} Updated type for the fixture
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {object} Updated Fixture object.
- */
 async function updateOne(req, res) {
   const fixture = req.context.fixture;
 

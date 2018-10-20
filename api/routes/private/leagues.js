@@ -5,19 +5,6 @@ const rest = require('api/utils/rest');
 
 const router = Router();
 
-/**
- * @api {post} /league create a new League
- * @apiName CreateLeague
- * @apiGroup League
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.body} league parameters object object.
- * @apiParam {req.body.name} new League name.
- * @apiParam {req.body.administrators} Array of player ID's to form the administrators.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {object} new League object.
- */
 async function create(req, res) {
   if (!req.body.name) {
     return res.error({message: 'League name is required', statusCode: 400});
@@ -50,17 +37,6 @@ async function create(req, res) {
   res.json(league);
 }
 
-/**
- * @api {get} /leagues/:id get a league
- * @apiName GetOne
- * @apiGroup League
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.league} League onject fetched by middleware
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {object} League object.
- */
 async function getOne(req, res) {
   let populators = '';
 
@@ -94,28 +70,6 @@ async function search(req, res) {
   res.json(leagues);
 }
 
-/**
- * @api {put} /leagues/:id update a league
- * @apiName UpdateOne
- * @apiGroup League
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.team} League onject fetched by middleware
- * @apiParam {req.body} League update params object.
- * @apiParam {req.body.name} updated Team name.
- * @apiParam {req.body.teams} teams params object.
- * @apiParam {req.body.teams.add} array of teams to add.
- * @apiParam {req.body.teams.remove} array of teams to remove.
- * @apiParam {req.body.fixtures} fixtures params object.
- * @apiParam {req.body.fixtures.add} array of fixtures to add.
- * @apiParam {req.body.fixtures.remove} array of fixtures to remove.
- * @apiParam {req.body.administrators} administrators params object.
- * @apiParam {req.body.administrators.add} array of administrators to add.
- * @apiParam {req.body.administrators.remove} array of administrators to remove.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {object} updated League object.
- */
 async function updateOne(req, res) {
   const league = req.league;
   const updateFields = 'name'.split(' ');

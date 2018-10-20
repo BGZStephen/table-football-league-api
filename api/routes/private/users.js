@@ -5,17 +5,6 @@ const rest = require('api/utils/rest');
 
 const router = Router();
 
-/**
- * @api {get} /users/:id Get one user
- * @apiName GetUser
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.user} User object.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {Object} mongoose User object.
- */
 async function getOne(req, res) {
   let populators = '';
 
@@ -55,23 +44,6 @@ async function search(req, res) {
   res.json(users);
 }
 
-/**
- * @api {put} /users/:id Update one user
- * @apiName GetAllUsers
- * @apiGroup User
- *
- * @apiParam {req} Express request object.
- * @apiParam {req.user} User object.
- * @apiParam {req.body} Update parameters object.
- * @apiParam {req.body.firstName} first name to update.
- * @apiParam {req.body.lastName} last name to update.
- * @apiParam {req.body.email} email to update.
- * @apiParam {req.body.password} password to update.
- * @apiParam {req.body.username} username to update.
- * @apiParam {res} Express response object object.
- *
- * @apiSuccess {Object} updated User object.
- */
 async function updateOne(req, res) {
   const user = req.user;
   const updateFields = 'firstName lastName email password username position'.split(' ');
