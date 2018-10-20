@@ -1,4 +1,3 @@
-const fs = require('fs');
 const config = require('api/config');
 const ejs = require('ejs');
 
@@ -8,8 +7,7 @@ const mailjet = require ('node-mailjet')
 async function send(options) {
   const sendMail = mailjet.post('send');
 
-  const templateFile = fs.readFileSync(`${__dirname}/templates/${options.template}.ejs`, 'utf8');
-  const htmlTemplate = await ejs.render(templateFile, options.data, {async: true})
+  const htmlTemplate = await ejs.renderFile(`${__dirname}/templates/${options.template}.ejs`, options.data, {async: true})
 
   const mailData = {
     'FromEmail': options.fromEmail,
