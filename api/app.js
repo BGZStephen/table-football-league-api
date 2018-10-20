@@ -30,9 +30,6 @@ const app = express()
 // middlewares
 app.use(cors())
 
-// static folder for public views
-app.use(express.static(path.join(__dirname, '../public')));
-
 // body partser initialize
 app.use(bodyParser.json());
 

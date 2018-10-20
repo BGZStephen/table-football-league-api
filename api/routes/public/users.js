@@ -110,19 +110,20 @@ async function authenticate(req, res) {
   });
 }
 
-async function checkPasswordResetToken(req, res, next) {
+async function checkPasswordResetToken(req, res) {
   const token = req.query.token;
-  if (!token || !token.match(/^([A-z]|[a-z]|[0-9]){20}$/)) {
-    return res.error({message: 'Invalid password reset token', statusCode: 400});
-  }
-
-  const token = await mongoose.model('PasswordReset').findOne({token})
 
   if (!token) {
     return res.error({message: 'Invalid password reset token', statusCode: 400});
   }
 
-  return res.statusCode(200).send();
+  const passwordResetToken = await mongoose.model('PasswordReset').findOne({token});
+
+  if (!passwordResetToken) {
+    return res.error({message: 'Invalid password reset token', statusCode: 400});
+  }
+
+  res.sendStatus(200);
 }
 
 async function createPasswordReset(req, res) {
@@ -145,9 +146,7 @@ async function createPasswordReset(req, res) {
 
   await mailer.passwordResetEmail({
     recipients: [email],
-    data: {
-      passwordResetUrl
-    }
+    passwordResetUrl
   })
 
   return res.sendStatus(200);
