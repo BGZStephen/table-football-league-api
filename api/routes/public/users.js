@@ -152,9 +152,42 @@ async function createPasswordReset(req, res) {
   return res.sendStatus(200);
 }
 
+async function updateUserFromPasswordReset(req, res) {
+  if (!req.body.email) {
+    return res.error({message: 'Email address is required', statusCode: 400});
+  }
+
+  if (!req.body.password) {
+    return res.error({message: 'Password is required', statusCode: 400});
+  }
+
+  if (!req.body.token) {
+    return res.error({message: 'Token is required', statusCode: 400});
+  }
+
+  const user = await User.findOne({email: req.body.email});
+
+  if (!user) {
+    return res.error({message: 'User not found', statusCode: 404});
+  }
+
+  const passwordReset = await mongoose.model('PasswordReset').findOne({token: req.body.token})
+  
+  if (!passwordReset || passwordReset.email !== user.email) {
+    return res.error({message: 'Unauthorized update', statusCode: 403});
+  }
+
+  user.password = req.body.password;
+
+  await user.save();
+
+  res.sendStatus(200);
+}
+
 module.exports = {
   create,
   authenticate,
   checkPasswordResetToken,
-  createPasswordReset
+  createPasswordReset,
+  updateUserFromPasswordReset
 }

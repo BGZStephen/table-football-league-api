@@ -1,7 +1,7 @@
 
 const configs = {
   development: {
-    database: 'mongodb://localhost/wriggleapp',
+    database: 'mongodb://localhost/mytablefootball',
     jwtSecret: 'testing',
     dashboardUrl: 'http://localhost:9000',
     mail: {
