@@ -59,7 +59,7 @@ describe('users', () => {
       expect(res.json).toHaveBeenCalledTimes(1);
     })
 
-    test('authentication failes', async () => {    
+    test('authentication fails with incorrect password', async () => {    
       const req = {
         body: {
           email: 'stephen@test.com',
@@ -80,6 +80,68 @@ describe('users', () => {
         password: 'FDSGFSGGNRSHRSA',
         isPasswordValid: jest.fn().mockReturnValue(false)
       });
+
+      await users.authenticate(req, res);
+      expect(res.error).toHaveBeenCalledTimes(1);
+    })
+
+    test('authentication fails with missing email', async () => {    
+      const req = {
+        body: {
+          password: 'password',
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('validate.js')
+      .mockReturnValue('Email address is required');
+
+      await users.authenticate(req, res);
+      expect(res.error).toHaveBeenCalledTimes(1);
+    })
+
+    test('authentication fails with missing email', async () => {    
+      const req = {
+        body: {
+          email: 'stephen@test.com'
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('validate.js')
+      .mockReturnValue(null);
+
+      require('mongoose')
+      .model('User')
+      .findOne.mockResolvedValue(null);
+
+      await users.authenticate(req, res);
+      expect(res.error).toHaveBeenCalledTimes(1);
+    })
+
+    test('authentication fails for no matching user', async () => {    
+      const req = {
+        body: {
+          email: 'stephen@not-test.com',
+          password: 'password'
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('validate.js')
+      .mockReturnValue('Password address is required');
 
       await users.authenticate(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);

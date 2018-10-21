@@ -51,14 +51,12 @@ async function create(req, res) {
 }
 
 async function authenticate(req, res) {
-  const validatorErrors = validate(req.body, {
-    email: {
-      presence: {message() {return validate.format('Email address is required')}}
-    },
-    password: {
-      presence: {message() {return validate.format('Email address is required')}}
-    },
-  }, {format: "flat"})
+  const validateConstraints = {
+    email: {presence: {message: 'Email address is required'}},
+    password: {presence: {message: 'Password is required'}},
+  }
+
+  const validatorErrors = validate(req.body, validateConstraints, {format: "flat"})
 
   if (validatorErrors) {
     return res.error({message: validatorErrors, statusCode: 403});
@@ -69,8 +67,6 @@ async function authenticate(req, res) {
   if (!user) {
     return res.error({message: 'Invalid email address or password', statusCode: 403});
   }
-
-  console.log(user.isPasswordValid())
 
   if (!user.isPasswordValid(req.body.password)) {
     return res.error({message: 'Invalid email address or password', statusCode: 403});

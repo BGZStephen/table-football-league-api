@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">21.54% </span>
+        <span class="strong">25.4% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>14/65</span>
+        <span class='fraction'>16/63</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">12.12% </span>
+        <span class="strong">18.18% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>4/33</span>
+        <span class='fraction'>6/33</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">20% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>1/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">21.54% </span>
+        <span class="strong">25.4% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>14/65</span>
+        <span class='fraction'>16/63</span>
       </div>
     </div>
   </div>
@@ -206,11 +206,7 @@
 161
 162
 163
-164
-165
-166
-167
-168</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+164</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -263,26 +259,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -430,26 +422,22 @@ async function <span class="fstat-no" title="function not covered" >create(</spa
 }
 &nbsp;
 async function authenticate(req, res) {
-  const validatorErrors = validate(req.body, {
-    email: {
-      presence: {message() {<span class="cstat-no" title="statement not covered" >return validate.format('Email address is required')}</span>}
-    },
-    password: {
-      presence: {message() {<span class="cstat-no" title="statement not covered" >return validate.format('Email address is required')}</span>}
-    },
-  }, {format: "flat"})
+  const validateConstraints = {
+    email: {presence: {message: 'Email address is required'}},
+    password: {presence: {message: 'Password is required'}},
+  }
 &nbsp;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (validatorErrors) {
-<span class="cstat-no" title="statement not covered" >    return res.error({message: validatorErrors, statusCode: 403});</span>
+  const validatorErrors = validate(req.body, validateConstraints, {format: "flat"})
+&nbsp;
+  if (validatorErrors) {
+    return res.error({message: validatorErrors, statusCode: 403});
   }
 &nbsp;
   const user = await User.findOne({email: req.body.email});
 &nbsp;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!user) {
-<span class="cstat-no" title="statement not covered" >    return res.error({message: 'Invalid email address or password', statusCode: 403});</span>
+  if (!user) {
+    return res.error({message: 'Invalid email address or password', statusCode: 403});
   }
-&nbsp;
-  console.log(user.isPasswordValid())
 &nbsp;
   if (!user.isPasswordValid(req.body.password)) {
     return res.error({message: 'Invalid email address or password', statusCode: 403});
@@ -550,7 +538,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Oct 21 2018 11:57:43 GMT+0100 (BST)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Oct 21 2018 12:29:20 GMT+0100 (BST)
 </div>
 </div>
 <script src="prettify.js"></script>
