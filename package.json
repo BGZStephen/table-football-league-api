@@ -14,8 +14,9 @@
     ],
     "coveragePathIgnorePatterns": [
       "/_mocks_/",
-      "api/routes/",
-      "tests/"
+      "tests/",
+      "coverage/",
+      "package.json"
     ]
   },
   "dependencies": {

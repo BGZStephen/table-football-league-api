@@ -1,10 +1,9 @@
 const jwt = require('api/utils/jwt');
 const mongoose = require('mongoose');
 const validate = require('validate.js');
-const mailer = require('api/services/mail');
+// const mailer = require('api/services/mail');
 
 const User = mongoose.model('User');
-
 async function create(req, res) {
   const validatorErrors = validate(req.body, {
     email: {
@@ -70,6 +69,8 @@ async function authenticate(req, res) {
   if (!user) {
     return res.error({message: 'Invalid email address or password', statusCode: 403});
   }
+
+  console.log(user.isPasswordValid())
 
   if (!user.isPasswordValid(req.body.password)) {
     return res.error({message: 'Invalid email address or password', statusCode: 403});
@@ -162,5 +163,5 @@ module.exports = {
   authenticate,
   checkPasswordResetToken,
   createPasswordReset,
-  updateUserFromPasswordReset
+  updateUserFromPasswordReset,
 }
