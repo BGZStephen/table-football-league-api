@@ -1,4 +1,23 @@
 {
+  "scripts": {
+    "dev": "docker-compose up -d && nodemon ./api/app.js",
+    "link-api": "[ -L node_modules/api ] && unlink node_modules/api; ln -s ../api node_modules/api",
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/tests/",
+      "/api/config/",
+      "/dist/"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/_mocks_/",
+      "api/routes/",
+      "tests/"
+    ]
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
@@ -8,7 +27,7 @@
     "ejs": "^2.6.1",
     "ejs-lint": "^0.3.0",
     "express": "^4.16.3",
-    "jest": "^21.2.1",
+    "jest": "^23.6.0",
     "jsonwebtoken": "^8.3.0",
     "moment": "^2.22.2",
     "mongoose": "^5.3.2",
@@ -16,10 +35,5 @@
     "node-mailjet": "^3.2.1",
     "supertest": "^3.0.0",
     "validate.js": "^0.12.0"
-  },
-  "scripts": {
-    "dev": "docker-compose up -d && nodemon ./api/app.js",
-    "link-api": "[ -L node_modules/api ] && unlink node_modules/api; ln -s ../api node_modules/api",
-    "test": "jest"
   }
 }
