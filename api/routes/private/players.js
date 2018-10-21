@@ -75,7 +75,11 @@ async function updateOne(req, res) {
     player.position.defender = req.body.position.defender;
   }
 
-  if (req.body.userId) {
+  if (req.body.userId === null) {
+    player.userId = null;
+  }
+
+  if (req.body.userId && req.body.userId !== null) {
     const user = await mongoose.model('User').findById(ObjectId(req.body.userId));
     if (!user) {
       return res.error({statusCode: 404, message: 'User not found'})
@@ -84,8 +88,7 @@ async function updateOne(req, res) {
     const existingLinkedPlayer = await mongoose.model('Player').findOne({userId: ObjectId(req.body.userId)})
 
     if (existingLinkedPlayer) {
-      existingLinkedPlayer.userId = undefined;
-      await existingLinkedPlayer.save();
+      return res.error({statusCode: 404, message: 'User already has an assigned player'})
     }
 
     player.userId = req.body.userId;
