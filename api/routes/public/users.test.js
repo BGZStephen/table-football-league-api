@@ -13,12 +13,16 @@ doMock('mongoose', () => {
     isPasswordValid: jest.fn(),
   };
 
+  const PasswordReset = {
+    findOne: jest.fn(),
+  };
+
   return {
     Types: {
       ObjectId,
     },
-    model() {
-      return User;
+    model(modelName) {
+      return {User, PasswordReset}[modelName];
     },
   };
 });
@@ -147,72 +151,86 @@ describe('users', () => {
       expect(res.error).toHaveBeenCalledTimes(1);
     })
   })
+
+  describe('checkPasswordResetToken()', () => {
+    test('fails due to missing supplied token', async () => {    
+      const req = {
+        query: {}
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      await users.checkPasswordResetToken(req, res);
+      expect(res.error).toHaveBeenCalledTimes(1);
+    })
+
+    test('fails due to token supplied not matching stored tokens', async () => {    
+      const req = {
+        query: {
+          token: 'not-a-valid-token'
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('PasswordReset')
+      .findOne.mockResolvedValue(null);
+
+      await users.checkPasswordResetToken(req, res);
+      expect(res.error).toHaveBeenCalledTimes(1);
+    })
+
+    test('fails due to matched token being expired', async () => {    
+      const req = {
+        query: {
+          token: 'valid-token'
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('PasswordReset')
+      .findOne.mockResolvedValue({
+        token: 'valid-token',
+        expiry: (Date.now() - 20000)
+      });
+
+      await users.checkPasswordResetToken(req, res);
+      expect(res.error).toHaveBeenCalledTimes(1);
+    })
+
+    test('passes with valid token that is not expired', async () => {    
+      const req = {
+        query: {
+          token: 'valid-token'
+        }
+      }
+
+      const res = {
+        sendStatus: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('PasswordReset')
+      .findOne.mockResolvedValue({
+        token: 'valid-token',
+        expiry: (Date.now() + 20000)
+      });
+
+      await users.checkPasswordResetToken(req, res);
+      expect(res.sendStatus).toHaveBeenCalledTimes(1);
+    })
+  })
 });
-
-// describe('getQualifyingAchievements', () => {
-//   test('returns only non claimed achievements that matches the achievements qualifying rule', async () => {
-//     require('api/domain/rewards/bonusesCache').getPurchaseRelated.mockResolvedValue(rewardsBonusFindResult);
-//     require('mongoose')
-//       .model('Receipt')
-//       .find.mockResolvedValue(receiptFindResult);
-
-//     bonuses.getUserNumberPurchasedCovers = jest.fn().mockReturnValue(3);
-
-//     const result = await bonuses.getQualifyingAchievements({
-//       _id: '5740215f889a1cb01e84d329',
-//       rewardsClaimedBonuses: ['progressive-pioneer', 'ardent-explorer'],
-//       stats: {
-//         purchases: 3,
-//       },
-//     });
-
-//     expect(result).toMatchObject([rewardsBonusFindResult[2]]);
-//   });
-// });
-
-// test('that it does not return already claimed achievements', async () => {
-//   require('mongoose')
-//     .model('RewardsBonus')
-//     .find.mockResolvedValue(rewardsBonusFindResult);
-//   require('mongoose')
-//     .model('Receipt')
-//     .find.mockResolvedValue(receiptFindResult);
-
-//   const result = await bonuses.getQualifyingAchievements({
-//     _id: '5740215f889a1cb01e84d329',
-//     rewardsClaimedBonuses: ['progressive-pioneer', 'ardent-explorer', 'determined-discoverer'],
-//     stats: {
-//       purchases: 3,
-//     },
-//   });
-
-//   expect(result).toMatchObject([]);
-// });
-
-// describe('validateBonus', () => {
-//   const validateBonusUser = {
-//     _id: '5740215f889a1cb01e84d329',
-//   };
-
-//   test('do unlock/save achievement in userClaimedRewards not already unlocked achievement', async () => {
-//     validateBonusUser.rewardsClaimedBonuses = [];
-//     validateBonusUser.save = jest.fn();
-
-//     require('api/domain/rewards/bonusesCache').getById.mockResolvedValue(rewardsBonusFindOneResultValid);
-//     const result = await bonuses.validateBonus(validateBonusUser, 'register-bonus');
-
-//     await expect(validateBonusUser.save).toHaveBeenCalled();
-//     await expect(result).toBe(undefined);
-//   });
-
-//   test('does not unlocked/save user as achievement is already unlocked', async () => {
-//     validateBonusUser.rewardsClaimedBonuses = ['register-bonus'];
-//     require('mongoose')
-//       .model('RewardsBonus')
-//       .findOne.mockResolvedValue(rewardsBonusFindOneResultValid);
-//     const result = await bonuses.validateBonus(validateBonusUser, 'register-bonus');
-
-//     await expect(validateBonusUser.save).toHaveBeenCalledTimes(0);
-//     await expect(result).toBe(undefined);
-//   });
-// });

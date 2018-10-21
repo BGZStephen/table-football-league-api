@@ -6,18 +6,10 @@ const validate = require('validate.js');
 const User = mongoose.model('User');
 async function create(req, res) {
   const validatorErrors = validate(req.body, {
-    email: {
-      presence: {message() {return validate.format('Email address is required')}}
-    },
-    firstName: {
-      presence: {message() {return validate.format('First name is required')}}
-    },
-    lastName: {
-      presence: {message() {return validate.format('Last name is required')}}
-    },
-    password: {
-      presence: {message() {return validate.format('Email address is required')}}
-    }
+    email: {presence: {message: 'Email address is required'}},
+    firstName: {presence: {message: 'First name is required'}},
+    lastName: {presence: {message: 'Last name is required'}},
+    password: {presence: {message: 'Email address is required'}}
   }, {format: "flat"})
 
   if (validatorErrors) {
@@ -89,7 +81,7 @@ async function checkPasswordResetToken(req, res) {
 
   const passwordResetToken = await mongoose.model('PasswordReset').findOne({token});
 
-  if (!passwordResetToken || passwordResetToken.expiry > Date.now()) {
+  if (!passwordResetToken || passwordResetToken.expiry < Date.now()) {
     return res.error({message: 'Invalid password reset token', statusCode: 400});
   }
 

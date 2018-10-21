@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">25.4% </span>
+        <span class="strong">38.98% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>16/63</span>
+        <span class='fraction'>23/59</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">18.18% </span>
+        <span class="strong">36.36% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>6/33</span>
+        <span class='fraction'>12/33</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">20% </span>
+        <span class="strong">40% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>1/5</span>
+        <span class='fraction'>2/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">25.4% </span>
+        <span class="strong">38.98% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>16/63</span>
+        <span class='fraction'>23/59</span>
       </div>
     </div>
   </div>
@@ -198,15 +198,7 @@
 153
 154
 155
-156
-157
-158
-159
-160
-161
-162
-163
-164</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+156</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -215,16 +207,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -289,19 +273,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -377,18 +361,10 @@ const validate = require('validate.js');
 const User = mongoose.model('User');
 async function <span class="fstat-no" title="function not covered" >create(</span>req, res) {
   const validatorErrors = <span class="cstat-no" title="statement not covered" >validate(req.body, {</span>
-    email: {
-      presence: {message() {<span class="cstat-no" title="statement not covered" >return validate.format('Email address is required')}</span>}
-    },
-    firstName: {
-      presence: {message() {<span class="cstat-no" title="statement not covered" >return validate.format('First name is required')}</span>}
-    },
-    lastName: {
-      presence: {message() {<span class="cstat-no" title="statement not covered" >return validate.format('Last name is required')}</span>}
-    },
-    password: {
-      presence: {message() {<span class="cstat-no" title="statement not covered" >return validate.format('Email address is required')}</span>}
-    }
+    email: {presence: {message: 'Email address is required'}},
+    firstName: {presence: {message: 'First name is required'}},
+    lastName: {presence: {message: 'Last name is required'}},
+    password: {presence: {message: 'Email address is required'}}
   }, {format: "flat"})
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  if (validatorErrors) {</span>
@@ -451,20 +427,20 @@ async function authenticate(req, res) {
   });
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >checkPasswordResetToken(</span>req, res) {
-  const token = <span class="cstat-no" title="statement not covered" >req.query.token;</span>
+async function checkPasswordResetToken(req, res) {
+  const token = req.query.token;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (!token) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.error({message: 'Invalid password reset token', statusCode: 400});</span>
+  if (!token) {
+    return res.error({message: 'Invalid password reset token', statusCode: 400});
   }
 &nbsp;
-  const passwordResetToken = <span class="cstat-no" title="statement not covered" >await mongoose.model('PasswordReset').findOne({token});</span>
+  const passwordResetToken = await mongoose.model('PasswordReset').findOne({token});
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (!passwordResetToken || passwordResetToken.expiry &gt; Date.now()) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.error({message: 'Invalid password reset token', statusCode: 400});</span>
+  if (!passwordResetToken || passwordResetToken.expiry &lt; Date.now()) {
+    return res.error({message: 'Invalid password reset token', statusCode: 400});
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  res.sendStatus(200);</span>
+  res.sendStatus(200);
 }
 &nbsp;
 async function <span class="fstat-no" title="function not covered" >createPasswordReset(</span>req, res) {
@@ -538,7 +514,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Oct 21 2018 12:29:20 GMT+0100 (BST)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Oct 21 2018 12:40:55 GMT+0100 (BST)
 </div>
 </div>
 <script src="prettify.js"></script>
