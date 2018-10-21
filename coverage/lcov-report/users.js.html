@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">38.98% </span>
+        <span class="strong">58.33% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>23/59</span>
+        <span class='fraction'>35/60</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">36.36% </span>
+        <span class="strong">48.48% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>12/33</span>
+        <span class='fraction'>16/33</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">40% </span>
+        <span class="strong">60% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>2/5</span>
+        <span class='fraction'>3/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">38.98% </span>
+        <span class="strong">58.33% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>23/59</span>
+        <span class='fraction'>35/60</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -201,7 +201,7 @@
 156</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -289,29 +289,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -356,7 +356,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const jwt = require('api/utils/jwt');
 const mongoose = require('mongoose');
 const validate = require('validate.js');
-// const mailer = require('api/services/mail');
+const mailer = require('api/services/mail');
 &nbsp;
 const User = mongoose.model('User');
 async function <span class="fstat-no" title="function not covered" >create(</span>req, res) {
@@ -443,30 +443,30 @@ async function checkPasswordResetToken(req, res) {
   res.sendStatus(200);
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >createPasswordReset(</span>req, res) {
-  const email = <span class="cstat-no" title="statement not covered" >req.body.email;</span>
+async function createPasswordReset(req, res) {
+  const email = req.body.email;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (!email) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.error({message: 'Email address is required', statusCode: 400});</span>
+  if (!email) {
+    return res.error({message: 'Email address is required', statusCode: 400});
   }
 &nbsp;
-  const user = <span class="cstat-no" title="statement not covered" >await User.findOne({email})</span>
+  const user = await User.findOne({email})
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (!user) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.error({message: 'No account with this email exists', statusCode: 404});</span>
+  if (!user) {
+    return res.error({message: 'No account with this email exists', statusCode: 404});
   }
 &nbsp;
-  const {createPasswordReset, generatePasswordResetUrl} = <span class="cstat-no" title="statement not covered" >require('api/domain/user/password-reset');</span>
+  const {createPasswordReset, generatePasswordResetUrl} = require('api/domain/user/password-reset');
 &nbsp;
-  const passwordResetToken = <span class="cstat-no" title="statement not covered" >await createPasswordReset(user);</span>
-  const passwordResetUrl = <span class="cstat-no" title="statement not covered" >generatePasswordResetUrl(passwordResetToken);</span>
+  const passwordResetToken = await createPasswordReset(user);
+  const passwordResetUrl = generatePasswordResetUrl(passwordResetToken);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  await mailer.passwordResetEmail({</span>
+  await mailer.passwordResetEmail({
     recipients: [email],
     passwordResetUrl
   })
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return res.sendStatus(200);</span>
+  return res.sendStatus(200);
 }
 &nbsp;
 async function <span class="fstat-no" title="function not covered" >updateUserFromPasswordReset(</span>req, res) {
@@ -514,7 +514,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Oct 21 2018 12:40:55 GMT+0100 (BST)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Oct 21 2018 13:07:33 GMT+0100 (BST)
 </div>
 </div>
 <script src="prettify.js"></script>

@@ -2,6 +2,8 @@ const {doMock} = require('../../../tests/jest-utils');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 doMock('validate.js')
+doMock('api/domain/user/password-reset')
+doMock('api/services/mail')
 doMock('api/config', () => ({
   jwtSecret: 'working',
 }));
@@ -230,6 +232,69 @@ describe('users', () => {
       });
 
       await users.checkPasswordResetToken(req, res);
+      expect(res.sendStatus).toHaveBeenCalledTimes(1);
+    })
+  })
+  describe('createPasswordReset()', () => {
+    test('fails due to missing email', async () => {    
+      const req = {
+        body: {}
+      }
+
+      const res = {
+        sendStatus: jest.fn(),
+        error: jest.fn()
+      }
+
+      await users.createPasswordReset(req, res);
+      expect(res.error).toHaveBeenCalledTimes(1);
+    })
+
+    test('fails due to email not matching any users', async () => {    
+      const req = {
+        body: {
+          email: 'stephen@not-test.com'
+        }
+      }
+
+      const res = {
+        sendStatus: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('User')
+      .findOne.mockResolvedValue(null);
+
+      await users.createPasswordReset(req, res);
+      expect(res.error).toHaveBeenCalledTimes(1);
+    })
+
+    test('passes when matching user is found', async () => {    
+      const req = {
+        body: {
+          email: 'stephen@test.com'
+        }
+      }
+
+      const res = {
+        sendStatus: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('User')
+      .findOne.mockResolvedValue({
+        email: 'stephen@test.com'
+      });
+
+      require('api/domain/user/password-reset')
+      .createPasswordReset.mockResolvedValue('test-token')
+
+      require('api/domain/user/password-reset')
+      .generatePasswordResetUrl.mockReturnValue('http://localhost:9000/password-reset/test-token');
+
+      await users.createPasswordReset(req, res);
       expect(res.sendStatus).toHaveBeenCalledTimes(1);
     })
   })

@@ -1,7 +1,7 @@
 const jwt = require('api/utils/jwt');
 const mongoose = require('mongoose');
 const validate = require('validate.js');
-// const mailer = require('api/services/mail');
+const mailer = require('api/services/mail');
 
 const User = mongoose.model('User');
 async function create(req, res) {
