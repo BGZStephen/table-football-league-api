@@ -2,8 +2,8 @@ const jwt = require('api/utils/jwt');
 const mongoose = require('mongoose');
 const validate = require('validate.js');
 const mailer = require('api/services/mail');
-
 const User = mongoose.model('User');
+
 async function create(req, res) {
   const validatorErrors = validate(req.body, {
     email: {presence: {message: 'Email address is required'}},
@@ -22,7 +22,7 @@ async function create(req, res) {
     return res.error({message: 'Email address already in use', statusCode: 400});
   }
 
-  const user = new User({
+  const user = User.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
@@ -115,16 +115,16 @@ async function createPasswordReset(req, res) {
 }
 
 async function updateUserFromPasswordReset(req, res) {
-  if (!req.body.email) {
-    return res.error({message: 'Email address is required', statusCode: 400});
+  const validateConstraints = {
+    email: {presence: {message: 'Email address is required'}},
+    password: {presence: {message: 'Password is required'}},
+    token: {presence: {message: 'Token is required'}},
   }
 
-  if (!req.body.password) {
-    return res.error({message: 'Password is required', statusCode: 400});
-  }
+  const validatorErrors = validate(req.body, validateConstraints, {format: "flat"})
 
-  if (!req.body.token) {
-    return res.error({message: 'Token is required', statusCode: 400});
+  if (validatorErrors) {
+    return res.error({message: validatorErrors, statusCode: 403});
   }
 
   const user = await User.findOne({email: req.body.email});
@@ -135,7 +135,7 @@ async function updateUserFromPasswordReset(req, res) {
 
   const passwordReset = await mongoose.model('PasswordReset').findOne({token: req.body.token})
   
-  if (!passwordReset || passwordReset.email !== user.email || passwordResetToken.expiry > Date.now()) {
+  if (!passwordReset || passwordReset.email !== user.email || passwordReset.expiry < Date.now()) {
     return res.error({message: 'Unauthorized update', statusCode: 403});
   }
 
