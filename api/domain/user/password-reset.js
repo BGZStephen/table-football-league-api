@@ -14,22 +14,30 @@ async function createPasswordReset(user) {
     throw new Error('Error generating token');
   }
 
-  const passwordReset = new PasswordReset ({
+  const passwordReset = await PasswordReset.create({
     userId: user._id,
     email: user.email,
     token,
     expiry: moment().endOf('day').valueOf(),
   })
 
-  await passwordReset.save();
   return passwordReset;
 }
 
 function generatePasswordResetUrl(passwordReset) {
-  return `${config.dashboardUrl}/password-reset/${passwordReset.token}`;
+  if (!module.exports.__config.dashboardUrl) {
+    throw new Error('Missing dashboard URL in config')
+  }
+
+  if (!passwordReset || !passwordReset.token) {
+    throw new Error('Missing password reset token')
+  }
+
+  return `${module.exports.__config.dashboardUrl}/password-reset/${passwordReset.token}`;
 }
 
 module.exports = {
   createPasswordReset,
-  generatePasswordResetUrl
+  generatePasswordResetUrl,
+  __config: config
 }
