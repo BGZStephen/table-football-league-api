@@ -2,12 +2,11 @@ const config = require('api/config');
 const jwt = require('jsonwebtoken');
 
 async function generateUserToken(user) {
-  console.log(config)
-  if (!config.jwtSecret) {
+  if (!module.exports.__config.jwtSecret) {
     throw new Error('Missing secret phrase')
   }
 
-  if (!user || !user._id || !user.email) { 
+  if (!user || !user._id || !user.email) {
     throw new Error('Invalid User')
   }
 
@@ -17,11 +16,12 @@ async function generateUserToken(user) {
       id: user._id,
       email: user.email,
     }
-  }, config.jwtSecret);
+  }, module.exports.__config.jwtSecret);
 
   return token;
 }
 
 module.exports = {
   generateUserToken,
+  __config: config,
 }
