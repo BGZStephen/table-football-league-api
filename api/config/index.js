@@ -15,4 +15,4 @@ const configs = {
   },
 }
 
-module.exports = configs[global.ENV]
+module.exports = configs[global.ENV || 'development']
