@@ -6,6 +6,10 @@ const config = require('api/config');
 const PasswordReset = mongoose.model('PasswordReset');
 
 async function createPasswordReset(user) {
+  if (!user || !user.email || !user._id) {
+    throw new Error('Invalid User');
+  }
+
   let token = null;
 
   try {
