@@ -5,6 +5,7 @@ doMock('validate.js')
 doMock('api/domain/user/password-reset')
 doMock('api/services/mail')
 doMock('api/utils/jwt');
+doMock('api/utils/rest');
 
 doMock('api/config', () => ({
   jwtSecret: 'working',

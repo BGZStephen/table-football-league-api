@@ -65,5 +65,6 @@ router.put('/:id', rest.asyncwrap(updateOne));
 module.exports = {
   router,
   // jest exports
-  __updateOne: updateOne
+  __updateOne: updateOne,
+  __search: search
 };
