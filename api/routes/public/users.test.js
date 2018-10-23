@@ -55,9 +55,9 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue('Email address is required');
+        .mockReturnValue('Email address is required');
 
-      await users.create(req, res);
+      await users.__create(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -76,9 +76,9 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue('First name is required');
+        .mockReturnValue('First name is required');
 
-      await users.create(req, res);
+      await users.__create(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -97,9 +97,9 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue('Last name is required');
+        .mockReturnValue('Last name is required');
 
-      await users.create(req, res);
+      await users.__create(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -118,9 +118,9 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue('Password is required');
+        .mockReturnValue('Password is required');
 
-      await users.create(req, res);
+      await users.__create(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -140,18 +140,18 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue(null);
+        .mockReturnValue(null);
 
       require('mongoose')
-      .model('User')
-      .findOne.mockReturnValue({
-        email: 'stephen@test.com',
-        firstName: 'stephen',
-        lastName: 'wright',
-        password: 'password'
-      });
+        .model('User')
+        .findOne.mockReturnValue({
+          email: 'stephen@test.com',
+          firstName: 'stephen',
+          lastName: 'wright',
+          password: 'password'
+        });
 
-      await users.create(req, res);
+      await users.__create(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -171,29 +171,29 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue(null);
+        .mockReturnValue(null);
 
       require('mongoose')
-      .model('User')
-      .findOne.mockReturnValue(null);
+        .model('User')
+        .findOne.mockReturnValue(null);
 
       require('mongoose')
-      .model('User')
-      .create.mockReturnValue({
-        email: 'stephen@test.com',
-        firstName: 'stephen',
-        lastName: 'wright',
-        password: 'password',
-        save: jest.fn(),
-      });
+        .model('User')
+        .create.mockReturnValue({
+          email: 'stephen@test.com',
+          firstName: 'stephen',
+          lastName: 'wright',
+          password: 'password',
+          save: jest.fn(),
+        });
 
-      await users.create(req, res);
+      await users.__create(req, res);
       expect(res.json).toHaveBeenCalledTimes(1);
     })
   })
 
   describe('authenticate()', () => {
-    test('authentication passes', async () => {    
+    test('authentication passes', async () => {
       const req = {
         body: {
           email: 'stephen@test.com',
@@ -206,22 +206,22 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue(null);
+        .mockReturnValue(null);
 
       require('mongoose')
-      .model('User')
-      .findOne.mockResolvedValue({
-        email: 'stephen@test.com',
-        // password would be hashed
-        password: 'FDSGFSGGNRSHRSA',
-        isPasswordValid: jest.fn().mockReturnValue(true)
-      });
+        .model('User')
+        .findOne.mockResolvedValue({
+          email: 'stephen@test.com',
+          // password would be hashed
+          password: 'FDSGFSGGNRSHRSA',
+          isPasswordValid: jest.fn().mockReturnValue(true)
+        });
 
-      await users.authenticate(req, res);
+      await users.__authenticate(req, res);
       expect(res.json).toHaveBeenCalledTimes(1);
     })
 
-    test('authentication fails with incorrect password', async () => {    
+    test('authentication fails with incorrect password', async () => {
       const req = {
         body: {
           email: 'stephen@test.com',
@@ -235,19 +235,19 @@ describe('users', () => {
       }
 
       require('mongoose')
-      .model('User')
-      .findOne.mockResolvedValue({
-        email: 'stephen@test.com',
-        // password would be hashed
-        password: 'FDSGFSGGNRSHRSA',
-        isPasswordValid: jest.fn().mockReturnValue(false)
-      });
+        .model('User')
+        .findOne.mockResolvedValue({
+          email: 'stephen@test.com',
+          // password would be hashed
+          password: 'FDSGFSGGNRSHRSA',
+          isPasswordValid: jest.fn().mockReturnValue(false)
+        });
 
-      await users.authenticate(req, res);
+      await users.__authenticate(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
-    test('authentication fails with missing email', async () => {    
+    test('authentication fails with missing email', async () => {
       const req = {
         body: {
           password: 'password',
@@ -260,13 +260,13 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue('Email address is required');
+        .mockReturnValue('Email address is required');
 
-      await users.authenticate(req, res);
+      await users.__authenticate(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
-    test('authentication fails with missing password', async () => {    
+    test('authentication fails with missing password', async () => {
       const req = {
         body: {
           email: 'stephen@test.com'
@@ -279,17 +279,17 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue(null);
+        .mockReturnValue(null);
 
       require('mongoose')
-      .model('User')
-      .findOne.mockResolvedValue(null);
+        .model('User')
+        .findOne.mockResolvedValue(null);
 
-      await users.authenticate(req, res);
+      await users.__authenticate(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
-    test('authentication fails for no matching user', async () => {    
+    test('authentication fails for no matching user', async () => {
       const req = {
         body: {
           email: 'stephen@not-test.com',
@@ -303,15 +303,15 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue('Password address is required');
+        .mockReturnValue('Password address is required');
 
-      await users.authenticate(req, res);
+      await users.__authenticate(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
   })
 
   describe('checkPasswordResetToken()', () => {
-    test('fails due to missing supplied token', async () => {    
+    test('fails due to missing supplied token', async () => {
       const req = {
         query: {}
       }
@@ -321,11 +321,11 @@ describe('users', () => {
         error: jest.fn()
       }
 
-      await users.checkPasswordResetToken(req, res);
+      await users.__checkPasswordResetToken(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
-    test('fails due to token supplied not matching stored tokens', async () => {    
+    test('fails due to token supplied not matching stored tokens', async () => {
       const req = {
         query: {
           token: 'not-a-valid-token'
@@ -338,14 +338,14 @@ describe('users', () => {
       }
 
       require('mongoose')
-      .model('PasswordReset')
-      .findOne.mockResolvedValue(null);
+        .model('PasswordReset')
+        .findOne.mockResolvedValue(null);
 
-      await users.checkPasswordResetToken(req, res);
+      await users.__checkPasswordResetToken(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
-    test('fails due to matched token being expired', async () => {    
+    test('fails due to matched token being expired', async () => {
       const req = {
         query: {
           token: 'valid-token'
@@ -358,17 +358,17 @@ describe('users', () => {
       }
 
       require('mongoose')
-      .model('PasswordReset')
-      .findOne.mockResolvedValue({
-        token: 'valid-token',
-        expiry: (Date.now() - 20000)
-      });
+        .model('PasswordReset')
+        .findOne.mockResolvedValue({
+          token: 'valid-token',
+          expiry: (Date.now() - 20000)
+        });
 
-      await users.checkPasswordResetToken(req, res);
+      await users.__checkPasswordResetToken(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
-    test('passes with valid token that is not expired', async () => {    
+    test('passes with valid token that is not expired', async () => {
       const req = {
         query: {
           token: 'valid-token'
@@ -381,18 +381,18 @@ describe('users', () => {
       }
 
       require('mongoose')
-      .model('PasswordReset')
-      .findOne.mockResolvedValue({
-        token: 'valid-token',
-        expiry: (Date.now() + 20000)
-      });
+        .model('PasswordReset')
+        .findOne.mockResolvedValue({
+          token: 'valid-token',
+          expiry: (Date.now() + 20000)
+        });
 
-      await users.checkPasswordResetToken(req, res);
+      await users.__checkPasswordResetToken(req, res);
       expect(res.sendStatus).toHaveBeenCalledTimes(1);
     })
   })
   describe('createPasswordReset()', () => {
-    test('fails due to missing email', async () => {    
+    test('fails due to missing email', async () => {
       const req = {
         body: {}
       }
@@ -402,11 +402,11 @@ describe('users', () => {
         error: jest.fn()
       }
 
-      await users.createPasswordReset(req, res);
+      await users.__createPasswordReset(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
-    test('fails due to email not matching any users', async () => {    
+    test('fails due to email not matching any users', async () => {
       const req = {
         body: {
           email: 'stephen@not-test.com'
@@ -419,14 +419,14 @@ describe('users', () => {
       }
 
       require('mongoose')
-      .model('User')
-      .findOne.mockResolvedValue(null);
+        .model('User')
+        .findOne.mockResolvedValue(null);
 
-      await users.createPasswordReset(req, res);
+      await users.__createPasswordReset(req, res);
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
-    test('passes when matching user is found', async () => {    
+    test('passes when matching user is found', async () => {
       const req = {
         body: {
           email: 'stephen@test.com'
@@ -439,18 +439,18 @@ describe('users', () => {
       }
 
       require('mongoose')
-      .model('User')
-      .findOne.mockResolvedValue({
-        email: 'stephen@test.com'
-      });
+        .model('User')
+        .findOne.mockResolvedValue({
+          email: 'stephen@test.com'
+        });
 
       require('api/domain/user/password-reset')
-      .createPasswordReset.mockResolvedValue('test-token')
+        .createPasswordReset.mockResolvedValue('test-token')
 
       require('api/domain/user/password-reset')
-      .generatePasswordResetUrl.mockReturnValue('http://localhost:9000/password-reset/test-token');
+        .generatePasswordResetUrl.mockReturnValue('http://localhost:9000/password-reset/test-token');
 
-      await users.createPasswordReset(req, res);
+      await users.__createPasswordReset(req, res);
       expect(res.sendStatus).toHaveBeenCalledTimes(1);
     })
   })
@@ -470,9 +470,9 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue('Password is required');
+        .mockReturnValue('Password is required');
 
-      await users.updateUserFromPasswordReset(req, res)
+      await users.__updateUserFromPasswordReset(req, res)
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -490,9 +490,9 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue('Password is required');
+        .mockReturnValue('Password is required');
 
-      await users.updateUserFromPasswordReset(req, res)
+      await users.__updateUserFromPasswordReset(req, res)
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -510,9 +510,9 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue('Token is required');
+        .mockReturnValue('Token is required');
 
-      await users.updateUserFromPasswordReset(req, res)
+      await users.__updateUserFromPasswordReset(req, res)
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -531,13 +531,13 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue(null);
+        .mockReturnValue(null);
 
       require('mongoose')
-      .model('User')
-      .findOne.mockResolvedValue(null);
+        .model('User')
+        .findOne.mockResolvedValue(null);
 
-      await users.updateUserFromPasswordReset(req, res)
+      await users.__updateUserFromPasswordReset(req, res)
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -556,19 +556,19 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue(null);
+        .mockReturnValue(null);
 
       require('mongoose')
-      .model('User')
-      .findOne.mockResolvedValue({
-        email: 'stephen@not-a-test.com',
-      });
+        .model('User')
+        .findOne.mockResolvedValue({
+          email: 'stephen@not-a-test.com',
+        });
 
       require('mongoose')
-      .model('PasswordReset')
-      .findOne.mockResolvedValue(null);
+        .model('PasswordReset')
+        .findOne.mockResolvedValue(null);
 
-      await users.updateUserFromPasswordReset(req, res)
+      await users.__updateUserFromPasswordReset(req, res)
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -587,21 +587,21 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue(null);
+        .mockReturnValue(null);
 
       require('mongoose')
-      .model('User')
-      .findOne.mockResolvedValue({
-        email: 'stephen@not-a-test.com',
-      });
+        .model('User')
+        .findOne.mockResolvedValue({
+          email: 'stephen@not-a-test.com',
+        });
 
       require('mongoose')
-      .model('PasswordReset')
-      .findOne.mockResolvedValue({
-        email: 'stephen@test.com',
-      });
+        .model('PasswordReset')
+        .findOne.mockResolvedValue({
+          email: 'stephen@test.com',
+        });
 
-      await users.updateUserFromPasswordReset(req, res)
+      await users.__updateUserFromPasswordReset(req, res)
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -620,22 +620,22 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue(null);
+        .mockReturnValue(null);
 
       require('mongoose')
-      .model('User')
-      .findOne.mockResolvedValue({
-        email: 'stephen@not-a-test.com',
-      });
+        .model('User')
+        .findOne.mockResolvedValue({
+          email: 'stephen@not-a-test.com',
+        });
 
       require('mongoose')
-      .model('PasswordReset')
-      .findOne.mockResolvedValue({
-        email: 'stephen@not-a-test.com',
-        expiry: (Date.now() - 20000)
-      });
+        .model('PasswordReset')
+        .findOne.mockResolvedValue({
+          email: 'stephen@not-a-test.com',
+          expiry: (Date.now() - 20000)
+        });
 
-      await users.updateUserFromPasswordReset(req, res)
+      await users.__updateUserFromPasswordReset(req, res)
       expect(res.error).toHaveBeenCalledTimes(1);
     })
 
@@ -654,23 +654,23 @@ describe('users', () => {
       }
 
       require('validate.js')
-      .mockReturnValue(null);
+        .mockReturnValue(null);
 
       require('mongoose')
-      .model('User')
-      .findOne.mockResolvedValue({
-        email: 'stephen@not-a-test.com',
-        save: jest.fn(),
-      });
+        .model('User')
+        .findOne.mockResolvedValue({
+          email: 'stephen@not-a-test.com',
+          save: jest.fn(),
+        });
 
       require('mongoose')
-      .model('PasswordReset')
-      .findOne.mockResolvedValue({
-        email: 'stephen@not-a-test.com',
-        expiry: (Date.now() + 20000)
-      });
+        .model('PasswordReset')
+        .findOne.mockResolvedValue({
+          email: 'stephen@not-a-test.com',
+          expiry: (Date.now() + 20000)
+        });
 
-      await users.updateUserFromPasswordReset(req, res)
+      await users.__updateUserFromPasswordReset(req, res)
       expect(res.sendStatus).toHaveBeenCalledTimes(1);
     })
   })

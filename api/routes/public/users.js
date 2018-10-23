@@ -157,5 +157,10 @@ router.put('/users/password-reset', rest.asyncwrap(updateUserFromPasswordReset))
 router.post('/users/authenticate', rest.asyncwrap(authenticate));
 
 module.exports = {
-  router
+  router,
+  __create: create,
+  __authenticate: authenticate,
+  __createPasswordReset: createPasswordReset,
+  __updateUserFromPasswordReset: updateUserFromPasswordReset,
+  __checkPasswordResetToken: checkPasswordResetToken
 }
