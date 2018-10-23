@@ -45,8 +45,8 @@ async function search(req, res) {
 }
 
 async function updateOne(req, res) {
-  const user = req.user;
-  const updateFields = 'firstName lastName email password username position'.split(' ');
+  const user = req.context.user;
+  const updateFields = ['firstName', 'lastName', 'email', 'password', 'username', 'position'];
 
   Object.keys(req.body).forEach(function (key) {
     if(updateFields.indexOf(key) > -1) {
@@ -62,4 +62,8 @@ router.get('/search', rest.asyncwrap(search));
 router.get('/:id', rest.asyncwrap(getOne));
 router.put('/:id', rest.asyncwrap(updateOne));
 
-module.exports = router;
+module.exports = {
+  router,
+  // jest exports
+  __updateOne: updateOne
+};
