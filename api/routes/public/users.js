@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const validate = require('validate.js');
 const mailer = require('api/services/mail');
 const User = mongoose.model('User');
+const {Router} = require('express');
+const rest = require('api/utils/rest');
+
+const router = Router();
 
 async function create(req, res) {
   const validatorErrors = validate(req.body, {
@@ -134,7 +138,7 @@ async function updateUserFromPasswordReset(req, res) {
   }
 
   const passwordReset = await mongoose.model('PasswordReset').findOne({token: req.body.token})
-  
+
   if (!passwordReset || passwordReset.email !== user.email || passwordReset.expiry < Date.now()) {
     return res.error({message: 'Unauthorized update', statusCode: 403});
   }
@@ -146,10 +150,12 @@ async function updateUserFromPasswordReset(req, res) {
   res.sendStatus(200);
 }
 
+router.post('/users', rest.asyncwrap(create));
+router.post('/users/password-reset', rest.asyncwrap(createPasswordReset));
+router.get('/users/password-reset', rest.asyncwrap(checkPasswordResetToken));
+router.put('/users/password-reset', rest.asyncwrap(updateUserFromPasswordReset));
+router.post('/users/authenticate', rest.asyncwrap(authenticate));
+
 module.exports = {
-  create,
-  authenticate,
-  checkPasswordResetToken,
-  createPasswordReset,
-  updateUserFromPasswordReset,
+  router
 }
