@@ -7,6 +7,7 @@ doMock('mongoose', () => {
   const User = {
     save: jest.fn(),
     find: jest.fn(),
+    findById: jest.fn(),
   };
 
   return {
@@ -85,6 +86,97 @@ describe('users', () => {
 
       await users.__search(req, res);
       expect(res.json).toHaveBeenCalledWith([{email: 'stephen@test.com', password: 'DFGDFHTHESWS'}]);
+    })
+  })
+
+  describe('getOne()', () => {
+    test('fails due to missing UserID', async () => {
+      const req = {
+        params: {}
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      await users.__getOne(req, res);
+      expect(res.error).toHaveBeenCalledWith({message: 'UserID is required', statusCode: 400});
+    })
+
+    test('fails due to user not found', async () => {
+      const req = {
+        params: {
+          id: '112233445566'
+        },
+        query: {}
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('User')
+      .findById.mockResolvedValue(null)
+
+      await users.__getOne(req, res);
+      expect(res.error).toHaveBeenCalledWith({message: 'User not found', statusCode: 404});
+    })
+
+    test('returns an unpopulated user', async () => {
+      const req = {
+        params: {
+          id: '112233445566'
+        },
+        query: {}
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('User')
+      .findById.mockResolvedValue({email: 'stephen@test.com', password: 'DSFSDGDFSGFG'})
+
+      await users.__getOne(req, res);
+      expect(res.json).toHaveBeenCalledWith({email: 'stephen@test.com', password: 'DSFSDGDFSGFG'});
+    })
+
+    test('returns a unpopulated user', async () => {
+      const req = {
+        params: {
+          id: '112233445566'
+        },
+        query: {
+          teams: true,
+          leagues: true,
+          fixtures: true,
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('User')
+      .findById.mockResolvedValue({
+        email: 'stephen@test.com', 
+        password: 'DSFSDGDFSGFG',
+        teams: [{_id: '1234567890', name: 'Wriggle'}],
+        leagues: [{_id: '1234567890', name: 'Premier league'}],
+        fixtures: [{_id: '1234567890', teams: []}],
+        populate: jest.fn().mockReturnThis(),
+        execPopulate: jest.fn().mockReturnThis()
+      })
+
+      await users.__getOne(req, res);
+      expect(res.json).toHaveBeenCalledTimes(1);
     })
   })
 });
