@@ -1,12 +1,10 @@
 const config = require('api/config');
 const ejs = require('ejs');
 
-const mailjet = require ('node-mailjet')
-  .connect(config.mailjet.apiKey, config.mailjet.apiSecret)
-
 async function send(options) {
+  const mailjet = require('node-mailjet').connect(config.mailjet.apiKey, config.mailjet.apiSecret)
   const sendMail = mailjet.post('send');
-
+  
   const htmlTemplate = await ejs.renderFile(`${__dirname}/templates/${options.template}.ejs`, options.data, {async: true})
 
   const mailData = {
@@ -21,7 +19,7 @@ async function send(options) {
         "Filename": attachment.name,
         "Content": attachment.content
       }
-    }) : null
+    }): null
   }
 
   return sendMail.request(mailData)
@@ -34,12 +32,14 @@ function passwordResetEmail(data) {
     subject: 'Password reset - My Table Football',
     template: 'password-reset',
     recipients: data.recipients,
+    attachments: [],
     data,
   }
 
- return send(emailOptions);
+ return module.exports.__send(emailOptions);
 }
 
 module.exports = {
-  passwordResetEmail
+  passwordResetEmail,
+  __send: send,
 };
