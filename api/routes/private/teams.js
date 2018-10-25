@@ -108,7 +108,7 @@ async function search(req, res) {
 async function updateOne(req, res) {
   const team = req.context.team;
 
-  if (req.body.players.length < 2) {
+  if (req.body.players && req.body.players.length !== 2) {
     return res.error({message: 'Teams require at least 2 players', statusCode: 400});
   }
 
@@ -136,4 +136,7 @@ router.all('/:id*', rest.asyncwrap(load));
 router.get('/:id', getOne);
 router.put('/:id', rest.asyncwrap(updateOne));
 
-module.exports = router;
+module.exports = {
+  router,
+  __updateOne: updateOne,
+};
