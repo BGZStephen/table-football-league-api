@@ -18,8 +18,13 @@ doMock('mongoose', () => {
   };
 });
 
-const authentication = require('./authentication');
+doMock('jsonwebtoken', () => {
+  return {
+    verify: jest.fn(),
+  }
+})
 
+const authentication = require('./authentication');
 
 describe('authentication', () => {
   const res = {
@@ -76,6 +81,69 @@ describe('authentication', () => {
         firstName: 'stephen',
         lastName: 'wright',
       })
+      expect(next).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('validateUser()', async () => {
+    test('fails due to invalid token', async () => {
+      const req = {}
+  
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+  
+      require('jsonwebtoken').verify.mockImplementation(() => {
+        throw new Error('Invalid token');
+      });
+  
+      await authentication.validateUser(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'Unauthorized', statusCode: 403})
+    })
+
+    test('fails due to lack of id within decoded token', async () => {
+      const req = {
+        headers: {
+          'x-access-token': 'valid-access-token'
+        }
+      }
+  
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+  
+      require('jsonwebtoken').verify.mockResolvedValue({
+        data: {}
+      });
+  
+      await authentication.validateUser(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'Invalid token', statusCode: 401})
+    })
+
+    test('fails due to lack of id within decoded token', async () => {
+      const req = {
+        headers: {
+          'x-access-token': 'valid-access-token'
+        },
+        context: {}
+      }
+  
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      const next = jest.fn()
+  
+      require('jsonwebtoken').verify.mockResolvedValue({
+        data: {
+          id: '112233445566'
+        }
+      });
+  
+      await authentication.validateUser(req, res, next)
       expect(next).toHaveBeenCalledTimes(1)
     })
   })
