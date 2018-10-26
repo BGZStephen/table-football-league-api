@@ -200,4 +200,50 @@ describe('teams', () => {
       expect(res.json).toHaveBeenCalledWith([{name: 'WRIGGLE UTD', players: [{firstName: 'stephen'}, {firstName: 'lydia'}]}]);
     })
   })
+
+  describe('search()', () => {
+    test('returns a loaded team', async () => {
+      const req = {
+        context: {
+          team: {
+            name: 'WRIGGLE FC'
+          },
+        },
+        query: {}
+      }
+
+      const res = {
+        json: jest.fn(),
+      }
+
+      await teams.__getOne(req, res);
+      expect(res.json).toHaveBeenCalledWith({
+        name: 'WRIGGLE FC',
+      })
+    })
+
+    test('returns a populated loaded team', async () => {
+      const req = {
+        context: {
+          team: {
+            name: 'WRIGGLE FC',
+            players: ['112233445566', '223344556677'],
+            populate: jest.fn().mockReturnThis(),
+            execPopulate: jest.fn().mockResolvedValue({}),
+          },
+        },
+        query: {
+          players: true,
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+      }
+
+      await teams.__getOne(req, res);
+      expect(req.context.team.execPopulate).toHaveBeenCalledTimes(1)
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
+  })
 });

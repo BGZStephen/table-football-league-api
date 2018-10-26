@@ -65,14 +65,6 @@ async function getOne(req, res) {
     populators = populators + 'players ';
   }
 
-  if (req.query.leagues) {
-    populators = populators + 'leagues ';
-  }
-
-  if (req.query.fixtures) {
-    populators = populators + 'fixtures ';
-  }
-
   if (populators) {
     await team.populate(populators).execPopulate();
   }
@@ -131,5 +123,6 @@ router.put('/:id', rest.asyncwrap(updateOne));
 module.exports = {
   router,
   __updateOne: updateOne,
-  __search: search
+  __search: search,
+  __getOne: getOne,
 };
