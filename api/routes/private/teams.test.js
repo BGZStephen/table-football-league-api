@@ -134,4 +134,70 @@ describe('teams', () => {
       expect(res.json).toHaveBeenCalledTimes(1);
     })
   })
+
+  describe('search()', () => {
+    test('returns search results', async () => {
+      const req = {
+        query: {},
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('Team')
+      .find.mockReturnValue({
+        populate: jest.fn().mockResolvedValue([{name: 'WRIGGLE UTD'}])
+      })
+
+      await teams.__search(req, res);
+      expect(res.json).toHaveBeenCalledWith([{name: 'WRIGGLE UTD'}]);
+    })
+
+    test('returns search results filtered by team name', async () => {
+      const req = {
+        query: {
+          name: 'WRIGGLE FC',
+        },
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('Team')
+      .find.mockReturnValue({
+        populate: jest.fn().mockResolvedValue([{name: 'WRIGGLE FC'}])
+      })
+
+      await teams.__search(req, res);
+      expect(res.json).toHaveBeenCalledWith([{name: 'WRIGGLE FC'}]);
+    })
+
+    test('returns search results with populators', async () => {
+      const req = {
+        query: {
+          players: true,
+        },
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn()
+      }
+
+      require('mongoose')
+      .model('Team')
+      .find.mockReturnValue({
+        populate: jest.fn().mockResolvedValue([{name: 'WRIGGLE UTD', players: [{firstName: 'stephen'}, {firstName: 'lydia'}]}])
+      })
+
+      await teams.__search(req, res);
+      expect(res.json).toHaveBeenCalledWith([{name: 'WRIGGLE UTD', players: [{firstName: 'stephen'}, {firstName: 'lydia'}]}]);
+    })
+  })
 });

@@ -92,14 +92,6 @@ async function search(req, res) {
     populators = populators + 'players ';
   }
 
-  if (req.query.leagues) {
-    populators = populators + 'teams ';
-  }
-
-  if (req.query.fixtures) {
-    populators = populators + 'fixtures ';
-  }
-
   const teams = await Team.find(query).populate(populators)
 
   res.json(teams);
@@ -139,4 +131,5 @@ router.put('/:id', rest.asyncwrap(updateOne));
 module.exports = {
   router,
   __updateOne: updateOne,
+  __search: search
 };
