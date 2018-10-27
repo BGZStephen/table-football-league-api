@@ -28,12 +28,12 @@ async function load(req, res, next) {
 async function create(req, res) {
   const validatorErrors = validate(req.body, {
     name: {
-      presence: {message() {return validate.format('Name is required')}}
+      presence: {message: 'Name is required'}
     },
   }, {format: "flat"})
 
   if (validatorErrors) {
-    return res.error({message: validatorErrors, statusCode: 403});
+    return res.error({message: validatorErrors, statusCode: 400});
   }
 
   const existingPlayer = await Player.findOne({name: req.body.name})
@@ -42,7 +42,7 @@ async function create(req, res) {
     return res.error({message: 'Player already exists', statusCode: 400});
   }
 
-  const player = new Player({
+  const player = await Player.create({
     createdBy: req.context.user._id,
     name: req.body.name,
     position: {
@@ -50,8 +50,6 @@ async function create(req, res) {
       defender: req.body.defender
     }
   })
-
-  await player.save();
 
   res.json(player);
 }
@@ -118,5 +116,6 @@ router.put('/:id', rest.asyncwrap(updateOne));
 
 module.exports = {
   router,
-  __load: load
+  __load: load,
+  __create: create,
 };

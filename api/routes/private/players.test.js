@@ -9,6 +9,7 @@ doMock('mongoose', () => {
     create: jest.fn(),
     find: jest.fn(),
     findById: jest.fn(),
+    findOne: jest.fn(),
   };
 
   return {
@@ -90,6 +91,66 @@ describe('players', () => {
         name: 'stephen'
       })
       expect(next).toHaveBeenCalledTimes(1);
+    })
+  })
+
+  describe('create()', () => {
+    test('fails creation due to missing player name', async () => {
+      const req = {};
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      };
+      require('validate.js').mockReturnValue('Player name is required')
+
+      await players.__create(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'Player name is required', statusCode: 400})
+    })
+
+    test('fails creation due to player already existing with that name', async () => {
+      const req = {
+        body: {
+          name: 'stephen'
+        }
+      };
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      };
+      require('validate.js').mockReturnValue(null)
+      require('mongoose').model('Player').findOne.mockResolvedValue({
+        name: 'stephen'
+      })
+
+      await players.__create(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'Player already exists', statusCode: 400})
+    })
+
+    test('creates player', async () => {
+      const req = {
+        body: {
+          name: 'reuben'
+        },
+        context: {
+          user: {
+            _id: '112233445566'
+          }
+        }
+      };
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      };
+      require('validate.js').mockReturnValue(null)
+      require('mongoose').model('Player').findOne.mockResolvedValue(null)
+      require('mongoose').model('Player').create.mockResolvedValue({
+        name: 'reuben',
+      })
+
+      await players.__create(req, res)
+      expect(res.json).toHaveBeenCalledWith({
+        name: 'reuben',
+      })
     })
   })
 })
