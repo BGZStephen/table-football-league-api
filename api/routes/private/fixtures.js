@@ -72,7 +72,7 @@ async function create(req, res) {
   res.json(fixture);
 }
 
-async function get(req, res) {
+async function search(req, res) {
   let query = {};
   let populators = '';
 
@@ -166,7 +166,7 @@ async function updateOne(req, res) {
 }
 
 router.post('/', rest.asyncwrap(create));
-router.get('/search', rest.asyncwrap(get));
+router.get('/search', rest.asyncwrap(search));
 router.all('/:id*', rest.asyncwrap(load));
 router.get('/:id', getOne);
 router.put('/:id', rest.asyncwrap(updateOne));
@@ -174,4 +174,5 @@ router.put('/:id', rest.asyncwrap(updateOne));
 module.exports = {
   router,
   __load: load,
+  __getOne: getOne,
 };

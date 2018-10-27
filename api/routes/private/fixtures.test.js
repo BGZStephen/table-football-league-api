@@ -99,4 +99,62 @@ describe('fixtures', () => {
       expect(next).toHaveBeenCalledTimes(1);
     })
   })
+
+  describe('getOne()', () => {
+    test('returns a non-populated fixture', async () => {
+      const req = {
+        query: {},
+        context: {
+          fixture: {
+            _id: '112233445566',
+            teams: [{name: 'WRIGGLE FC'}, {name: 'WRIGGLE UTD'}]
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await fixtures.__getOne(req, res)
+      expect(res.json).toHaveBeenCalledWith({
+        _id: '112233445566',
+        teams: [
+          {
+            name: 'WRIGGLE FC'
+          },
+          {
+            name: 'WRIGGLE UTD'
+          }
+        ]
+      })
+    })
+
+    test('returns a populated fixture', async () => {
+      const req = {
+        query: {
+          teams: true,
+          players: true,
+        },
+        context: {
+          fixture: {
+            _id: '112233445566',
+            teams: [{name: 'WRIGGLE FC'}, {name: 'WRIGGLE UTD'}],
+            populate: jest.fn().mockReturnThis(),
+            execPopulate: jest.fn().mockReturnThis()
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await fixtures.__getOne(req, res)
+      expect(req.context.fixture.execPopulate).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
+  })
 })
