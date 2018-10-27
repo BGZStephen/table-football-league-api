@@ -4,8 +4,8 @@ const authentication = require('./authentication');
 const fixtureRoutes = require('./fixtures');
 const leagueRoutes = require('./leagues');
 const userRoutes = require('./users').router;
-const teamRoutes = require('./teams');
-const playerRoutes = require('./players');
+const teamRoutes = require('./teams').router;
+const playerRoutes = require('./players').router;
 const router = express.Router();
 
 

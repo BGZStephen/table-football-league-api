@@ -116,4 +116,7 @@ router.all('/:id*', rest.asyncwrap(load));
 router.get('/:id', getOne);
 router.put('/:id', rest.asyncwrap(updateOne));
 
-module.exports = router;
+module.exports = {
+  router,
+  __load: load
+};
