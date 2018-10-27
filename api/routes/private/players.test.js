@@ -12,12 +12,16 @@ doMock('mongoose', () => {
     findOne: jest.fn(),
   };
 
+  const User = {
+    findById: jest.fn(),
+  }
+
   return {
     Types: {
       ObjectId,
     },
     model(modelName) {
-      return {Player}[modelName];
+      return {User, Player}[modelName];
     },
   };
 });
@@ -204,6 +208,215 @@ describe('players', () => {
 
       await players.__search(req, res)
       expect(res.json).toHaveBeenCalledWith([{name: 'stephen'}])
+    })
+  })
+
+  describe('updateOne()', () => {
+    test('update fails as cannot find user to assign to player', async () => {
+      const req = {
+        body: {
+          userId: '112233445566'
+        },
+        context: {
+          player: {
+            name: 'stephen',
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('User').findById.mockResolvedValue(null);
+      await players.__updateOne(req, res)
+      expect(res.error).toHaveBeenCalledWith({statusCode: 400, message: 'User not found'})
+    })
+
+    test('update fails as user is already assigned to another player', async () => {
+      const req = {
+        body: {
+          userId: '112233445566'
+        },
+        context: {
+          player: {
+            name: 'stephen',
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('User').findById.mockResolvedValue({_id: '112233445566', firstName: 'stephen'});
+      require('mongoose').model('Player').findOne.mockResolvedValue({name: 'lydia'});
+      await players.__updateOne(req, res)
+      expect(res.error).toHaveBeenCalledWith({statusCode: 400, message: 'User already has an assigned player'})
+    })
+
+    test('update to userID passes', async () => {
+      const req = {
+        body: {
+          userId: '112233445566'
+        },
+        context: {
+          player: {
+            name: 'stephen',
+            save: jest.fn(),
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('User').findById.mockResolvedValue({_id: '112233445566', firstName: 'stephen'});
+      require('mongoose').model('Player').findOne.mockResolvedValue(null);
+      await players.__updateOne(req, res)
+      expect(req.context.player.save).toHaveBeenCalledTimes(1)
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
+
+    test('update to name passes', async () => {
+      const req = {
+        body: {
+          name: 'lydia'
+        },
+        context: {
+          player: {
+            name: 'stephen',
+            save: jest.fn(),
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await players.__updateOne(req, res)
+      expect(req.context.player.name).toBe('lydia')
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
+
+    test('removes userId linked with player', async () => {
+      const req = {
+        body: {
+          userId: null
+        },
+        context: {
+          player: {
+            name: 'stephen',
+            userId: '112233445566',
+            save: jest.fn(),
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await players.__updateOne(req, res)
+      expect(req.context.player.userId).toBe(null)
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
+
+    test('updates user positions with true values', async () => {
+      const req = {
+        body: {
+          position: {
+            striker: true,
+            defender: true,
+          }
+        },
+        context: {
+          player: {
+            name: 'stephen',
+            save: jest.fn(),
+            position: {
+              striker: false,
+              defender: false,
+            }
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await players.__updateOne(req, res)
+      expect(req.context.player.position).toEqual({striker: true, defender: true})
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
+
+    test('updates user positions with strict false values', async () => {
+      const req = {
+        body: {
+          position: {
+            striker: false,
+            defender: false,
+          }
+        },
+        context: {
+          player: {
+            name: 'stephen',
+            save: jest.fn(),
+            position: {
+              striker: true,
+              defender: true,
+            }
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await players.__updateOne(req, res)
+      expect(req.context.player.position).toEqual({striker: false, defender: false})
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
+
+    test('doesn\'t update user positions of they are null', async () => {
+      const req = {
+        body: {
+          position: {
+            striker: null,
+            defender: null,
+          }
+        },
+        context: {
+          player: {
+            name: 'stephen',
+            save: jest.fn(),
+            position: {
+              striker: false,
+              defender: false,
+            }
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await players.__updateOne(req, res)
+      expect(req.context.player.position).toEqual({striker: false, defender: false})
+      expect(res.json).toHaveBeenCalledTimes(1)
     })
   })
 })

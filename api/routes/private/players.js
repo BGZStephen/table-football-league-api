@@ -60,36 +60,38 @@ async function getOne(req, res) {
 
 async function updateOne(req, res) {
   const player = req.context.player;
+  
+  if (req.body.userId) {
+    const user = await mongoose.model('User').findById(ObjectId(req.body.userId));
+    if (!user) {
+      return res.error({statusCode: 400, message: 'User not found'})
+    }
+  
+    const existingLinkedPlayer = await mongoose.model('Player').findOne({userId: ObjectId(req.body.userId)})
+  
+    if (existingLinkedPlayer) {
+      return res.error({statusCode: 400, message: 'User already has an assigned player'})
+    }
+  
+    player.userId = req.body.userId;
+  }
 
   if (req.body.name) {
     player.name = req.body.name;
   }
 
-  if (req.body.position.striker !== null && req.body.position.striker !== undefined) {
-    player.position.striker = req.body.position.striker;
-  }
-
-  if (req.body.position.defender !== null && req.body.position.defender !== undefined) {
-    player.position.defender = req.body.position.defender;
+  if (req.body.position) {
+    if (req.body.position.striker !== null && req.body.position.striker !== undefined) {
+      player.position.striker = req.body.position.striker;
+    }
+  
+    if (req.body.position.defender !== null && req.body.position.defender !== undefined) {
+      player.position.defender = req.body.position.defender;
+    }
   }
 
   if (req.body.userId === null) {
     player.userId = null;
-  }
-
-  if (req.body.userId && req.body.userId !== null) {
-    const user = await mongoose.model('User').findById(ObjectId(req.body.userId));
-    if (!user) {
-      return res.error({statusCode: 404, message: 'User not found'})
-    }
-
-    const existingLinkedPlayer = await mongoose.model('Player').findOne({userId: ObjectId(req.body.userId)})
-
-    if (existingLinkedPlayer) {
-      return res.error({statusCode: 404, message: 'User already has an assigned player'})
-    }
-
-    player.userId = req.body.userId;
   }
 
   await player.save();
@@ -120,4 +122,5 @@ module.exports = {
   __create: create,
   __search: search,
   __getOne: getOne,
+  __updateOne: updateOne,
 };
