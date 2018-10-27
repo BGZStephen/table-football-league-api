@@ -2,12 +2,14 @@ const {doMock} = require('../../../tests/jest-utils');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 doMock('api/utils/rest');
+doMock('validate.js');
 
 doMock('mongoose', () => {
   const Team = {
     save: jest.fn(),
     find: jest.fn(),
     findById: jest.fn(),
+    create: jest.fn()
   };
 
   const Player = {
@@ -281,7 +283,7 @@ describe('teams', () => {
       await teams.__load(req, res);
       expect(res.error).toHaveBeenCalledWith({statusCode: 404, message: 'Team not found'})
     })
-    
+
     test('loads a user into context', async () => {
       const req = {
         body: {
@@ -312,4 +314,75 @@ describe('teams', () => {
     })
   })
 
+  describe('create()', () => {
+    test('fails creation due to missing team name', async () => {
+      const req = {};
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      };
+      require('validate.js').mockReturnValue('Team name is required')
+
+      await teams.__create(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'Team name is required', statusCode: 400})
+    })
+
+    test('fails creation due to insufficient players', async () => {
+      const req = {
+        body: {
+          players: []
+        }
+      };
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      };
+      require('validate.js').mockReturnValue(null)
+
+      await teams.__create(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'Teams require at least 2 players', statusCode: 400})
+    })
+
+    test('fails creation due to inability to find player(s)', async () => {
+      const req = {
+        body: {
+          players: ['998877665544', '887766554433']
+        }
+      };
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      };
+      require('validate.js').mockReturnValue(null)
+      require('mongoose').model('Player').findById.mockResolvedValue(null)
+
+      await teams.__create(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'Player not found', statusCode: 400})
+    })
+
+    test('fails creation due to inability to find player(s)', async () => {
+      const req = {
+        body: {
+          players: ['998877665544', '887766554433'],
+          name: 'WRIGGLE FC'
+        }
+      };
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      };
+      require('validate.js').mockReturnValue(null)
+      require('mongoose').model('Player').findById.mockResolvedValue({_id: '887766554433'})
+      require('mongoose').model('Team').create.mockResolvedValue({
+        name: 'WRIGGLE FC',
+        players: ['998877665544', '887766554433']
+      })
+
+      await teams.__create(req, res)
+      expect(res.json).toHaveBeenCalledWith({
+        name: 'WRIGGLE FC',
+        players: ['998877665544', '887766554433']
+      })
+    })
+  })
 })

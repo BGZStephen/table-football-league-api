@@ -29,7 +29,7 @@ async function load(req, res, next) {
 async function create(req, res) {
   const validatorErrors = validate(req.body, {
     name: {
-      presence: {message() {return validate.format('Team name is required')}}
+      presence: {message: 'Team name is required'}
     },
   }, {format: "flat"})
 
@@ -43,16 +43,14 @@ async function create(req, res) {
 
   for (const player of req.body.players) {
     if (!await Player.findById(player)) {
-      return res.error({message: 'Player not found', statusCode: 403});
+      return res.error({message: 'Player not found', statusCode: 400});
     }
   }
 
-  const team = new Team({
+  const team = await Team.create({
     name: req.body.name,
     players: req.body.players,
   })
-
-  await team.save()
 
   res.json(team);
 }
@@ -126,4 +124,5 @@ module.exports = {
   __search: search,
   __getOne: getOne,
   __load: load,
+  __create: create,
 };
