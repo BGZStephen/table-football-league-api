@@ -370,4 +370,155 @@ describe('fixtures', () => {
       expect(res.json).toHaveBeenCalledTimes(1)
     })
   })
+
+  describe('search()', () => {
+    test('returns unpopulated search', async () => {
+      const req = {
+        query: {}
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('Fixture').find.mockReturnValue({
+        limit: jest.fn().mockReturnThis(),
+        populate: jest.fn().mockResolvedValue([{date: moment().startOf('d').valueOf}])
+      })
+    
+
+      await fixtures.__search(req, res)
+      expect(res.json).toHaveBeenCalledWith([{date: moment().startOf('d').valueOf}])
+    })
+
+    test('returns populated search', async () => {
+      const req = {
+        query: {
+          teams: true
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('Fixture').find.mockReturnValue({
+        limit: jest.fn().mockReturnThis(),
+        populate: jest.fn().mockResolvedValue([
+          {
+            date: moment().startOf('d').valueOf,
+            teams: [{name: 'WRIGGLE FC'}, {name: 'WRIGGLE UTD'}]
+          }
+        ])
+      })
+    
+
+      await fixtures.__search(req, res)
+      expect(res.json).toHaveBeenCalledWith([
+        {
+          date: moment().startOf('d').valueOf,
+          teams: [{name: 'WRIGGLE FC'}, {name: 'WRIGGLE UTD'}]
+        }
+      ])
+    })
+
+    test('returns limited search', async () => {
+      const req = {
+        query: {
+          limit: 1,
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('Fixture').find.mockReturnValue({
+        limit: jest.fn().mockReturnThis(),
+        populate: jest.fn().mockResolvedValue([
+          {
+            date: moment().startOf('d').valueOf,
+            teams: [{name: 'WRIGGLE FC'}, {name: 'WRIGGLE UTD'}]
+          }
+        ])
+      })
+    
+
+      await fixtures.__search(req, res)
+      expect(res.json).toHaveBeenCalledWith([
+        {
+          date: moment().startOf('d').valueOf,
+          teams: [{name: 'WRIGGLE FC'}, {name: 'WRIGGLE UTD'}]
+        }
+      ])
+    })
+
+    test('returns populated search with player filtering', async () => {
+      const req = {
+        query: {
+          limit: 1,
+          teams: true,
+          player: '112233445566'
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('Fixture').find.mockReturnValue({
+        limit: jest.fn().mockReturnThis(),
+        populate: jest.fn().mockResolvedValue([
+          {
+            date: moment().startOf('d').valueOf,
+            teams: [
+              {
+                name: 'WRIGGLE FC',
+                players: ['112233445566', '223344556677']
+              }, 
+              {
+                name: 'WRIGGLE UTD',
+                players: ['334455667788', '445566778899']
+              }
+            ]
+          },
+          {
+            date: moment().startOf('d').valueOf,
+            teams: [
+              {
+                name: 'FC WRIGGLE',
+                players: ['223344556677', '334455667788']
+              }, 
+              {
+                name: 'AFC WRIGGLE',
+                players: ['445566778899', '556677889900']
+              }
+            ]
+          }
+        ])
+      })
+    
+
+      await fixtures.__search(req, res)
+      expect(res.json).toHaveBeenCalledWith([
+        {
+          date: moment().startOf('d').valueOf,
+          teams: [
+            {
+              name: 'WRIGGLE FC',
+              players: ['112233445566', '223344556677']
+            }, 
+            {
+              name: 'WRIGGLE UTD',
+              players: ['334455667788', '445566778899']
+            }
+          ]
+        }
+      ])
+    })
+  })
 })

@@ -174,4 +174,5 @@ module.exports = {
   __load: load,
   __getOne: getOne,
   __create: create,
+  __search: search
 };
