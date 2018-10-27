@@ -100,7 +100,7 @@ async function search(req, res) {
   const query = {}
 
   if (req.query.name) {
-    query.name = name;
+    query.name = req.query.name;
   }
 
   const players = await Player.find(query)
@@ -118,4 +118,6 @@ module.exports = {
   router,
   __load: load,
   __create: create,
+  __search: search,
+  __getOne: getOne,
 };

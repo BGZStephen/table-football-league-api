@@ -153,4 +153,57 @@ describe('players', () => {
       })
     })
   })
+
+  describe('getOne()', () => {
+    test('returns user from context', async () => {
+      const req = {
+        context: {
+          player: {
+            name: 'stephen',
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+      }
+
+      await players.__getOne(req, res)
+      expect(res.json).toHaveBeenCalledWith({name: 'stephen'})
+    })
+  })
+
+  describe('search()', () => {
+    test('returns users from search', async () => {
+      const req = {
+        query: {}
+      }
+
+      const res = {
+        json: jest.fn(),
+      }
+
+      require('mongoose').model('Player').find.mockResolvedValue([{name: 'stephen'}, {name: 'lydia'}])
+
+      await players.__search(req, res)
+      expect(res.json).toHaveBeenCalledWith([{name: 'stephen'}, {name: 'lydia'}])
+    })
+
+    test('returns users from name based search', async () => {
+      const req = {
+        query: {
+          name: 'stephen'
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+      }
+
+      require('mongoose').model('Player').find.mockResolvedValue([{name: 'stephen'}])
+
+      await players.__search(req, res)
+      expect(res.json).toHaveBeenCalledWith([{name: 'stephen'}])
+    })
+  })
 })
