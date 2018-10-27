@@ -21,10 +21,6 @@ async function load(req, res, next) {
     return res.error({statusCode: 404, message: 'Fixture not found'})
   }
 
-  if (!req.context) {
-    req.context = {};
-  }
-
   req.context.fixture = fixture;
 
   next();
@@ -33,7 +29,7 @@ async function load(req, res, next) {
 async function create(req, res) {
   const validatorErrors = validate(req.body, {
     date: {
-      presence: {message() {return validate.format('Date is required')}}
+      presence: {message: 'Date is required'}
     },
   }, {format: "flat"})
 
@@ -41,28 +37,30 @@ async function create(req, res) {
     return res.error({message: validatorErrors, statusCode: 400});
   }
 
-  if (req.body.teams) { 
-    if (req.body.teams.length !== 2) {
-      return res.error({message: '2 Teams are required for a fixture', statusCode: 400});
-    }
+  if (req.body.date && moment(req.body.date).isBefore(moment().startOf('day'))) {
+    return res.error({message: 'Fixture dates must be in the future', statusCode: 400});
+  }
+
+  if (!req.body.teams || req.body.teams.length !== 2) {
+    return res.error({message: '2 Teams are required for a fixture', statusCode: 400});
+  }
     
-    const teamOne = await mongoose.model('Team').findById(ObjectId(req.body.teams[0]))
-    const teamTwo = await mongoose.model('Team').findById(ObjectId(req.body.teams[1]))
+  const teamOne = await mongoose.model('Team').findById(ObjectId(req.body.teams[0]))
+  const teamTwo = await mongoose.model('Team').findById(ObjectId(req.body.teams[1]))
 
-    if (teamOne || teamTwo) {
-      return res.error({message: 'Team not found', statusCode: 400});
-    }
+  if (!teamOne || !teamTwo) {
+    return res.error({message: 'Team not found', statusCode: 400});
+  }
 
-    for (const teamOnePlayer of teamOne) {
-      for (const teamTwoPlayer of teamTwo) {
-        if (teamOnePlayer._id === teamTwoPlayer._id) {
-          return res.error({message: 'Fixtures cannot contain teams with the same players', statusCode: 400});
-        }
+  for (const teamOnePlayer of teamOne.players) {
+    for (const teamTwoPlayer of teamTwo.players) {
+      if (teamOnePlayer._id === teamTwoPlayer._id) {
+        return res.error({message: 'Fixtures cannot contain teams with the same players', statusCode: 400});
       }
     }
   }
 
-  const fixture = new Fixture({
+  const fixture = await Fixture.create({
     createdBy: req.context.user._id,
     date: req.body.date,
     teams: req.body.teams,
@@ -175,4 +173,5 @@ module.exports = {
   router,
   __load: load,
   __getOne: getOne,
+  __create: create,
 };
