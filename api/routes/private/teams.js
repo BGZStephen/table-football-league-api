@@ -125,4 +125,5 @@ module.exports = {
   __updateOne: updateOne,
   __search: search,
   __getOne: getOne,
+  __load: load,
 };

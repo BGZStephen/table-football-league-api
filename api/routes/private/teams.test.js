@@ -246,4 +246,70 @@ describe('teams', () => {
       expect(res.json).toHaveBeenCalledTimes(1)
     })
   })
-});
+
+  describe('load()', () => {
+    test('fails to load a team due to a missing teamID', async () => {
+      const req = {
+        body: {},
+        params: {},
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await teams.__load(req, res);
+      expect(res.error).toHaveBeenCalledWith({statusCode: 400, message: 'TeamID is required'})
+    })
+
+    test('fails to load as user not found', async () => {
+      const req = {
+        body: {
+          id: '665544332211'
+        },
+        params: {},
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('Team').findById.mockResolvedValue(null)
+
+      await teams.__load(req, res);
+      expect(res.error).toHaveBeenCalledWith({statusCode: 404, message: 'Team not found'})
+    })
+    
+    test('loads a user into context', async () => {
+      const req = {
+        body: {
+          id: '112233445566'
+        },
+        params: {},
+        context: {},
+      }
+  
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+  
+      const next = jest.fn();
+  
+      require('mongoose').model('Team').findById.mockResolvedValue({
+        id: '112233445566',
+        name: 'WRIGGLE FC'
+      })
+  
+      await teams.__load(req, res, next);
+      expect(req.context.team).toEqual({
+        id: '112233445566',
+        name: 'WRIGGLE FC'
+      })
+      expect(next).toHaveBeenCalledTimes(1);
+    })
+  })
+
+})
