@@ -5,14 +5,32 @@ const rest = require('api/utils/rest');
 
 const router = Router();
 
+async function load(req, res, next) {
+  const leagueId = req.body.id || req.params.id;
+
+  if (!leagueId) {
+    return res.error({statusCode: 400, message: 'LeagueID is required'})
+  }
+
+  const league = await League.findById(ObjectId(leagueId))
+
+  if (!league) {
+    return res.error({statusCode: 404, message: 'League not found'})
+  }
+
+  req.context.league = league;
+
+  next();
+}
+
 async function create(req, res) {
   if (!req.body.name) {
     return res.error({message: 'League name is required', statusCode: 400});
   }
 
-  const existingLeague = await League.findOne({name: req.body.name})
+  const existingLeagueWithName = await League.findOne({name: req.body.name})
 
-  if (existingLeague) {
+  if (existingLeagueWithName) {
     return res.error({message: 'A league with that name already exists', statusCode: 400})
   }
 
@@ -24,14 +42,13 @@ async function create(req, res) {
     return res.error({message: 'Games Per Season is required', statusCode: 400})
   }
 
-  const league = new League({
+  const league = await League.create({
     createdBy: req.context.user._id,
     name: req.body.name,
     gamesPerSeason: req.body.gamesPerSeason,
     teams: req.body.teams,
   });
 
-  await league.save();
   await league.generateFixtures();
 
   res.json(league);
@@ -40,16 +57,8 @@ async function create(req, res) {
 async function getOne(req, res) {
   let populators = '';
 
-  if (req.query.administrators) {
-    populators = populators + 'administrators ';
-  }
-
   if (req.query.teams) {
     populators = populators + 'teams ';
-  }
-
-  if (req.query.fixtures) {
-    populators = populators + 'fixtures ';
   }
 
   if (populators) {
@@ -72,42 +81,33 @@ async function search(req, res) {
 
 async function updateOne(req, res) {
   const league = req.league;
-  const updateFields = 'name'.split(' ');
-  const updateParams = {};
 
-  Object.keys(req.body).forEach(function (key) {
-    if(updateFields.indexOf(key)) {
-      league[key] = req.body[key];
-    }
-  })
+  if (req.body.name) {
+    const existingLeagueWithName = await League.findOne({name: req.body.name})
 
-  if (req.body.administrators) {
-    for (const userId of league.administrators) {
-      if (req.body.administrators.indexOf(userId) === -1) {
-        leage.removeAdministrator(userId);
-      } else {
-        leage.addAdministrator(userId);
-      }
+    if (existingLeagueWithName) {
+      return res.error({message: 'A league with that name already exists', statusCode: 400})
     }
+
+    league.name = name;
   }
 
-  if (req.body.teams) {
-    for (const teamId of req.body.teams) {
-      const team = await Team.findById(teamId)
-      await team.addLeague(league._id).save();
-    }
-  }
-
-  if (!req.body.teams) {
-    await league.save();
-  }
+  await league.save();
 
   res.json(league);
 }
 
 router.post('/', rest.asyncwrap(create));
 router.get('/search', rest.asyncwrap(search));
-// router.get('/leagues/:id', Leagues.getOne);
-// router.put('/leagues/:id', Leagues.updateOne);
+router.all('/leagues/:id*', rest.asyncwrap(load));
+router.get('/leagues/:id', rest.asyncwrap(getOne));
+router.put('/leagues/:id', rest.asyncwrap(updateOne));
 
-module.exports = router;
+module.exports = {
+  router,
+  __getOne: getOne,
+  __load: load,
+  __create: create,
+  __search: search,
+  __updateOne: updateOne,
+};
