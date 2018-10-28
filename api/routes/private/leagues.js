@@ -56,6 +56,8 @@ async function create(req, res) {
 }
 
 async function getOne(req, res) {
+  const league = req.context.league;
+
   let populators = '';
 
   if (req.query.teams) {
@@ -63,10 +65,10 @@ async function getOne(req, res) {
   }
 
   if (populators) {
-    await req.league.populate(populators).execPopulate();
+    await league.populate(populators).execPopulate();
   }
 
-  res.json(req.league);
+  res.json(league);
 }
 
 async function search(req, res) {

@@ -93,4 +93,48 @@ describe('leagues', () => {
       expect(next).toHaveBeenCalledTimes(1);
     })
   })
+
+  describe('getOne()', () => {
+    test('gets an unpopulated league', async () => {
+      const req = {
+        context: {
+          league: {
+            name: 'PREMIER LEAGUE'
+          }
+        },
+        query: {}
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await leagues.__getOne(req, res)
+      expect(res.json).toHaveBeenCalledWith({name: 'PREMIER LEAGUE'})
+    })
+
+    test('gets an populated league', async () => {
+      const req = {
+        context: {
+          league: {
+            name: 'PREMIER LEAGUE',
+            populate: jest.fn().mockReturnThis(),
+            execPopulate: jest.fn(),
+          }
+        },
+        query: {
+          teams: true,
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await leagues.__getOne(req, res)
+      expect(req.context.league.execPopulate).toHaveBeenCalledTimes(1);
+    })
+  })
 })
