@@ -137,4 +137,50 @@ describe('leagues', () => {
       expect(req.context.league.execPopulate).toHaveBeenCalledTimes(1);
     })
   })
+
+  describe('search()', () => {
+    test('returns an unfiltered search', async () => {
+      const req = {
+        query: {}
+      }
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose')
+      .model('League')
+      .find.mockResolvedValue({
+        name: 'PREMIER LEAGUE'
+      })
+
+      await leagues.__search(req, res);
+      expect(res.json).toHaveBeenCalledWith({
+        name: 'PREMIER LEAGUE'
+      })
+    })
+
+    test('returns an filtered search', async () => {
+      const req = {
+        query: {
+          name: 'EUROPA LEAGUE'
+        }
+      }
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose')
+      .model('League')
+      .find.mockResolvedValue({
+        name: 'EUROPA LEAGUE'
+      })
+
+      await leagues.__search(req, res);
+      expect(res.json).toHaveBeenCalledWith({
+        name: 'EUROPA LEAGUE'
+      })
+    })
+  })
 })
