@@ -521,4 +521,126 @@ describe('fixtures', () => {
       ])
     })
   })
+
+  describe('updateOne()', () => {
+    test('update fails as fixture date is in the past', async () => {
+      const req = {
+        body: {
+          date: moment().subtract(2, 'd').startOf('d').valueOf()
+        },
+        context: {
+          fixture: {
+            date: moment().add(1, 'd').startOf('d').valueOf()
+          }
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await fixtures.__updateOne(req, res);
+      expect(res.error).toHaveBeenCalledWith({message: 'Fixture dates must be in the future', statusCode: 400})
+    })
+
+    test('fails due to minimum of 2 teams not being met', async() => {
+      const req = {
+        context: {
+          user: {
+            _id: '112233445566'
+          },
+          fixture: {
+            date: moment().add(1, 'days').valueOf(),
+          }
+        },
+        body: {
+          date: moment().add(2, 'days').valueOf(),
+          teams: []
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await fixtures.__updateOne(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: '2 Teams are required for a fixture', statusCode: 400})
+    })
+
+    test('fails due to one or both teams not being found', async() => {
+      const req = {
+        context: {
+          user: {
+            _id: '112233445566'
+          },
+          fixture: {
+            teams: []
+          }
+        },
+        body: {
+          teams: ['112233445566', '998877665544']
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('Team').findById.mockResolvedValue(null)
+
+      await fixtures.__updateOne(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'Team not found', statusCode: 400})
+    })
+
+    test('fails due to both teams containing the same player', async() => {
+      const req = {
+        context: {
+          user: {
+            _id: '112233445566'
+          },
+          fixture: {
+            date: moment().add(1, 'days'),
+            teams: [],
+          }
+        },
+        body: {
+          date: moment().add(1, 'days'),
+          teams: ['112233445566', '998877665544']
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('Team').findById
+      .mockReturnValueOnce({
+        players: [
+          {
+            _id: '112233445566'
+          },
+          {
+            _id: '223344556677'
+          }
+        ]
+      })
+      .mockReturnValueOnce({
+        players: [
+          {
+            _id: '112233445566'
+          },
+          {
+            _id: '334455667788'
+          }
+        ]
+      })
+
+      await fixtures.__updateOne(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'Fixtures cannot contain teams with the same players', statusCode: 400})
+    })
+  })
 })

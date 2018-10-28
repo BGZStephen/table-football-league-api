@@ -136,28 +136,26 @@ async function updateOne(req, res) {
     fixture.date = req.body.date;
   }
 
-  if (req.body.teams) {
-    if (req.body.teams.length !== 2) {
-      return res.error({message: '2 Teams are required for a fixture', statusCode: 400});
-    }
+  if (req.body.teams && req.body.teams.length !== 2) {
+    return res.error({message: '2 Teams are required for a fixture', statusCode: 400});
+  }
 
-    const teamOne = await mongoose.model('Team').findById(ObjectId(req.body.teams[0]._id))
-    const teamTwo = await mongoose.model('Team').findById(ObjectId(req.body.teams[1]._id))
+  const teamOne = await mongoose.model('Team').findById(ObjectId(req.body.teams[0]._id))
+  const teamTwo = await mongoose.model('Team').findById(ObjectId(req.body.teams[1]._id))
 
-    if (!teamOne || !teamTwo) {
-      return res.error({message: 'Team not found', statusCode: 400});
-    }
+  if (!teamOne || !teamTwo) {
+    return res.error({message: 'Team not found', statusCode: 400});
+  }
 
-    for (const teamOnePlayer of teamOne.players) {
-      for (const teamTwoPlayer of teamTwo.players) {
-        if (teamOnePlayer._id === teamTwoPlayer._id) {
-          return res.error({message: 'Fixtures cannot contain teams with the same players', statusCode: 400});
-        }
+  for (const teamOnePlayer of teamOne.players) {
+    for (const teamTwoPlayer of teamTwo.players) {
+      if (teamOnePlayer._id === teamTwoPlayer._id) {
+        return res.error({message: 'Fixtures cannot contain teams with the same players', statusCode: 400});
       }
     }
-
-    fixture.teams = req.body.teams;
   }
+
+  fixture.teams = req.body.teams;
 
   await fixture.save();
   res.json(fixture);
@@ -174,5 +172,6 @@ module.exports = {
   __load: load,
   __getOne: getOne,
   __create: create,
-  __search: search
+  __search: search,
+  __updateOne: updateOne
 };
