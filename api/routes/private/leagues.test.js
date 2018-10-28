@@ -183,4 +183,113 @@ describe('leagues', () => {
       })
     })
   })
+
+  describe('create()', () => {
+    test('fails creation as no league name is provided', async () => {
+      const req = {
+        body: {},
+      }
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      await leagues.__create(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'League name is required', statusCode: 400})
+    })
+
+    test('fails creation as a league already exists with the name supplied', async () => {
+      const req = {
+        body: {
+          name: 'PREMIER LEAGUE'
+        },
+      }
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose')
+      .model('League')
+      .findOne.mockResolvedValue({name: 'PREMIER LEAGUE'})
+
+      await leagues.__create(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'A league with that name already exists', statusCode: 400})
+    })
+
+    test('fails creation as a league doesn\'t have the minimum 3 teams', async () => {
+      const req = {
+        body: {
+          name: 'PREMIER LEAGUE',
+          teams: []
+        },
+      }
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose')
+      .model('League')
+      .findOne.mockResolvedValue(null)
+
+      await leagues.__create(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'A league requires a minimum of 3 teams', statusCode: 400})
+    })
+
+    test('fails creation as a league doesn\'t have a defined number of games per season', async () => {
+      const req = {
+        body: {
+          name: 'PREMIER LEAGUE',
+          teams: [{id: '112233445566'}, {id: '223344556677'}, {id: '334455667788'}]
+        },
+      }
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose')
+      .model('League')
+      .findOne.mockResolvedValue(null)
+
+      await leagues.__create(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'Games Per Season is required', statusCode: 400})
+    })
+
+    test('creates a league', async () => {
+      const req = {
+        body: {
+          name: 'PREMIER LEAGUE',
+          teams: [{id: '112233445566'}, {id: '223344556677'}, {id: '334455667788'}],
+          gamesPerSeason: 2,
+        },
+        context: {
+          user: {
+            _id: '112233445566'
+          }
+        }
+      }
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose')
+      .model('League')
+      .findOne.mockResolvedValue(null)
+
+      require('mongoose')
+      .model('League')
+      .create.mockResolvedValue({
+        name: 'PREMIER LEAGUE',
+        teams: [{id: '112233445566'}, {id: '223344556677'}, {id: '334455667788'}],
+        gamesPerSeason: 2,
+        generateFixtures: jest.fn(),
+      })
+
+      await leagues.__create(req, res)
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
+  })
 })
