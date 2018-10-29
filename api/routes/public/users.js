@@ -150,11 +150,11 @@ async function updateUserFromPasswordReset(req, res) {
   res.sendStatus(200);
 }
 
-router.post('/users', rest.asyncwrap(create));
-router.post('/users/password-reset', rest.asyncwrap(createPasswordReset));
-router.get('/users/password-reset', rest.asyncwrap(checkPasswordResetToken));
-router.put('/users/password-reset', rest.asyncwrap(updateUserFromPasswordReset));
-router.post('/users/authenticate', rest.asyncwrap(authenticate));
+router.post('/', rest.asyncwrap(create));
+router.post('/password-reset', rest.asyncwrap(createPasswordReset));
+router.get('/password-reset', rest.asyncwrap(checkPasswordResetToken));
+router.put('/password-reset', rest.asyncwrap(updateUserFromPasswordReset));
+router.post('/authenticate', rest.asyncwrap(authenticate));
 
 module.exports = {
   router,

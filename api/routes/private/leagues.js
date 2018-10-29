@@ -102,9 +102,9 @@ async function updateOne(req, res) {
 
 router.post('/', rest.asyncwrap(create));
 router.get('/search', rest.asyncwrap(search));
-router.all('/leagues/:id*', rest.asyncwrap(load));
-router.get('/leagues/:id', rest.asyncwrap(getOne));
-router.put('/leagues/:id', rest.asyncwrap(updateOne));
+router.all('/:id*', rest.asyncwrap(load));
+router.get('/:id', rest.asyncwrap(getOne));
+router.put('/:id', rest.asyncwrap(updateOne));
 
 module.exports = {
   router,
