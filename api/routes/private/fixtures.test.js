@@ -642,5 +642,55 @@ describe('fixtures', () => {
       await fixtures.__updateOne(req, res)
       expect(res.error).toHaveBeenCalledWith({message: 'Fixtures cannot contain teams with the same players', statusCode: 400})
     })
+
+    test('updates a fixtures teams', async() => {
+      const req = {
+        context: {
+          user: {
+            _id: '112233445566'
+          },
+          fixture: {
+            date: moment().add(1, 'days'),
+            teams: ['223344556677', '334455667788'],
+            save: jest.fn(),
+          }
+        },
+        body: {
+          date: moment().add(1, 'days'),
+          teams: ['112233445566', '998877665544']
+        }
+      }
+
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('Team').findById
+      .mockReturnValueOnce({
+        players: [
+          {
+            _id: '112233445566'
+          },
+          {
+            _id: '223344556677'
+          }
+        ]
+      })
+      .mockReturnValueOnce({
+        players: [
+          {
+            _id: '445566778899'
+          },
+          {
+            _id: '334455667788'
+          }
+        ]
+      })
+
+      await fixtures.__updateOne(req, res)
+      expect(req.context.fixture.teams).toEqual(['112233445566', '998877665544'])
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
   })
 })
