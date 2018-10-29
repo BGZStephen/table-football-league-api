@@ -292,4 +292,76 @@ describe('leagues', () => {
       expect(res.json).toHaveBeenCalledTimes(1)
     })
   })
+
+  describe('updateOne()', () => {
+    test('fails update as a league with that name already exists', async () => {
+      const req = {
+        body: {
+          name: 'ROAD TO WORLD CUP'
+        },
+        context: {
+          league: {
+            name: 'ROAD TO WORLD CUP',
+          }
+        }
+      }
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('League').findOne.mockResolvedValue({
+        name: 'ROAD TO WORLD CUP'
+      })
+
+      await leagues.__updateOne(req, res)
+      expect(res.error).toHaveBeenCalledWith({message: 'A league with that name already exists', statusCode: 400})
+    })
+
+    test('updates a leagues name', async () => {
+      const req = {
+        body: {
+          name: 'ROAD TO WORLD CUP'
+        },
+        context: {
+          league: {
+            name: 'WORLD CUP 2018',
+            save: jest.fn()
+          }
+        }
+      }
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('League').findOne.mockResolvedValue(null)
+
+      await leagues.__updateOne(req, res)
+      expect(req.context.league.name).toEqual('ROAD TO WORLD CUP')
+      expect(req.context.league.save).toHaveBeenCalledTimes(1)
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
+
+    test('update passes with no changes', async () => {
+      const req = {
+        body: {},
+        context: {
+          league: {
+            name: 'WORLD CUP 2018',
+            save: jest.fn()
+          }
+        }
+      }
+      const res = {
+        json: jest.fn(),
+        error: jest.fn(),
+      }
+
+      require('mongoose').model('League').findOne.mockResolvedValue(null)
+
+      await leagues.__updateOne(req, res)
+      expect(res.json).toHaveBeenCalledTimes(1)
+    })
+  })
 })

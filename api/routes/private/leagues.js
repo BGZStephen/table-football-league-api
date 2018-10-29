@@ -83,7 +83,7 @@ async function search(req, res) {
 }
 
 async function updateOne(req, res) {
-  const league = req.league;
+  const league = req.context.league;
 
   if (req.body.name) {
     const existingLeagueWithName = await League.findOne({name: req.body.name})
@@ -92,7 +92,7 @@ async function updateOne(req, res) {
       return res.error({message: 'A league with that name already exists', statusCode: 400})
     }
 
-    league.name = name;
+    league.name = req.body.name;
   }
 
   await league.save();
