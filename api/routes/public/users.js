@@ -26,15 +26,13 @@ async function create(req, res) {
     return res.error({message: 'Email address already in use', statusCode: 400});
   }
 
-  const user = User.create({
+  const user = await User.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
     username: req.body.username,
     password: req.body.password,
   })
-
-  await user.save();
 
   const token = await jwt.generateUserToken(user);
 
