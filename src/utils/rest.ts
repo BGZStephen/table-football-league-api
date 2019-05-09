@@ -1,11 +1,7 @@
-function asyncwrap(fn) {
-  return function(req, res, next) {
-    // Make sure to `.catch()` any errors and pass them along to the `next()`
-    // middleware in the chain, in this case the error handler.
-    fn(req, res, next).catch(next);
+export function asyncwrap(fn) {
+  const ctx = this;
+
+  return function (req, res, next) {
+    return fn.call(ctx, req, res, next).catch(next);
   };
 }
-
-module.exports = {
-  asyncwrap
-};

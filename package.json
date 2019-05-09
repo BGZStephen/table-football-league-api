@@ -6,17 +6,28 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "\\.test\\.(js|ts)$",
+    "moduleFileExtensions": [
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json",
+        "node"
+    ],
     "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/tests/",
-      "/api/config/",
-      "/dist/"
+        "/_mocks_",
+        "/node_modules/",
+        "/tests/",
+        "/build/"
     ],
     "coveragePathIgnorePatterns": [
-      "/_mocks_/",
-      "tests/",
-      "coverage/",
-      "package.json"
+        "/_mocks_/",
+        "api/routes/",
+        "tests/"
     ]
   },
   "dependencies": {
@@ -29,7 +40,6 @@
     "ejs": "^2.6.1",
     "ejs-lint": "^0.3.0",
     "express": "^4.16.3",
-    "jest": "^23.6.0",
     "jsonwebtoken": "^8.3.0",
     "moment": "^2.22.2",
     "mongoose": "^5.3.2",
@@ -39,8 +49,11 @@
     "validate.js": "^0.12.0"
   },
   "devDependencies": {
+    "jest": "22.4.4",
+    "@types/jest": "^23.3.9",
     "@types/node": "^10.12.2",
     "ts-node-dev": "^1.0.0-pre.38",
-    "typescript": "^3.0.1"
+    "typescript": "^3.0.1",
+    "ts-jest": "^23.10.4"
   }
 }
