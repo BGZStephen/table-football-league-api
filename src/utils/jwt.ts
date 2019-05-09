@@ -1,7 +1,8 @@
 import { config } from '../config';
 import * as jwt from 'jsonwebtoken';
+import { IUser } from '../models/user';
 
-export function generateUserToken(user): string {
+export function generateUserToken(user: IUser): string {
   if (!config.jwtSecret) {
     throw new Error('Missing secret phrase')
   }

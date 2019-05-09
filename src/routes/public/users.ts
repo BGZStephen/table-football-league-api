@@ -1,14 +1,12 @@
 import { Request, Response, Router } from "express";
 import * as jwt from '../../utils/jwt';
-import * as mongoose from 'mongoose';
 import * as validate from 'validate.js';
 import * as rest from '../../utils/rest';
-
-const User = mongoose.model('User');
+import { UserModel } from "../../models/user";
 
 const router = Router();
 
-async function create(req: Request, res: Response) {
+async function create(req: Request, res: Response): Promise<void> {
   const validatorErrors = validate(req.body, {
     email: {presence: {message: 'Email address is required'}},
     firstName: {presence: {message: 'First name is required'}},
@@ -20,13 +18,13 @@ async function create(req: Request, res: Response) {
     return res.error({message: validatorErrors, statusCode: 403});
   }
 
-  const existingUser = await User.findOne({email: req.body.email})
+  const existingUser = await UserModel.findOne({email: req.body.email})
 
   if (existingUser) {
     return res.error({message: 'Email address already in use', statusCode: 400});
   }
 
-  const user = await User.create({
+  const user = await UserModel.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
