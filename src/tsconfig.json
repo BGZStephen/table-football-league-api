@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2015",
+    "noImplicitAny": false,
+    "sourceMap": false,
+    "downlevelIteration": true,
+    "lib": [
+      "es7"
+    ]
+  },
+  "include": [
+    "./**/*/"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

@@ -1,7 +1,7 @@
-global.ENV = process.env.NODE_ENV || 'development';
-const config = require('./config')
+// global.ENV = process.env.NODE_ENV || 'development';
+
+import { config } from './config';
 const express = require('express');
-const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -46,7 +46,6 @@ app.use(function(req, res, next) {
 });
 
 app.use('/', require('./routes/public'));
-app.use('/private', require('./routes/private'));
 
 // error handlers
 app.use(errorUtils.logErrors);

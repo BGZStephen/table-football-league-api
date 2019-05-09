@@ -1,3 +1,6 @@
+declare const global;
+
+global.ENV = process.env.NODE_ENV || 'development';
 
 const configs = {
   development: {
@@ -15,4 +18,4 @@ const configs = {
   },
 }
 
-module.exports = configs[global.ENV || 'development']
+export const config = configs[global.ENV || 'development']

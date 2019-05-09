@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "docker-compose up -d && nodemon ./api/app.js",
+    "dev": "docker-compose up -d && ts-node-dev ./src/app.ts",
     "link-api": "[ -L node_modules/api ] && unlink node_modules/api; ln -s ../api node_modules/api",
     "test": "jest"
   },
@@ -36,5 +36,10 @@
     "node-mailjet": "^3.2.1",
     "supertest": "^3.0.0",
     "validate.js": "^0.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.2",
+    "ts-node-dev": "^1.0.0-pre.38",
+    "typescript": "^3.0.1"
   }
 }
