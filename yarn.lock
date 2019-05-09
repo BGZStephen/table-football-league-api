@@ -18,6 +18,13 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
+"@types/bson@*":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/bson/-/bson-4.0.0.tgz#9073772679d749116eb1dfca56f8eaac6d59cc7a"
+  integrity sha512-pq/rqJwJWkbS10crsG5bgnrisL8pML79KlMKQMoQwLUjlPAkrUHMvHJ3oGwE7WHR61Lv/nadMwXVAD2b+fpD8Q==
+  dependencies:
+    "@types/node" "*"
+
 "@types/jest@^23.3.9":
   version "23.3.14"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.14.tgz#37daaf78069e7948520474c87b80092ea912520a"
@@ -28,6 +35,22 @@
   resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.3.2.tgz#e3d5245197152346fae7ee87d5541aa5a92d0362"
   integrity sha512-Mkjljd9DTpkPlrmGfTJvcP4aBU7yO2QmW7wNVhV4/6AEUxYoacqU7FJU/N0yFEHTsIrE4da3rUrjrR5ejicFmA==
   dependencies:
+    "@types/node" "*"
+
+"@types/mongodb@*":
+  version "3.1.26"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.1.26.tgz#6877554353fd9e9d03f28c62de09bad616ed7142"
+  integrity sha512-i7+l95IbqnGLRW+AJ6F2nzqosLUgU022lDuoHhbQquMV7tgek0vNUg9RwC2Fn7ImBSQSFdCWeU394ciPEwSeaQ==
+  dependencies:
+    "@types/bson" "*"
+    "@types/node" "*"
+
+"@types/mongoose@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.5.0.tgz#282f3327d328f0e5e5d024cc520ee5d45404a055"
+  integrity sha512-LIuVYQ/6y3ak5f+0C6J+t1ufZA/dM0bqkmEHOtbPO6pH/VB09Tn+BoTh2T2/UbkKH4SLdvupQQRBuCu3XXxynQ==
+  dependencies:
+    "@types/mongodb" "*"
     "@types/node" "*"
 
 "@types/node@*":
@@ -49,6 +72,13 @@
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/strip-json-comments/-/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
   integrity sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==
+
+"@types/validate.js@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@types/validate.js/-/validate.js-0.11.0.tgz#121a83aecfdb848f46a4c796644e0da7cb1633c8"
+  integrity sha512-RnMxYwlFMG6jP0+TyJ9PDNfuIzZQqgfNIftyDFhwYQJuHBBuBBevi7fuNC5FVZxwrOV4eJUJuArDlMqIqZInMA==
+  dependencies:
+    validate.js "*"
 
 abab@^2.0.0:
   version "2.0.0"
@@ -4471,7 +4501,7 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
 
-validate.js@^0.12.0:
+validate.js@*, validate.js@^0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/validate.js/-/validate.js-0.12.0.tgz#17f989e37c192ea2f826bbf19bf4e97e6e4be68f"
   integrity sha512-/x2RJSvbqEyxKj0RPN4xaRquK+EggjeVXiDDEyrJzsJogjtiZ9ov7lj/svVb4DM5Q5braQF4cooAryQbUwOxlA==

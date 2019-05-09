@@ -11,27 +11,29 @@
     },
     "testRegex": "\\.test\\.(js|ts)$",
     "moduleFileExtensions": [
-        "ts",
-        "tsx",
-        "js",
-        "jsx",
-        "json",
-        "node"
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
     ],
     "testPathIgnorePatterns": [
-        "/_mocks_",
-        "/node_modules/",
-        "/tests/",
-        "/build/"
+      "/_mocks_",
+      "/node_modules/",
+      "/tests/",
+      "/build/"
     ],
     "coveragePathIgnorePatterns": [
-        "/_mocks_/",
-        "api/routes/",
-        "tests/"
+      "/_mocks_/",
+      "api/routes/",
+      "tests/"
     ]
   },
   "dependencies": {
     "@types/jsonwebtoken": "^8.3.2",
+    "@types/mongoose": "^5.5.0",
+    "@types/validate.js": "^0.11.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cloudinary": "^1.11.0",
@@ -49,11 +51,11 @@
     "validate.js": "^0.12.0"
   },
   "devDependencies": {
-    "jest": "22.4.4",
     "@types/jest": "^23.3.9",
     "@types/node": "^10.12.2",
+    "jest": "22.4.4",
+    "ts-jest": "^23.10.4",
     "ts-node-dev": "^1.0.0-pre.38",
-    "typescript": "^3.0.1",
-    "ts-jest": "^23.10.4"
+    "typescript": "^3.0.1"
   }
 }

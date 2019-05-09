@@ -1,7 +1,7 @@
 import { config } from '../config';
 import * as jwt from 'jsonwebtoken';
 
-export async function generateUserToken(user) {
+export function generateUserToken(user): string {
   if (!config.jwtSecret) {
     throw new Error('Missing secret phrase')
   }
