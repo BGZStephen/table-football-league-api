@@ -1,9 +1,6 @@
-declare const global;
-
-global.ENV = process.env.NODE_ENV || 'development';
-
 const configs = {
   development: {
+    env: process.env.NODE_ENV,
     database: 'mongodb://localhost/mytablefootball',
     jwtSecret: 'testing',
     dashboardUrl: 'http://localhost:9000',
@@ -18,4 +15,4 @@ const configs = {
   },
 }
 
-export const config = configs[global.ENV || 'development']
+export const config = configs[process.env.NODE_ENV || 'development']

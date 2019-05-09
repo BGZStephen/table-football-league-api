@@ -9,6 +9,9 @@
       "es7"
     ]
   },
+  "files": [
+    "typings/custom.d.ts",
+  ],
   "include": [
     "./**/*/"
   ],

@@ -1,8 +1,8 @@
-const config = require('../config');
-const jwt = require('jsonwebtoken');
+import { config } from '../config';
+import * as jwt from 'jsonwebtoken';
 
-async function generateUserToken(user) {
-  if (!module.exports.__config.jwtSecret) {
+export async function generateUserToken(user) {
+  if (!config.jwtSecret) {
     throw new Error('Missing secret phrase')
   }
 
@@ -16,12 +16,7 @@ async function generateUserToken(user) {
       id: user._id,
       email: user.email,
     }
-  }, module.exports.__config.jwtSecret);
+  }, config.jwtSecret);
 
   return token;
-}
-
-module.exports = {
-  generateUserToken,
-  __config: config,
 }

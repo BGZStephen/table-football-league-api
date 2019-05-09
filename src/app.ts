@@ -1,12 +1,12 @@
-// global.ENV = process.env.NODE_ENV || 'development';
-
 import { config } from './config';
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const errorUtils = require('./utils/error-utils');
-const debug = require('debug')('app');
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+import * as mongoose from 'mongoose';
+import * as cors from 'cors';
+import * as errorUtils from './utils/error-utils';
+import * as Debug from 'debug';
+
+const debug = Debug('api')
 
 // bootstrap models
 require('./models');
@@ -18,11 +18,11 @@ mongoose.connect(config.database, {
 });
 
 mongoose.connection.on('connected', () => {
-  debug('db connected')
+  debug('DB connected')
 });
 
 mongoose.connection.on('error', (err) => {
-  debug(`db error: ${err}`)
+  debug(`DB connection error: ${err}`)
 })
 
 const app = express()
@@ -40,8 +40,6 @@ app.use(function(req, res, next) {
     })
   };
 
-  req.context = {};
-
   next();
 });
 
@@ -52,4 +50,7 @@ app.use(errorUtils.logErrors);
 app.use(errorUtils.errorHandler);
 
 const port = process.env.PORT || 3000;
-app.listen(port);
+
+app.listen(port, () => {
+  debug(`Server started on port ${port}, environment ${config.env}`)
+});
