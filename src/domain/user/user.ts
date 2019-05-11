@@ -37,7 +37,7 @@ class UserDomainHelper {
 
   public getPublicFields() {
     this.hasUser("getPublicFields");
-    return this.user;
+    return this.user.getPublicFields();
   }
 
   public generateJwt() {

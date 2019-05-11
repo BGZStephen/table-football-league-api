@@ -11,8 +11,11 @@ export interface IUser extends Document {
   password: string;
   lastSignIn: Date,
 
-  isPasswordValid(password: string): Promise<boolean>;
+  isPasswordValid(password: string): boolean;
+  getPublicFields(): IPublicUser;
 }
+
+type IPublicUser = Pick<IUser, 'createdOn' | 'updatedOn' | 'firstName' | 'lastName' | 'email' | 'lastSignIn'>
 
 const UserSchema = new Schema({
   createdOn: {type: Date, default: () => new Date()},
@@ -33,8 +36,12 @@ UserSchema.pre('save', function(this: IUser, next) {
 })
 
 UserSchema.methods = {
-  isPasswordValid(password) {
+  isPasswordValid(this: IUser, password: string) {
     return bcrypt.compareSync(password, this.password)
+  },
+
+  getPublicFields(this: IUser): IPublicUser {
+    return _.pick(this, ['createdOn', 'updatedOn', 'firstName', 'lastName', 'email', 'lastSignIn']);
   }
 }
 
