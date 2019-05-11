@@ -20,9 +20,18 @@ async function create(req: Request, res: Response): Promise<void> {
   });
 }
 
-router.post('/', rest.asyncwrap(create));
+async function authenticate(req: Request, res: Response): Promise<void> {
+  const {email, password} = req.body;
+  const user = await User.authenticate({email, password});
+  const token = user.generateJwt();
 
-module.exports = {
-  router,
-  __create: create,
+  res.json({
+    token: token,
+    user: user.getPublicFields(),
+  });
 }
+
+router.post('/', rest.asyncwrap(create));
+router.post('/authenticate', rest.asyncwrap(authenticate));
+
+export const userRoutes = router;
