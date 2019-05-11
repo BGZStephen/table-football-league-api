@@ -6,7 +6,7 @@ class UserValidatorService {
     const schema = joi.object().keys({
       firstName: joi.string().alphanum().required().label('First name'),
       lastName: joi.string().alphanum().required().label('Last name'),
-      email: joi.string().email({ minDomainAtoms: 2 }).label('Email'),
+      email: joi.string().email({ minDomainAtoms: 2 }).required().label('Email'),
       password: joi.string().required().label('Password'),
     });
   
