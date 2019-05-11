@@ -1,0 +1,3 @@
+export = {
+  unlinkSync: jest.fn(),
+}

@@ -1,0 +1,3 @@
+export = {
+  validate: jest.fn(),
+};
