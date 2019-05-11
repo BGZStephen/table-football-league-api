@@ -46,19 +46,17 @@ class UserDomainHelper {
   }
 
   static async create(params) {
+    UserValidator.validateNewUser(params);
+
     // validate password regexp outside of joi to stop the string being sent back in plain test
     if (!params.password.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)) {
       throw new HTTPError('Password is not strong enough', 400);
     }
-
-    UserValidator.validateNewUser(params);
-  
+    
     if (await UserModel.findOne({ email: params.email }).count()) {
       throw new HTTPError('Email address already in use', 400);
     }
 
-    params.password = bcrypt.hashSync(params.password, 10)
-  
     const user = await UserModel.create(_.pick(params, ['firstName', 'lastName', 'email', 'password']));
   
     return new UserDomainHelper(user)
