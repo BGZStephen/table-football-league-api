@@ -1,10 +1,21 @@
 import * as _ from "lodash"
-import * as bcrypt from "bcryptjs";
 import { UserValidator } from "./validator";
 import { HTTPError } from "../errors/http-error";
 import { IUser, UserModel } from "../../models/user";
 import jwt = require('../../utils/jwt');
 import * as Debug from "debug";
+
+export interface IUserCreateParams {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+export interface IUserAuthenticationParams {
+  email: string;
+  password: string;
+}
 
 const debugAuth = Debug('authentication');
 
@@ -25,7 +36,7 @@ class UserDomainHelper {
     await this.user.save();
   }
 
-  private hasUser(callingFunctionName) {
+  private hasUser(callingFunctionName: string) {
     if (!this.user) {
       throw new Error(`A User has to be set for this function (${callingFunctionName}) to be called`)
     }
@@ -45,7 +56,7 @@ class UserDomainHelper {
     return jwt.generateUserToken(this.user);
   }
 
-  static async create(params) {
+  static async create(params: IUserCreateParams) {
     UserValidator.validateNewUser(params);
 
     // validate password regexp outside of joi to stop the string being sent back in plain test
@@ -62,7 +73,7 @@ class UserDomainHelper {
     return new UserDomainHelper(user)
   }
 
-  static async authenticate(params) {
+  static async authenticate(params: IUserAuthenticationParams) {
     UserValidator.validateAuthenticationCredentials(params);
     const user = await UserModel.findOne({ email: params.email });
 

@@ -1,8 +1,9 @@
 import * as joi from 'joi';
 import * as joiUtils from '../../utils/joi';
+import { IUserCreateParams, IUserAuthenticationParams } from './user';
 
 class UserValidatorService {
-  public validateNewUser(params) {
+  public validateNewUser(params: IUserCreateParams) {
     const schema = joi.object().keys({
       firstName: joi.string().alphanum().required().label('First name'),
       lastName: joi.string().alphanum().required().label('Last name'),
@@ -13,7 +14,7 @@ class UserValidatorService {
     joiUtils.validateThrow(params, schema);
   }
 
-  public validateAuthenticationCredentials(params) {
+  public validateAuthenticationCredentials(params: IUserAuthenticationParams) {
     const schema = joi.object().keys({
       email: joi.string().email().required().label('Email'),
       password: joi.string().required().label('Password'),
