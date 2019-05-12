@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User, IUserCreateParams, IUserAuthenticationParams } from "./user";
 
 jest.mock('../../models/user', () => require('../../models/_mocks_/user'));
 
@@ -9,7 +9,7 @@ describe('User Domain Helpers', () => {
         lastName: "Wright",
         email: "stephen@test.com",
         password: "boo"
-      }
+      } as IUserCreateParams
 
       await expect(User.create(userProperties)).rejects.toThrowError("\"First name\" is required");
     });
@@ -19,7 +19,7 @@ describe('User Domain Helpers', () => {
         firstName: "Stephen",
         email: "stephen@test.com",
         password: "boo"
-      }
+      } as IUserCreateParams
 
       await expect(User.create(userProperties)).rejects.toThrowError("\"Last name\" is required");
     });
@@ -29,7 +29,7 @@ describe('User Domain Helpers', () => {
         firstName: "Stephen",
         lastName: "Wright",
         password: "boo"
-      }
+      } as IUserCreateParams
 
       await expect(User.create(userProperties)).rejects.toThrowError("\"Email\" is required");
     });
@@ -39,7 +39,7 @@ describe('User Domain Helpers', () => {
         firstName: "Stephen",
         lastName: "Wright",
         email: "stephen@test.com",
-      }
+      } as IUserCreateParams
 
       await expect(User.create(userProperties)).rejects.toThrowError("\"Password\" is required");
     });
@@ -51,7 +51,7 @@ describe('User Domain Helpers', () => {
         lastName: "Wright",
         email: "stephen@test.com",
         password: "boo"
-      }
+      } as IUserCreateParams
 
       await expect(User.create(userProperties)).rejects.toThrowError("Password is not strong enough");
     });
@@ -62,7 +62,7 @@ describe('User Domain Helpers', () => {
         lastName: "Wright",
         email: "stephen@test.com",
         password: "Squall333!"
-      }
+      } as IUserCreateParams
 
       require('../../models/user').UserModel.count.mockResolvedValue(true)
 
@@ -75,7 +75,7 @@ describe('User Domain Helpers', () => {
         lastName: "Wright",
         email: "stephen@test.com",
         password: "Squall333!"
-      }
+      } as IUserCreateParams
 
       require('../../models/user').UserModel.count.mockResolvedValue(0)
       require('../../models/user').UserModel.create.mockResolvedValue({
@@ -86,6 +86,45 @@ describe('User Domain Helpers', () => {
       })
 
       await expect(User.create(userProperties)).resolves.toBeInstanceOf(User);
+    });
+  });
+
+  describe('authenticate', () => {
+    test('user authentication fails as no user found with matching email address', async () => {
+      const userProperties = {
+        email: "stephen@test.com",
+        password: "boo"
+      } as IUserAuthenticationParams
+
+      require('../../models/user').UserModel.findOne.mockResolvedValue(null)
+
+      await expect(User.authenticate(userProperties)).rejects.toThrowError("Incorrect email address or password");
+    });
+
+    test('user authentication fails as password is not valid', async () => {
+      const userProperties = {
+        email: "stephen@test.com",
+        password: "boo"
+      } as IUserAuthenticationParams
+
+      require('../../models/user').UserModel.findOne.mockResolvedValue({
+        isPasswordValid: jest.fn().mockReturnValue(false)
+      })
+
+      await expect(User.authenticate(userProperties)).rejects.toThrowError("Incorrect email address or password");
+    });
+
+    test('user authentication passes', async () => {
+      const userProperties = {
+        email: "stephen@test.com",
+        password: "boo"
+      } as IUserAuthenticationParams
+
+      require('../../models/user').UserModel.findOne.mockResolvedValue({
+        isPasswordValid: jest.fn().mockReturnValue(true)
+      })
+
+      await expect(User.authenticate(userProperties)).resolves.toBeInstanceOf(User);
     });
   });
 });
