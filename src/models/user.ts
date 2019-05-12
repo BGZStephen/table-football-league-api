@@ -27,7 +27,7 @@ const UserSchema = new Schema({
   lastSignIn: Date,
 })
 
-UserSchema.pre('save', function(this: IUser, next) {
+UserSchema.pre('save', function(this: IUser, next: Function) {
   if (this.isModified('password')) {
     this.password = bcrypt.hashSync(this.password, 8)
   }

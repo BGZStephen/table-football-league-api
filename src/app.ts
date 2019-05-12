@@ -21,7 +21,7 @@ mongoose.connection.on('connected', () => {
   debug('DB connected')
 });
 
-mongoose.connection.on('error', (err) => {
+mongoose.connection.on('error', (err: Error) => {
   debug(`DB connection error: ${err}`)
 })
 
@@ -33,7 +33,7 @@ app.use(cors())
 // body partser initialize
 app.use(bodyParser.json());
 
-app.use(function(req, res, next) {
+app.use(function(req: express.Request, res: express.Response, next: express.NextFunction) {
   res.error = function(params) {
     return res.status(params.statusCode).json({
       message: params.message
@@ -49,7 +49,7 @@ app.use('/', require('./routes/public'));
 app.use(errorUtils.logErrors);
 app.use(errorUtils.errorHandler);
 
-const port = process.env.PORT || 3000;
+const port = parseInt(process.env.PORT) || 3000;
 
 app.listen(port, () => {
   debug(`Server started on port ${port}, environment ${config.env}`)
