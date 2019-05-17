@@ -1,5 +1,6 @@
 import * as joi from 'joi';
 import * as Debug from 'debug';
+import { HTTPError } from '../domain/errors/http-error';
 
 const debugApi = Debug('api');
 
@@ -8,6 +9,6 @@ export function validateThrow(value: any, schema: joi.SchemaLike, options?: joi.
 
   if (results && results.error) {
     debugApi(results.error.details);
-    throw new Error(results.error.details[0].message);
+    throw new HTTPError(results.error.details[0].message, 400);
   }
 }

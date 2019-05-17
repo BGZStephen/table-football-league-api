@@ -5,5 +5,6 @@ export class HTTPError extends Error {
 
     Error.captureStackTrace(this, HTTPError)
     this.statusCode = statusCode;
+    this.message = message;
   }
 }

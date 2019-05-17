@@ -35,9 +35,8 @@ app.use(bodyParser.json());
 
 app.use(function(req: express.Request, res: express.Response, next: express.NextFunction) {
   res.error = function(params) {
-    return res.status(params.statusCode).json({
-      message: params.message
-    })
+    res.statusMessage = params.message;
+    return res.status(params.statusCode).send(params.message)
   };
 
   next();
@@ -47,7 +46,6 @@ app.use('/', require('./routes/public'));
 
 // error handlers
 app.use(errorUtils.logErrors);
-app.use(errorUtils.errorHandler);
 
 const port = parseInt(process.env.PORT) || 3000;
 
