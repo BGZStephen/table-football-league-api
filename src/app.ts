@@ -43,6 +43,7 @@ app.use(function(req: express.Request, res: express.Response, next: express.Next
 });
 
 app.use('/', require('./routes/public'));
+app.use('/private', require('./routes/private'));
 
 // error handlers
 app.use(errorUtils.logErrors);
