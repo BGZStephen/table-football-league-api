@@ -1,12 +1,22 @@
 import * as joi from 'joi';
 import * as joiUtils from '../../utils/joi';
-import { ITeamCreateParams } from './team';
+import { ITeamCreateParams, ITeamQuery } from './team';
 
 class TeamValidatorService {
   public validateNewTeam(params: ITeamCreateParams) {
     const schema = joi.object().keys({
       name: joi.string().alphanum().required().label('Team Name'),
       userIds: joi.alternatives().try(joi.array().items(joi.string().alphanum()), joi.string().alphanum()).label('User IDs'),
+    });
+  
+    joiUtils.validateThrow(params, schema);
+  }
+
+  public validateListQuery(params: ITeamQuery) {
+    const schema = joi.object().keys({
+      name: joi.string().alphanum().label('Team Name'),
+      _id: joi.alternatives().try(joi.array().items(joi.string().alphanum()), joi.string().alphanum()).label('Team IDs'),
+      userId: joi.alternatives().try(joi.array().items(joi.string().alphanum()), joi.string().alphanum()).label('User IDs'),
     });
   
     joiUtils.validateThrow(params, schema);
