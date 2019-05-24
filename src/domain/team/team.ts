@@ -7,6 +7,15 @@ export interface ITeamCreateParams {
   userIds: string[];
 }
 
+export interface ITeamQuery {
+  _id: string;
+  userId: string;
+  name: string;
+  sort: string;
+  limit: number;
+  offset: number;
+}
+
 class TeamDomainHelper {
   private team: ITeam;
 
@@ -45,6 +54,46 @@ class TeamDomainHelper {
     const user = await TeamModel.create(_.pick(params, ['name', 'userIds']));
   
     return new TeamDomainHelper(user)
+  }
+
+  static async list(query: ITeamQuery) {
+    TeamValidator.validateListQuery(query);
+
+    const dbQuery: any = {};
+    const dbSort: any = {};
+    const dbFields: any = {};
+    const dbFilter: any = {
+      limit: query.limit || 20,
+      skip: query.offset || 0,
+    }
+
+    if (query._id) {
+      dbQuery._id = {$in: query._id.split(',')}
+    }
+
+    if (query.userId) {
+      dbQuery.userIds = {$in: query.userId.split(',')}
+    }
+
+    if (query.name) {
+      dbQuery.name = {$in: query.name.split(',')}
+    }
+
+    if (query.sort) {
+      const sortKey = query.sort.startsWith('-') ? query.sort.substr(1, query.sort.length) : query.sort;
+      dbSort[sortKey] = query.sort.startsWith('-') ? 'desc' : 'asc';
+    }
+
+    const results = await TeamModel.find(dbQuery, dbFields, dbFilter).sort(query.sort ? dbSort : null);
+    const totalCount = await TeamModel.count({});
+
+    const response = {
+      count: results.length,
+      totalCount,
+      data: results,
+    }
+
+    return response;
   }
 }
 
