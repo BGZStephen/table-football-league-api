@@ -17,6 +17,14 @@ export interface IUserAuthenticationParams {
   password: string;
 }
 
+export interface IUserQuery {
+  _id: string;
+  email: string;
+  sort: string;
+  limit: number;
+  offset: number;
+}
+
 const debugAuth = Debug('authentication');
 
 class UserDomainHelper {
@@ -88,6 +96,42 @@ class UserDomainHelper {
     }
 
     return new UserDomainHelper(user);
+  }
+
+  static async list(query: IUserQuery) {
+    UserValidator.validateListQuery(query);
+
+    const dbQuery: any = {};
+    const dbSort: any = {};
+    const dbFields: any = {};
+    const dbFilter: any = {
+      limit: query.limit || 20,
+      skip: query.offset || 0,
+    }
+
+    if (query._id) {
+      dbQuery._id = {$in: query._id.split(',')}
+    }
+
+    if (query.email) {
+      dbQuery.email = {$in: query.email.split(',')}
+    }
+
+    if (query.sort) {
+      const sortKey = query.sort.startsWith('-') ? query.sort.substr(1, query.sort.length) : query.sort;
+      dbSort[sortKey] = query.sort.startsWith('-') ? 'desc' : 'asc';
+    }
+
+    const results = await UserModel.find(dbQuery, dbFields, dbFilter).sort(query.sort ? dbSort : null);
+    const totalCount = await UserModel.count({});
+
+    const response = {
+      count: results.length,
+      totalCount,
+      data: results,
+    }
+
+    return response;
   }
 }
 
