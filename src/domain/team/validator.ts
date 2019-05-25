@@ -15,8 +15,8 @@ class TeamValidatorService {
   public validateListQuery(params: ITeamQuery) {
     const schema = joi.object().keys({
       name: joi.string().alphanum().label('Team Name'),
-      _id: joi.alternatives().try(joi.array().items(joi.string().alphanum()), joi.string().alphanum()).label('Team IDs'),
-      userId: joi.alternatives().try(joi.array().items(joi.string().alphanum()), joi.string().alphanum()).label('User IDs'),
+      _id: joi.string().label('Team IDs'),
+      userId: joi.string().label('User IDs'),
     });
   
     joiUtils.validateThrow(params, schema);
