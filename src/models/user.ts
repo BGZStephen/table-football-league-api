@@ -15,7 +15,7 @@ export interface IUser extends Document {
   getPublicFields(): IPublicUser;
 }
 
-type IPublicUser = Pick<IUser, 'createdOn' | 'updatedOn' | 'firstName' | 'lastName' | 'email' | 'lastSignIn'>
+type IPublicUser = Pick<IUser, '_id' | 'createdOn' | 'updatedOn' | 'firstName' | 'lastName' | 'email' | 'lastSignIn'>
 
 const UserSchema = new Schema({
   createdOn: {type: Date, default: () => new Date()},
@@ -41,7 +41,7 @@ UserSchema.methods = {
   },
 
   getPublicFields(this: IUser): IPublicUser {
-    return _.pick(this, ['createdOn', 'updatedOn', 'firstName', 'lastName', 'email', 'lastSignIn']);
+    return _.pick(this, ['_id', 'createdOn', 'updatedOn', 'firstName', 'lastName', 'email', 'lastSignIn']);
   }
 }
 
