@@ -9,6 +9,12 @@ async function list(req: Request, res: Response): Promise<void> {
   res.json(results);
 }
 
+async function create(req: Request, res: Response): Promise<void> {
+  const team = await Team.create(req.body);
+  res.json(team);
+}
+
 router.get('/', rest.asyncwrap(list));
+router.post('/', rest.asyncwrap(create));
 
 export const teamRoutes = router;

@@ -13,7 +13,7 @@ export interface ITeam extends Document {
 const TeamSchema = new Schema({
   createdOn: {type: Date, default: () => new Date()},
   updatedOn: {type: Date},
-  userIds: {type: String}
+  userIds: [{type: String}]
 })
 
 TeamSchema.virtual('users', {
