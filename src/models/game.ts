@@ -31,10 +31,10 @@ export interface IGame extends Document {
 }
 
 const GameSchema = new Schema({
-  createdOn: {type: Date, default: () => new Date()},
+  createdOn: {type: Date, required: true, default: () => new Date()},
   updatedOn: {type: Date},
-  homeTeam: {type: TeamModel.schema},
-  awayTeam: {type: TeamModel.schema},
+  homeTeam: {type: TeamModel.schema, required: true},
+  awayTeam: {type: TeamModel.schema, required: true},
   startDate: {type: Date},
   endDate: {type: Date},
   score: {
@@ -52,8 +52,8 @@ const GameSchema = new Schema({
     }
   },
   submitted: {
-    homeTeam: {type: Boolean},
-    awayTeam: {type: Boolean}
+    homeTeam: {type: Boolean, required: true, default: false},
+    awayTeam: {type: Boolean, required: true, default: false}
   }
 })
 
