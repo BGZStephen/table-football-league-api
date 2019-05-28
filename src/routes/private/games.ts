@@ -10,11 +10,19 @@ async function list(req: Request, res: Response): Promise<void> {
 }
 
 async function create(req: Request, res: Response): Promise<void> {
-  const team = await Game.create(req.body);
-  res.json(team);
+  const game = await Game.create(req.body);
+  res.json(game);
+}
+
+async function update(req: Request, res: Response): Promise<void> {
+  const game = await Game.getById(req.params.id);
+  await game.update(req.body);
+
+  res.json(game.getPublicFields);
 }
 
 router.get('/', rest.asyncwrap(list));
 router.post('/', rest.asyncwrap(create));
+router.put('/:id', rest.asyncwrap(update));
 
 export const gameRoutes = router;

@@ -1,6 +1,8 @@
 import * as _ from "lodash"
 import { GameValidator } from "./validator";
 import { IGame, GameModel } from "../../models/game";
+import { ObjectId } from "bson";
+import { HTTPError } from "../errors/http-error";
 
 export interface IGameCreateParams {
   homeTeam: string;
@@ -14,6 +16,29 @@ export interface IGameQuery {
   sort: string;
   limit: number;
   offset: number;
+}
+
+export interface IGameUpdateParams {
+  score: {
+    homeTeam: number;
+    awayTeam: number;
+  };
+  submitted: {
+    homeTeam: boolean;
+    awayTeam: boolean;
+  };
+  startDate: Date;
+  endDate: Date;
+  startingPositions: {
+    homeTeam: {
+      offence: string;
+      defence: string;
+    };
+    awayTeam: {
+      offence: string;
+      defence: string;
+    };
+  }
 }
 
 class GameDomainHelper {
@@ -91,7 +116,7 @@ class GameDomainHelper {
     return response;
   }
 
-  async getById(id: string | ObjectId) {
+  static async getById(id: string | ObjectId) {
     if (typeof id !== "string") {
       throw new Error("ID must be a string")
     }
@@ -109,6 +134,18 @@ class GameDomainHelper {
     }
 
     return new Game(game);
+  }
+
+  public async update(params: IGameUpdateParams) {
+    GameValidator.validateUpdate(params);
+
+    this.hasGame("update");
+
+    const availableUpdateFields = ["score", "submitted", "startDate", "endDate", "startingPositions"];
+
+    Object.assign(this.game, _.pick(params, availableUpdateFields))
+
+    await this.save()
   }
 }
 
