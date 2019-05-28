@@ -90,6 +90,26 @@ class GameDomainHelper {
 
     return response;
   }
+
+  async getById(id: string | ObjectId) {
+    if (typeof id !== "string") {
+      throw new Error("ID must be a string")
+    }
+
+    if (!ObjectId.isValid(id)) {
+      throw new Error("Invalid ObjectID")
+    }
+
+    id = new ObjectId(id);
+
+    const game = await GameModel.findById(id)
+
+    if (!game) {
+      throw new HTTPError("Game not found", 404)
+    }
+
+    return new Game(game);
+  }
 }
 
 export const Game = GameDomainHelper;
