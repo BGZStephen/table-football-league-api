@@ -18,11 +18,18 @@ async function update(req: Request, res: Response): Promise<void> {
   const game = await Game.getById(req.params.id);
   await game.update(req.body);
 
-  res.json(game.getPublicFields);
+  res.json(game.getPublicFields());
+}
+
+async function get(req: Request, res: Response): Promise<void> {
+  const game = await Game.getById(req.params.id);
+
+  res.json(game.getPublicFields());
 }
 
 router.get('/', rest.asyncwrap(list));
 router.post('/', rest.asyncwrap(create));
+router.get('/:id', rest.asyncwrap(get));
 router.put('/:id', rest.asyncwrap(update));
 
 export const gameRoutes = router;
