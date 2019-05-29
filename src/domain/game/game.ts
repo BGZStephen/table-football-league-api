@@ -147,6 +147,17 @@ class GameDomainHelper {
 
     await this.save()
   }
+
+  public hasUser(userId: string) {
+    const { homeTeam, awayTeam } = this.game.startingPositions;
+    const gameUserIds = [homeTeam.offence._id, homeTeam.defence._id, awayTeam.offence._id, awayTeam.defence._id];
+
+    if (gameUserIds.includes(userId)) {
+      return true;
+    }
+
+    return false;
+  }
 }
 
 export const Game = GameDomainHelper;
