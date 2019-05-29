@@ -1,6 +1,6 @@
 import { IUser } from "../../models/user";
 
-export class UserService {
+class UserServiceFactory {
   user: IUser;
 
   public set(user: IUser) {
@@ -8,7 +8,6 @@ export class UserService {
   }
 
   public get() {
-    this.hasUser("get")
     return this.user;
   }
 
@@ -18,3 +17,5 @@ export class UserService {
     }
   }
 }
+
+export const UserService = new UserServiceFactory()
