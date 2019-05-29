@@ -130,7 +130,7 @@ class GameDomainHelper {
     const game = await GameModel.findById(id)
 
     if (!game) {
-      throw new HTTPError("Game not found", 404)
+      throw HTTPError("Game not found", 404)
     }
 
     return new Game(game);

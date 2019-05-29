@@ -9,6 +9,6 @@ export function validateThrow(value: any, schema: joi.SchemaLike, options?: joi.
 
   if (results && results.error) {
     debugApi(results.error.details);
-    throw new HTTPError(results.error.details[0].message, 400);
+    throw HTTPError(results.error.details[0].message, 400);
   }
 }

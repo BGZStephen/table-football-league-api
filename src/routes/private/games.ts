@@ -1,6 +1,8 @@
 import { Request, Response, Router } from "express";
 import * as rest from '../../utils/rest';
 import { Game } from "../../domain/game/game";
+import { UserService } from "../../domain/user/service";
+import { HTTPUnauthorized } from "../../domain/errors/http-error";
 
 const router = Router();
 
@@ -16,6 +18,11 @@ async function create(req: Request, res: Response): Promise<void> {
 
 async function update(req: Request, res: Response): Promise<void> {
   const game = await Game.getById(req.params.id);
+  const sessionUser = UserService.get();
+
+  if (!game.hasUser(sessionUser._id)) {
+    throw HTTPUnauthorized()
+  }
   await game.update(req.body);
 
   res.json(game.getPublicFields());

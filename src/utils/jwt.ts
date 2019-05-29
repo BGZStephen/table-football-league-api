@@ -44,7 +44,7 @@ export async function decodeToken(token: string): any {
   const user = await UserModel.findById(new ObjectId(userId));
 
   if (!user) {
-    throw new HTTPError("User not found", 404);
+    throw HTTPError("User not found", 404);
   }
 
   UserService.set(user);

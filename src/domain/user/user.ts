@@ -69,11 +69,11 @@ class UserDomainHelper {
 
     // validate password regexp outside of joi to stop the string being sent back in plain test
     if (!params.password.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)) {
-      throw new HTTPError('Password is not strong enough', 400);
+      throw HTTPError('Password is not strong enough', 400);
     }
     
     if (await UserModel.findOne({ email: params.email }).count()) {
-      throw new HTTPError('Email address already in use', 400);
+      throw HTTPError('Email address already in use', 400);
     }
 
     const user = await UserModel.create(_.pick(params, ['firstName', 'lastName', 'email', 'password']));
@@ -87,12 +87,12 @@ class UserDomainHelper {
 
     if (!user) {
       debugAuth('unrecognised email address');
-      throw new HTTPError('Incorrect email address or password', 400);
+      throw HTTPError('Incorrect email address or password', 400);
     }
 
     if (!await user.isPasswordValid(params.password)) {
       debugAuth('Incorrect password');
-      throw new HTTPError('Incorrect email address or password', 400)
+      throw HTTPError('Incorrect email address or password', 400)
     }
 
     return new UserDomainHelper(user);
