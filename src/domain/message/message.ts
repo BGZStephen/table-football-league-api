@@ -1,6 +1,8 @@
 import * as _ from "lodash"
 import { MessageValidator } from "./validator";
 import { IMessage, MessageModel } from "../../models/message";
+import { ObjectId } from "bson";
+import { HTTPError } from "../errors/http-error";
 
 export interface IMessageCreateParams {
   title: string;
@@ -16,6 +18,10 @@ export interface IMessageQuery {
   sort: string;
   limit: number;
   offset: number;
+}
+
+export interface IMessageUpdateParams {
+  viewedOn: string;
 }
 
 class MessageDomainHelper {
@@ -96,6 +102,50 @@ class MessageDomainHelper {
     }
 
     return response;
+  }
+
+  static async getById(id: string | ObjectId) {
+    if (typeof id !== "string") {
+      throw new Error("ID must be a string")
+    }
+
+    if (!ObjectId.isValid(id)) {
+      throw new Error("Invalid ObjectID")
+    }
+
+    id = new ObjectId(id);
+
+    const message = await MessageModel.findById(id)
+
+    if (!message) {
+      throw HTTPError("Message not found", 404)
+    }
+
+    return new Message(message);
+  }
+
+  public async update(params: IMessageUpdateParams) {
+    MessageValidator.validateUpdate(params);
+
+    this.hasMessage("update");
+
+    const availableUpdateFields = ["viewedOn"];
+
+    Object.assign(this.message, _.pick(params, availableUpdateFields))
+
+    await this.save()
+  }
+
+  public hasUser(userId: string) {
+    this.hasMessage("hasUser");
+
+    const { recipientId, senderId } = this.message;
+    
+    if (recipientId === userId || senderId === userId) {
+      return true;
+    }
+
+    return false;
   }
 }
 
