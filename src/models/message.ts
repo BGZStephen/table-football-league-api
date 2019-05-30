@@ -8,7 +8,7 @@ export interface IMessage extends Document {
   viewedOn: Date;
   createdBy: string;
   senderId: string;
-  receipientId: string;
+  recipientId: string;
   sender: IUser;
   recipient: IUser;
   content: string;
@@ -20,7 +20,7 @@ const MessageSchema = new Schema({
   viewedOn: {type: Date, required: true, default: () => new Date()},
   createdBy: {type: String},
   senderId: {type: String},
-  receipientId: {type: String},
+  recipientId: {type: String},
   title: {type: String},
   content: {type: String},
 })
