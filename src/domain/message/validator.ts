@@ -1,6 +1,6 @@
 import * as joi from 'joi';
 import * as joiUtils from '../../utils/joi';
-import { IMessageCreateParams, IMessageQuery } from './message';
+import { IMessageCreateParams, IMessageQuery, IMessageUpdateParams } from './message';
 
 class MessageValidatorService {
   public validateNewMessage(params: IMessageCreateParams) {
@@ -10,6 +10,12 @@ class MessageValidatorService {
 
   public validateListQuery(params: IMessageQuery) {
     const schema = joi.object().keys(messageListConstraint);
+  
+    joiUtils.validateThrow(params, schema);
+  }
+
+  public validateUpdate(params: IMessageUpdateParams) {
+    const schema = joi.object().keys(messageUpdateConstraint);
   
     joiUtils.validateThrow(params, schema);
   }
@@ -32,4 +38,8 @@ export const messageListConstraint = {
   sort: joi.string().label("Sort"),
   limit: joi.number().min(1).label("Limit"),
   offset: joi.number().min(0).label("Offset"),
+}
+
+export const messageUpdateConstraint = {
+  viewedOn: joi.string().isoDate(),
 }
