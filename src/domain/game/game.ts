@@ -149,6 +149,8 @@ class GameDomainHelper {
   }
 
   public hasUser(userId: string) {
+    this.hasGame("hasUser");
+    
     const { homeTeam, awayTeam } = this.game.startingPositions;
     const gameUserIds = [homeTeam.offence._id, homeTeam.defence._id, awayTeam.offence._id, awayTeam.defence._id];
 
