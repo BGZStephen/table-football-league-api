@@ -39,4 +39,7 @@ export const authenticationCredentialConstraint = {
 export const userListConstraint = {
   _id: joi.string().alphanum().label('User IDs'),
   email: joi.string().email().label('Email address'),
+  sort: joi.string().label("Sort"),
+  limit: joi.number().min(1).label("Limit"),
+  offset: joi.number().min(0).label("Offset"),
 };

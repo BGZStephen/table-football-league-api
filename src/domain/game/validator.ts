@@ -33,6 +33,9 @@ export const gameListConstraint = {
   name: joi.string().alphanum().label('Game Name'),
   _id: joi.string().label('Game IDs'),
   userId: joi.string().label('User IDs'),
+  sort: joi.string().label("Sort"),
+  limit: joi.number().min(1).label("Limit"),
+  offset: joi.number().min(0).label("Offset"),
 }
 
 export const gameUpdateConstraint = {

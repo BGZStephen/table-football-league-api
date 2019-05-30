@@ -26,4 +26,7 @@ export const teamListConstraint = {
   name: joi.string().alphanum().label('Team Name'),
   _id: joi.string().label('Team IDs'),
   userId: joi.string().label('User IDs'),
+  sort: joi.string().label("Sort"),
+  limit: joi.number().min(1).label("Limit"),
+  offset: joi.number().min(0).label("Offset"),
 }
