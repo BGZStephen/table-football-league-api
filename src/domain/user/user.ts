@@ -133,6 +133,17 @@ class UserDomainHelper {
 
     return response;
   }
+
+  static async getById(userId: string) {
+    const user = await UserModel.findById(new ObjectId(userId));
+
+    if (!user) {
+      throw HTTPError("USer not found", 404);
+    }
+
+    return new UserDomainHelper(user);
+  }
+
 }
 
 export const User = UserDomainHelper;

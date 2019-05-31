@@ -9,6 +9,13 @@ async function list(req: Request, res: Response): Promise<void> {
   res.json(results);
 }
 
+async function get(req: Request, res: Response) {
+  const user = await User.getById(req.params.id);
+  res.json(user.getPublicFields());
+}
+
+
 router.get('/', rest.asyncwrap(list));
+router.get('/:id', rest.asyncwrap(get));
 
 export const userRoutes = router;
