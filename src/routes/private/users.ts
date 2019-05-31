@@ -14,8 +14,15 @@ async function get(req: Request, res: Response) {
   res.json(user.getPublicFields());
 }
 
+async function update(req: Request, res: Response): Promise<void> {
+  const user = await User.getById(req.params.id);
+  await user.update(req.body);
+
+  res.json(user.getPublicFields());
+}
 
 router.get('/', rest.asyncwrap(list));
 router.get('/:id', rest.asyncwrap(get));
+router.put('/:id', rest.asyncwrap(update));
 
 export const userRoutes = router;

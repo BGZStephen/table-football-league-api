@@ -1,9 +1,11 @@
 import * as _ from "lodash"
 import { UserValidator } from "./validator";
-import { HTTPError } from "../errors/http-error";
+import { HTTPError, HTTPUnauthorized } from "../errors/http-error";
 import { IUser, UserModel } from "../../models/user";
 import jwt = require('../../utils/jwt');
 import * as Debug from "debug";
+import { UserService } from "./service";
+import { ObjectId } from "bson";
 
 export interface IUserCreateParams {
   firstName: string;
@@ -23,6 +25,13 @@ export interface IUserQuery {
   sort: string;
   limit: number;
   offset: number;
+}
+
+export interface IUserUpdateParams {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
 }
 
 const debugAuth = Debug('authentication');
@@ -144,6 +153,22 @@ class UserDomainHelper {
     return new UserDomainHelper(user);
   }
 
+  public async update(params: IUserUpdateParams) {
+    UserValidator.validateUpdate(params);
+    this.hasUser("update");
+
+    const sessionUser = UserService.get();
+
+    if (sessionUser._id !== this.user._id) {
+      throw HTTPUnauthorized();
+    }
+
+    const availableUpdateFields = ["firstName", "lastName", "email", "password"];
+
+    Object.assign(this.user, _.pick(params, availableUpdateFields))
+
+    await this.save()
+  }
 }
 
 export const User = UserDomainHelper;
