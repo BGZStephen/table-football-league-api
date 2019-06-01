@@ -1,13 +1,16 @@
 import { config } from '../config';
 import * as jwt from 'jsonwebtoken';
-import { IUser, UserModel } from '../models/user';
-import { ObjectId } from 'bson';
-import { HTTPError } from '../domain/errors/http-error';
-import { UserService } from '../domain/user/service';
+import { IUser } from '../models/user';
 
 interface IUserTokenPayload {
   id: string;
   email: string;
+}
+
+interface IDecodedJWT {
+  exp: number;
+  data: IUserTokenPayload
+  iat: number;
 }
 
 export function generateUserToken(user: IUser): string {
@@ -30,22 +33,10 @@ export function generateUserToken(user: IUser): string {
   return token;
 }
 
-export async function decodeToken(token: string): any {
-  const data = jwt.decode(token) as IUserTokenPayload
+export async function decodeToken(token: string): Promise<IUserTokenPayload> {
+  const decodedJwt = jwt.decode(token) as IDecodedJWT
 
-  if (!data) { throw new Error("Invalid Access Token")};
+  if (!decodedJwt) { throw new Error("Invalid Access Token")};
 
-  const userId = data.id;
-
-  if (!userId ||  typeof userId !== "string" || ObjectId.isValid("userId")) {
-    throw new Error("Invalud User ID")
-  }
-
-  const user = await UserModel.findById(new ObjectId(userId));
-
-  if (!user) {
-    throw HTTPError("User not found", 404);
-  }
-
-  UserService.set(user);
+  return decodedJwt.data;
 }
