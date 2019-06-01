@@ -1,7 +1,7 @@
 import * as _ from "lodash"
 import { TeamValidator } from "./validator";
 import { ITeam, TeamModel } from "../../models/team";
-import { IUser } from "../../models/user";
+import { HTTPError } from "../errors/http-error";
 
 export interface ITeamCreateParams {
   name: string;
@@ -52,9 +52,15 @@ class TeamDomainHelper {
   static async create(params: ITeamCreateParams) {
     TeamValidator.validateNewTeam(params);
 
-    const user = await TeamModel.create(_.pick(params, ['name', 'userIds']));
+    const teamMatchingName = await TeamModel.findOne({name: params.name});
+
+    if (teamMatchingName) {
+      throw HTTPError("A team with that name already exists", 400);
+    }
+
+    const team = await TeamModel.create(_.pick(params, ['name', 'userIds']));
   
-    return new TeamDomainHelper(user)
+    return new TeamDomainHelper(team)
   }
 
   static async list(query: ITeamQuery) {
@@ -77,7 +83,9 @@ class TeamDomainHelper {
     }
 
     if (query.name) {
-      dbQuery.name = {$in: query.name.split(',')}
+      const nameRegexp = new RegExp(query.name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'gi');
+
+      dbQuery.name = nameRegexp;
     }
 
     if (query.sort) {
