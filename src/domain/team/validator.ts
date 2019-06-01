@@ -18,12 +18,12 @@ class TeamValidatorService {
 export const TeamValidator = new TeamValidatorService();
 
 export const newTeamConstraint = {
-  name: joi.string().alphanum().required().label('Team Name'),
+  name: joi.string().required().label('Team Name'),
   userIds: joi.array().items(joi.string().alphanum()).label('User IDs'),
 }
 
 export const teamListConstraint = {
-  name: joi.string().alphanum().label('Team Name'),
+  name: joi.string().label('Team Name'),
   _id: joi.string().label('Team IDs'),
   userId: joi.string().label('User IDs'),
   sort: joi.string().label("Sort"),

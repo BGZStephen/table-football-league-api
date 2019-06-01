@@ -11,9 +11,11 @@ export interface ITeam extends Document {
 }
 
 const TeamSchema = new Schema({
+
   createdOn: {type: Date, default: () => new Date().toISOString()},
   updatedOn: {type: Date},
-  userIds: [{type: String}]
+  userIds: [{type: String}],
+  name: {type: String, required: true}
 })
 
 TeamSchema.virtual('users', {
