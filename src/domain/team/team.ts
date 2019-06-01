@@ -1,6 +1,7 @@
 import * as _ from "lodash"
 import { TeamValidator } from "./validator";
 import { ITeam, TeamModel } from "../../models/team";
+import { IUser } from "../../models/user";
 
 export interface ITeamCreateParams {
   name: string;

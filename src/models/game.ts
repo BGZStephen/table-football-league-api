@@ -10,16 +10,16 @@ interface ITeamFormation {
 
 export interface IGame extends Document {
   _id: string;
-  createdOn: Date;
-  updatedOn?: Date;
+  createdOn: string;
+  updatedOn?: string;
   homeTeam: ITeam;
   awayTeam: ITeam;
   score: {
     homeTeam: number;
     awayTeam: number;
   };
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   startingPositions: {
     homeTeam: ITeamFormation;
     awayTeam: ITeamFormation;
@@ -31,7 +31,7 @@ export interface IGame extends Document {
 }
 
 const GameSchema = new Schema({
-  createdOn: {type: Date, required: true, default: () => new Date()},
+  createdOn: {type: Date, required: true, default: () => new Date().toISOString()},
   updatedOn: {type: Date},
   homeTeam: {type: TeamModel.schema, required: true},
   awayTeam: {type: TeamModel.schema, required: true},

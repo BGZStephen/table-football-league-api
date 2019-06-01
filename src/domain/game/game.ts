@@ -27,8 +27,8 @@ export interface IGameUpdateParams {
     homeTeam: boolean;
     awayTeam: boolean;
   };
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   startingPositions: {
     homeTeam: {
       offence: string;

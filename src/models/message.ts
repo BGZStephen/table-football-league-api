@@ -4,8 +4,8 @@ import { IUser } from './user';
 
 export interface IMessage extends Document {
   _id: string;
-  createdOn: Date;
-  viewedOn: Date;
+  createdOn: string;
+  viewedOn: string;
   createdBy: string;
   senderId: string;
   recipientId: string;
@@ -16,8 +16,8 @@ export interface IMessage extends Document {
 }
 
 const MessageSchema = new Schema({
-  createdOn: {type: Date, required: true, default: () => new Date()},
-  viewedOn: {type: Date, required: true, default: () => new Date()},
+  createdOn: {type: Date, required: true, default: () => new Date().toISOString()},
+  viewedOn: {type: Date},
   createdBy: {type: String},
   senderId: {type: String},
   recipientId: {type: String},

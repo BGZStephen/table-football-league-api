@@ -3,13 +3,13 @@ import * as _ from 'lodash';
 import * as bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
-  createdOn: Date;
-  updatedOn?: Date;
+  createdOn: string;
+  updatedOn?: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  lastSignIn: Date,
+  lastSignIn: string,
 
   isPasswordValid(password: string): boolean;
   getPublicFields(): IPublicUser;
@@ -18,7 +18,7 @@ export interface IUser extends Document {
 type IPublicUser = Pick<IUser, '_id' | 'createdOn' | 'updatedOn' | 'firstName' | 'lastName' | 'email' | 'lastSignIn'>
 
 const UserSchema = new Schema({
-  createdOn: {type: Date, default: () => new Date()},
+  createdOn: {type: Date, default: () => new Date().toISOString()},
   updatedOn: {type: Date},
   firstName: {type: String, required: true},
   lastName: {type: String},

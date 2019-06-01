@@ -4,14 +4,14 @@ import { IUser } from './user';
 
 export interface ITeam extends Document {
   _id: string;
-  createdOn: Date;
-  updatedOn?: Date;
+  createdOn: string;
+  updatedOn?: string;
   userIds: string[];
   users?: IUser[];
 }
 
 const TeamSchema = new Schema({
-  createdOn: {type: Date, default: () => new Date()},
+  createdOn: {type: Date, default: () => new Date().toISOString()},
   updatedOn: {type: Date},
   userIds: [{type: String}]
 })
