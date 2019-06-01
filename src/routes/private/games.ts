@@ -34,9 +34,17 @@ async function get(req: Request, res: Response): Promise<void> {
   res.json(game.getPublicFields());
 }
 
+async function remove(req: Request, res: Response) {
+  const game = await Game.getById(req.params.id);
+
+  await game.remove()
+  res.sendStatus(200);
+}
+
 router.get('/', rest.asyncwrap(list));
 router.post('/', rest.asyncwrap(create));
 router.get('/:id', rest.asyncwrap(get));
 router.put('/:id', rest.asyncwrap(update));
+router.delete('/:id', rest.asyncwrap(remove));
 
 export const gameRoutes = router;

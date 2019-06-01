@@ -148,6 +148,12 @@ class GameDomainHelper {
     await this.save()
   }
 
+  public remove() {
+    this.hasGame("remove");
+
+    return this.game.remove();
+  }
+
   public hasUser(userId: string) {
     this.hasGame("hasUser");
     
