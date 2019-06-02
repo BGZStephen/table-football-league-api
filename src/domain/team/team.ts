@@ -11,6 +11,7 @@ export interface ITeamCreateParams {
 export interface ITeamQuery {
   _id: string;
   userId: string;
+  excludeUserId: string;
   name: string;
   sort: string;
   limit: number;
@@ -80,6 +81,10 @@ class TeamDomainHelper {
 
     if (query.userId) {
       dbQuery.userIds = {$in: query.userId.split(',')}
+    }
+
+    if (query.excludeUserId) {
+      dbQuery.userIds = {$nin: query.excludeUserId.split(',')}
     }
 
     if (query.name) {
