@@ -25,8 +25,8 @@ class GameValidatorService {
 export const GameValidator = new GameValidatorService();
 
 export const newGameConstraint = {
-  homeTeam: joi.string().alphanum().required().label('Home team'),
-  awayTeam: joi.string().alphanum().required().label('Away team'),
+  homeTeamId: joi.string().alphanum().required().label('Home team'),
+  awayTeamId: joi.string().alphanum().required().label('Away team'),
 }
 
 export const gameListConstraint = {

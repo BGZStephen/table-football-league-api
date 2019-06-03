@@ -3,10 +3,11 @@ import { GameValidator } from "./validator";
 import { IGame, GameModel } from "../../models/game";
 import { ObjectId } from "bson";
 import { HTTPError } from "../errors/http-error";
+import { TeamModel } from "../../models/team";
 
 export interface IGameCreateParams {
-  homeTeam: string;
-  awayTeam: string;
+  homeTeamId: string;
+  awayTeamId: string;
 }
 
 export interface IGameQuery {
@@ -76,9 +77,12 @@ class GameDomainHelper {
   static async create(params: IGameCreateParams) {
     GameValidator.validateNewGame(params);
 
+    const homeTeam = await TeamModel.findById(params.homeTeamId)
+    const awayTeam = await TeamModel.findById(params.awayTeamId)
+
     const game = await GameModel.create({
-      homeTeam: params.homeTeam,
-      awayTeam: params.awayTeam,
+      homeTeam,
+      awayTeam,
     });
   
     return new GameDomainHelper(game)
