@@ -13,7 +13,7 @@ async function list(req: Request, res: Response): Promise<void> {
 
 async function create(req: Request, res: Response): Promise<void> {
   const game = await Game.create(req.body);
-  res.json(game);
+  res.json(game.getPublicFields());
 }
 
 async function update(req: Request, res: Response): Promise<void> {
