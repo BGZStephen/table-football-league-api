@@ -22,7 +22,7 @@ const UserSchema = new Schema({
   updatedOn: {type: Date},
   firstName: {type: String, required: true},
   lastName: {type: String},
-  email: {type: String, required: true, unique: true},
+  email: {type: String, required: true},
   password: String,
   lastSignIn: Date,
 })
