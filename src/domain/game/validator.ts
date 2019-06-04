@@ -39,6 +39,8 @@ export const gameListConstraint = {
 }
 
 export const gameUpdateConstraint = {
+  homeTeamReady: joi.boolean(),
+  awayTeamReady: joi.boolean(),
   score: joi.object().keys({
     homeTeam: joi.number().min(-10).max(10),
     awayTeam: joi.number().min(-10).max(10),

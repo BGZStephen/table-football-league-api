@@ -145,7 +145,7 @@ class GameDomainHelper {
 
     this.hasGame("update");
 
-    const availableUpdateFields = ["score", "submitted", "startDate", "endDate", "startingPositions"];
+    const availableUpdateFields = ["score", "submitted", "startDate", "endDate", "startingPositions", "homeTeamReady", "awayTeamReady"];
 
     Object.assign(this.game, _.pick(params, availableUpdateFields))
 

@@ -14,6 +14,8 @@ export interface IGame extends Document {
   updatedOn?: string;
   homeTeam: ITeam;
   awayTeam: ITeam;
+  homeTeamReady: boolean;
+  awayTeamReady: boolean;
   score: {
     homeTeam: number;
     awayTeam: number;
@@ -41,6 +43,8 @@ const GameSchema = new Schema({
     homeTeam: {type: Number, required: true, default: 0},
     awayTeam: {type: Number, required: true, default: 0}
   },
+  homeTeamReady: {type: Boolean, default: false},
+  awayTeamReady: {type: Boolean, default: false},
   startingPositions: {
     homeTeam: {
       offence: {type: UserModel.schema},
