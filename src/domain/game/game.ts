@@ -77,12 +77,22 @@ class GameDomainHelper {
   static async create(params: IGameCreateParams) {
     GameValidator.validateNewGame(params);
 
-    const homeTeam = await TeamModel.findById(params.homeTeamId)
-    const awayTeam = await TeamModel.findById(params.awayTeamId)
+    const homeTeam = await TeamModel.findById(params.homeTeamId).populate("users")
+    const awayTeam = await TeamModel.findById(params.awayTeamId).populate("users")
 
     const game = await GameModel.create({
-      homeTeam,
-      awayTeam,
+      homeTeam: _.omit(homeTeam, "users"),
+      awayTeam: _.omit(awayTeam, "users"),
+      startingPositions: {
+        homeTeam: {
+          offence: homeTeam.users[0],
+          defence: homeTeam.users[1]
+        },
+        awayTeam: {
+          offence: awayTeam.users[0],
+          defence: awayTeam.users[1]
+        }
+      }
     });
   
     return new GameDomainHelper(game)
@@ -158,14 +168,16 @@ class GameDomainHelper {
     return this.game.remove();
   }
 
-  public hasUser(userId: string) {
+  public hasUser(userId: ObjectId) {
     this.hasGame("hasUser");
     
     const { homeTeam, awayTeam } = this.game.startingPositions;
     const gameUserIds = [homeTeam.offence._id, homeTeam.defence._id, awayTeam.offence._id, awayTeam.defence._id];
 
-    if (gameUserIds.includes(userId)) {
-      return true;
+    for (const gameUserId of gameUserIds) {
+      if (userId.equals(gameUserId)) {
+        return true;
+      }
     }
 
     return false;

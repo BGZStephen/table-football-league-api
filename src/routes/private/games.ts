@@ -23,6 +23,7 @@ async function update(req: Request, res: Response): Promise<void> {
   if (!game.hasUser(sessionUser._id)) {
     throw HTTPUnauthorized()
   }
+  
   await game.update(req.body);
 
   res.json(game.getPublicFields());
