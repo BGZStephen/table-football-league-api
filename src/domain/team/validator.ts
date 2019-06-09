@@ -1,6 +1,6 @@
 import * as joi from 'joi';
 import * as joiUtils from '../../utils/joi';
-import { ITeamCreateParams, ITeamQuery } from './team';
+import { ITeamCreateParams, ITeamQuery, ITeamGetQuery } from './team';
 
 class TeamValidatorService {
   public validateNewTeam(params: ITeamCreateParams) {
@@ -10,6 +10,12 @@ class TeamValidatorService {
 
   public validateListQuery(params: ITeamQuery) {
     const schema = joi.object().keys(teamListConstraint);
+  
+    joiUtils.validateThrow(params, schema);
+  }
+
+  public validateGetRequest(params: ITeamGetQuery) {
+    const schema = joi.object().keys(teamGetConstraint);
   
     joiUtils.validateThrow(params, schema);
   }
@@ -30,4 +36,8 @@ export const teamListConstraint = {
   sort: joi.string().label("Sort"),
   limit: joi.number().min(1).label("Limit"),
   offset: joi.number().min(0).label("Offset"),
+}
+
+export const teamGetConstraint = {
+  id: joi.string().label('Team ID'),
 }
