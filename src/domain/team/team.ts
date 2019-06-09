@@ -18,6 +18,10 @@ export interface ITeamQuery {
   offset: number;
 }
 
+export interface ITeamGetQuery {
+  id: string;
+}
+
 class TeamDomainHelper {
   private team: ITeam;
 
@@ -62,6 +66,18 @@ class TeamDomainHelper {
     const team = await TeamModel.create(_.pick(params, ['name', 'userIds']));
   
     return new TeamDomainHelper(team)
+  }
+
+  static async getById(params: ITeamGetQuery) {
+    TeamValidator.validateGetRequest(params);
+
+    const team = await TeamModel.findOne({_id: params.id}).populate("users");
+
+    if (!team) {
+      throw HTTPError("Team not found", 404)
+    }
+
+    return new TeamDomainHelper(team);
   }
 
   static async list(query: ITeamQuery) {
