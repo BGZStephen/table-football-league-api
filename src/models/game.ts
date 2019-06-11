@@ -26,9 +26,15 @@ export interface IGame extends Document {
     homeTeam: ITeamFormation;
     awayTeam: ITeamFormation;
   };
-  submitted: {
-    homeTeam: boolean;
-    awayTeam: boolean;
+  submittedScore: {
+    homeTeam: {
+      homeTeam: number;
+      awayTeam: number;
+    };
+    awayTeam: {
+      homeTeam: number;
+      awayTeam: number;
+    };
   }
 }
 
@@ -43,8 +49,6 @@ const GameSchema = new Schema({
     homeTeam: {type: Number, required: true, default: 0},
     awayTeam: {type: Number, required: true, default: 0}
   },
-  homeTeamReady: {type: Boolean, default: false},
-  awayTeamReady: {type: Boolean, default: false},
   startingPositions: {
     homeTeam: {
       offence: {type: UserModel.schema},
@@ -55,9 +59,15 @@ const GameSchema = new Schema({
       defence: {type: UserModel.schema}
     }
   },
-  submitted: {
-    homeTeam: {type: Boolean, required: true, default: false},
-    awayTeam: {type: Boolean, required: true, default: false}
+  submittedScore: {
+    homeTeam: {
+      homeTeam: {type: Number, default: 0, required: true},
+      awayTeam: {type: Number, default: 0, required: true}
+    },
+    awayTeam: {
+      homeTeam: {type: Number, default: 0, required: true},
+      awayTeam: {type: Number, default: 0, required: true}
+    },
   }
 })
 

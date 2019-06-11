@@ -45,9 +45,15 @@ export const gameUpdateConstraint = {
     homeTeam: joi.number().min(-10).max(10),
     awayTeam: joi.number().min(-10).max(10),
   }),
-  submitted: joi.object().keys({
-    homeTeam: joi.boolean(),
-    awayTeam: joi.boolean(),
+  submittedScore: joi.object().keys({
+    homeTeam: joi.object().keys({
+      homeTeam: joi.number().min(-99).max(10),
+      awayTeam: joi.number().min(-99).max(10)
+    }),
+    awayTeam: joi.object().keys({
+      homeTeam: joi.number().min(-99).max(10),
+      awayTeam: joi.number().min(-99).max(10)
+    }),
   }),
   positions: joi.object().keys({
     homeTeam: joi.object().keys({
