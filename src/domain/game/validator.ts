@@ -56,7 +56,7 @@ export const gameUpdateConstraint = {
       awayTeam: joi.number().min(-99).max(10)
     }),
   }),
-  positions: joi.object().keys({
+  startingPositions: joi.object().keys({
     homeTeam: joi.object().keys({
       offence: joi.string().alphanum().required(),
       defence: joi.string().alphanum().required()

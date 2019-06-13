@@ -2,10 +2,11 @@ import { Schema, Model, model, Document } from 'mongoose';
 import * as _ from 'lodash';
 import { ITeam, TeamModel } from './team';
 import { UserModel, IUser } from './user';
+import { ObjectId } from 'bson';
 
 interface ITeamFormation {
-  offence: IUser;
-  defence: IUser;
+  offence: ObjectId;
+  defence: ObjectId;
 }
 
 export interface IGame extends Document {
@@ -51,12 +52,12 @@ const GameSchema = new Schema({
   },
   startingPositions: {
     homeTeam: {
-      offence: {type: UserModel.schema},
-      defence: {type: UserModel.schema}
+      offence: {type: Schema.Types.ObjectId, ref: 'User'},
+      defence: {type: Schema.Types.ObjectId, ref: 'User'}
     },
     awayTeam: {
-      offence: {type: UserModel.schema},
-      defence: {type: UserModel.schema}
+      offence: {type: Schema.Types.ObjectId, ref: 'User'},
+      defence: {type: Schema.Types.ObjectId, ref: 'User'}
     }
   },
   submittedScore: {

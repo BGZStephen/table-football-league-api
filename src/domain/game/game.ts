@@ -17,7 +17,7 @@ export interface IGameQuery {
   sort: string;
   limit: number;
   offset: number;
-  submitted: number;
+  submitted: '0' | '1';
 }
 
 export interface IGameUpdateParams {
@@ -39,6 +39,16 @@ export interface IGameUpdateParams {
     awayTeam: {
       offence: string;
       defence: string;
+    };
+  },
+  submittedScore: {
+    homeTeam: {
+      homeTeam: number;
+      awayTeam: number;
+    };
+    awayTeam: {
+      homeTeam: number;
+      awayTeam: number;
     };
   }
 }
@@ -81,17 +91,19 @@ class GameDomainHelper {
     const homeTeam = await TeamModel.findById(params.homeTeamId).populate("users")
     const awayTeam = await TeamModel.findById(params.awayTeamId).populate("users")
 
+    console.log(homeTeam, awayTeam);
+
     const game = await GameModel.create({
-      homeTeam: _.omit(homeTeam, "users"),
-      awayTeam: _.omit(awayTeam, "users"),
+      homeTeam,
+      awayTeam,
       startingPositions: {
         homeTeam: {
-          offence: homeTeam.users[0],
-          defence: homeTeam.users[1]
+          offence: homeTeam.users[0]._id,
+          defence: homeTeam.users[1]._id
         },
         awayTeam: {
-          offence: awayTeam.users[0],
-          defence: awayTeam.users[1]
+          offence: awayTeam.users[0]._id,
+          defence: awayTeam.users[1]._id
         }
       }
     });
@@ -119,7 +131,7 @@ class GameDomainHelper {
       dbSort[sortKey] = query.sort.startsWith('-') ? 'desc' : 'asc';
     }
 
-    if (query.submitted === 0) {
+    if (query.submitted === '0') {
       dbQuery.score = {homeTeam: 0, awayTeam: 0}
     }
 
@@ -160,9 +172,19 @@ class GameDomainHelper {
 
     this.hasGame("update");
 
-    const availableUpdateFields = ["score", "submittedScore", "startDate", "endDate", "startingPositions", "homeTeamReady", "awayTeamReady"];
+    const availableUpdateFields = ["score", "startDate", "endDate", "startingPositions", "homeTeamReady", "awayTeamReady"];
 
     Object.assign(this.game, _.pick(params, availableUpdateFields))
+
+    if (params.submittedScore) {
+      if (params.submittedScore.homeTeam) {
+        this.game.submittedScore.homeTeam = params.submittedScore.homeTeam;
+      }
+
+      if (params.submittedScore.awayTeam) {
+        this.game.submittedScore.awayTeam = params.submittedScore.awayTeam;
+      }
+    }
 
     await this.save()
   }
@@ -177,7 +199,7 @@ class GameDomainHelper {
     this.hasGame("hasUser");
     
     const { homeTeam, awayTeam } = this.game.startingPositions;
-    const gameUserIds = [homeTeam.offence._id, homeTeam.defence._id, awayTeam.offence._id, awayTeam.defence._id];
+    const gameUserIds = [homeTeam.offence, homeTeam.defence, awayTeam.offence, awayTeam.defence];
 
     for (const gameUserId of gameUserIds) {
       if (userId.equals(gameUserId)) {
