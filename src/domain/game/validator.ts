@@ -36,6 +36,7 @@ export const gameListConstraint = {
   sort: joi.string().label("Sort"),
   limit: joi.number().min(1).label("Limit"),
   offset: joi.number().min(0).label("Offset"),
+  submitted: joi.number().allow(0, 1)
 }
 
 export const gameUpdateConstraint = {

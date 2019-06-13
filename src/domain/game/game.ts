@@ -17,6 +17,7 @@ export interface IGameQuery {
   sort: string;
   limit: number;
   offset: number;
+  submitted: number;
 }
 
 export interface IGameUpdateParams {
@@ -116,6 +117,10 @@ class GameDomainHelper {
     if (query.sort) {
       const sortKey = query.sort.startsWith('-') ? query.sort.substr(1, query.sort.length) : query.sort;
       dbSort[sortKey] = query.sort.startsWith('-') ? 'desc' : 'asc';
+    }
+
+    if (query.submitted === 0) {
+      dbQuery.score = {homeTeam: 0, awayTeam: 0}
     }
 
     const results = await GameModel.find(dbQuery, dbFields, dbFilter).sort(query.sort ? dbSort : null);
