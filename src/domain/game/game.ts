@@ -186,6 +186,21 @@ class GameDomainHelper {
       }
     }
 
+    if (this.game.submittedScore.awayTeam 
+      && this.game.submittedScore.homeTeam 
+      && this.game.submittedScore.awayTeam.awayTeam === this.game.submittedScore.homeTeam.awayTeam
+      && this.game.submittedScore.awayTeam.homeTeam === this.game.submittedScore.homeTeam.homeTeam
+    ) { 
+      this.game.score = this.game.submittedScore.homeTeam;
+    } else if (
+      this.game.submittedScore.awayTeam 
+      && this.game.submittedScore.homeTeam 
+      && (this.game.submittedScore.awayTeam.awayTeam !== this.game.submittedScore.homeTeam.awayTeam
+      || this.game.submittedScore.awayTeam.homeTeam !== this.game.submittedScore.homeTeam.homeTeam)
+    ) {
+      throw HTTPError("Submitted scores don't match", 400)
+    }
+
     await this.save()
   }
 
