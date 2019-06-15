@@ -186,19 +186,8 @@ class GameDomainHelper {
       }
     }
 
-    if (this.game.submittedScore.awayTeam 
-      && this.game.submittedScore.homeTeam 
-      && this.game.submittedScore.awayTeam.awayTeam === this.game.submittedScore.homeTeam.awayTeam
-      && this.game.submittedScore.awayTeam.homeTeam === this.game.submittedScore.homeTeam.homeTeam
-    ) { 
+    if (this.gameScoreShouldUpdate()) {
       this.game.score = this.game.submittedScore.homeTeam;
-    } else if (
-      this.game.submittedScore.awayTeam 
-      && this.game.submittedScore.homeTeam 
-      && (this.game.submittedScore.awayTeam.awayTeam !== this.game.submittedScore.homeTeam.awayTeam
-      || this.game.submittedScore.awayTeam.homeTeam !== this.game.submittedScore.homeTeam.homeTeam)
-    ) {
-      throw HTTPError("Submitted scores don't match", 400)
     }
 
     await this.save()
@@ -223,6 +212,29 @@ class GameDomainHelper {
     }
 
     return false;
+  }
+
+  private gameScoreShouldUpdate() {
+    const awayTeamSubmission = this.game.submittedScore.awayTeam;
+    const homeTeamSubmission = this.game.submittedScore.homeTeam;
+
+    if (awayTeamSubmission.homeTeam === 0 && awayTeamSubmission.awayTeam === 0) {
+      return false;
+    }
+
+    if (homeTeamSubmission.homeTeam === 0 && homeTeamSubmission.awayTeam === 0) {
+      return false;
+    }
+
+    if (homeTeamSubmission.homeTeam !== awayTeamSubmission.homeTeam) {
+      throw HTTPError("Submitted scores don't match", 400)
+    }
+
+    if (homeTeamSubmission.awayTeam !== awayTeamSubmission.awayTeam) {
+      throw HTTPError("Submitted scores don't match", 400)
+    }
+
+    return true;
   }
 }
 
