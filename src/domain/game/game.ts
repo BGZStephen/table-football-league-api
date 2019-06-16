@@ -91,8 +91,6 @@ class GameDomainHelper {
     const homeTeam = await TeamModel.findById(params.homeTeamId).populate("users")
     const awayTeam = await TeamModel.findById(params.awayTeamId).populate("users")
 
-    console.log(homeTeam, awayTeam);
-
     const game = await GameModel.create({
       homeTeam,
       awayTeam,
@@ -122,6 +120,8 @@ class GameDomainHelper {
       skip: query.offset || 0,
     }
 
+    let or = [{}];
+
     if (query._id) {
       dbQuery._id = {$in: query._id.split(',')}
     }
@@ -135,7 +135,14 @@ class GameDomainHelper {
       dbQuery.score = {homeTeam: 0, awayTeam: 0}
     }
 
-    const results = await GameModel.find(dbQuery, dbFields, dbFilter).sort(query.sort ? dbSort : null);
+    if (query.submitted === '1') {
+      or = [
+        {"score.homeTeam": {$ne: 0}}, 
+        {"score.awayTeam": {$ne: 0}},
+      ]
+    }
+
+    const results = await GameModel.find(dbQuery, dbFields, dbFilter).or(or).sort(query.sort ? dbSort : null);
     const totalCount = await GameModel.count({});
 
     const response = {
