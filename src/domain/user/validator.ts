@@ -47,8 +47,8 @@ export const userListConstraint = {
 };
 
 export const userUpdateConstraint = {
-  firstName: joi.string().alphanum().required().label('First name'),
-  lastName: joi.string().alphanum().required().label('Last name'),
-  email: joi.string().email({ minDomainAtoms: 2 }).required().label('Email'),
-  password: joi.string().required().label('Password'),
+  firstName: joi.string().alphanum().label('First name'),
+  lastName: joi.string().alphanum().label('Last name'),
+  email: joi.string().email({ minDomainAtoms: 2 }).label('Email'),
+  password: joi.string().label('Password'),
 };

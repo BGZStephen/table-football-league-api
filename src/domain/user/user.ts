@@ -159,7 +159,7 @@ class UserDomainHelper {
 
     const sessionUser = UserService.get();
 
-    if (sessionUser._id !== this.user._id) {
+    if (!sessionUser._id.equals(this.user._id)) {
       throw HTTPUnauthorized();
     }
 
