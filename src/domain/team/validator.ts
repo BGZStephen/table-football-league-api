@@ -33,6 +33,7 @@ export const teamListConstraint = {
   _id: joi.string().label('Team IDs'),
   userId: joi.string().label('User IDs'),
   excludeUserId: joi.string().label('Excluded User IDs'),
+  populate: joi.string().label("Populate"),
   sort: joi.string().label("Sort"),
   limit: joi.number().min(1).label("Limit"),
   offset: joi.number().min(0).label("Offset"),

@@ -13,6 +13,7 @@ export interface ITeamQuery {
   userId: string;
   excludeUserId: string;
   name: string;
+  populate: string;
   sort: string;
   limit: number;
   offset: number;
@@ -91,6 +92,8 @@ class TeamDomainHelper {
       skip: query.offset || 0,
     }
 
+    let populators = "";
+
     if (query._id) {
       dbQuery._id = {$in: query._id.split(',')}
     }
@@ -114,7 +117,12 @@ class TeamDomainHelper {
       dbSort[sortKey] = query.sort.startsWith('-') ? 'desc' : 'asc';
     }
 
-    const results = await TeamModel.find(dbQuery, dbFields, dbFilter).sort(query.sort ? dbSort : null);
+    if (query.populate) {
+      populators = query.populate;
+    }
+
+    const results = await TeamModel.find(dbQuery, dbFields, dbFilter).populate(populators).sort(query.sort ? dbSort : null);
+
     const totalCount = await TeamModel.count({});
 
     const response = {
